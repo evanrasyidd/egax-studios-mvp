@@ -1,97 +1,256 @@
 # EGAX Studios
 
-Fashion e-commerce built with Next.js 15, Tailwind CSS, Framer Motion, Zustand, React Three Fiber + Rapier.
+> Built in the Dark. Worn in the Streets.
 
-## Requirements
-- Node.js v18+
-- npm v9+
+Platform e-commerce streetwear dark editorial untuk brand EGAX Studios. Dibangun sebagai satu aplikasi Next.js yang menggabungkan customer-facing shop, admin dashboard, dan POS kasir — tanpa database eksternal, semua state persisted di localStorage via Zustand.
 
-## Setup
+---
+
+## Fitur
+
+### Customer Shop
+- **Homepage** — hero section, pre-order banner, new collection, featured collection, bestseller, editorial banner, social CTA, newsletter
+- **Catalog** — browsing produk dengan filter kategori dan mega menu
+- **Product Detail** (`/product/[slug]`) — pilih ukuran, tambah ke cart, recently viewed
+- **Cart** — slide panel, update qty, remove item, persistent antar sesi
+- **Wishlist** — simpan produk favorit, persistent via localStorage
+- **Checkout** — pilih metode pengiriman, simulasi payment (QRIS / Virtual Account BCA/BNI/Mandiri)
+- **Checkout Success** — halaman konfirmasi dengan order ID
+- **Account** — profil, riwayat pesanan, wishlist, alamat tersimpan, settings
+- **Editorial** — lookbook & artikel brand
+- **Gallery** — foto koleksi
+- **About & Contact** — halaman brand
+
+### Admin Dashboard (`/admin`)
+- Login dengan username + password, session token di-derive dari hash credential (SHA-256 + salt)
+- Manajemen produk — tambah, edit, hapus, toggle sold out / pre-order
+- Kelola pesanan customer — lihat semua order, update status
+- Manajemen user — lihat daftar customer, ban/unban
+- Manajemen staff — tambah/edit/hapus admin & kasir, set password/PIN (tersimpan sebagai hash, bukan plaintext)
+
+### POS Kasir (`/pos`)
+- Login via PIN (tanpa username) — sistem mencocokkan PIN ke kasir aktif
+- Cart kasir terpisah dari cart customer
+- Simulasi transaksi langsung di kasir
+
+---
+
+## Tech Stack
+
+| Layer | Teknologi |
+|---|---|
+| Framework | Next.js 15 (App Router) |
+| Language | JavaScript (JSConfig path alias) |
+| Styling | Tailwind CSS v3 |
+| Animasi | Framer Motion 11 |
+| State Management | Zustand 5 (persist middleware) |
+| 3D / WebGL | Three.js + React Three Fiber + Rapier |
+| Icons | Lucide React |
+
+### Typography
+- `Press Start 2P` — pixel display (`--font-pixel`)
+- `Bebas Neue` — heading display (`--font-display`)
+- `Inter` — body text (`--font-body`)
+
+### Palet Warna
+| Token | Hex | Penggunaan |
+|---|---|---|
+| `bg` | `#0A0A0A` | Background utama |
+| `surface` | `#141414` | Card/panel |
+| `card` | `#1B1B1B` | Nested card |
+| `accent` | `#540A21` | Aksen merah gelap |
+| `pink` | `#FF2D9B` | Highlight/CTA |
+| `text1` | `#F5F5F3` | Teks primer |
+| `text2` | `#A1A1AA` | Teks sekunder |
+
+---
+
+## Struktur Folder
+
+```
+app/
+├── (root)/                     # Customer-facing pages dengan shared layout (Navbar + Footer)
+│   ├── page.js                 # Homepage
+│   ├── catalog/                # Halaman katalog produk
+│   ├── product/[slug]/         # Halaman detail produk
+│   ├── editorial/              # Editorial / lookbook
+│   ├── gallery/                # Galeri foto
+│   ├── about/                  # Halaman about brand
+│   └── contact/                # Halaman kontak
+├── (shop)/                     # Halaman shop dengan layout berbeda
+│   ├── checkout/               # Halaman checkout
+│   └── checkout/success/       # Halaman konfirmasi order
+├── account/                    # Dashboard customer (profil, pesanan, wishlist, alamat)
+├── admin/                      # Admin dashboard (protected)
+│   ├── page.js                 # Overview admin
+│   ├── orders/                 # Manajemen pesanan
+│   ├── products/               # Manajemen produk
+│   ├── staff/                  # Manajemen staff
+│   └── users/                  # Manajemen customer
+├── pos/                        # POS kasir (protected via PIN)
+└── layout.js                   # Root layout (font, StoreHydration)
+
+components/
+├── account/                    # Komponen halaman account
+├── admin/                      # Komponen admin dashboard
+├── cart/                       # Cart slide panel & item
+├── checkout/                   # Form checkout, payment modal
+├── layout/                     # Navbar, Footer, shared layout
+├── pos/                        # Interface POS kasir
+├── product/                    # Product card, detail, size picker
+├── providers/                  # StoreHydration provider
+├── search/                     # Search overlay
+├── sections/                   # Homepage sections
+├── three/                      # 3D scene (FragmentScene + lazy + fallback)
+└── ui/                         # Komponen UI reusable
+
+store/
+├── authStore.js                # State auth customer (email login)
+├── adminAuthStore.js           # State auth admin (username+password, session token)
+├── adminStore.js               # State data admin (produk, banned users)
+├── cartStore.js                # Cart customer (persist localStorage)
+├── orderStore.js               # Riwayat order customer
+├── posStore.js                 # Session & cart kasir POS
+├── staffStore.js               # Data seluruh staff (admin + kasir), hash credential
+├── uiStore.js                  # UI state (cart open, search open, menu open)
+└── wishlistStore.js            # Wishlist customer
+
+lib/
+├── mockAuth.js                 # Simulasi login/register customer (in-memory array)
+├── mockPayment.js              # Simulasi QRIS + VA payment + delay + failure rate
+├── staffCrypto.js              # Hash SHA-256+salt, verifyCredential, deriveSessionToken
+└── utils.js                    # Utilities umum
+
+constants/
+├── products.js                 # Data produk seed
+├── categories.js               # Daftar kategori & nav links
+├── editorial.js                # Konten editorial
+└── lookbook.js                 # Data lookbook/gallery
+
+hooks/
+├── useAuth.js                  # Hook customer auth
+├── useCart.js                  # Hook cart
+├── useHydrated.js              # Guard SSR hydration mismatch + trigger seed hashing
+├── useRecentlyViewed.js        # Produk terakhir dilihat
+├── useSearch.js                # Search logic
+├── useStaffSessionGuard.js     # Re-verify session staff saat mount (auto-logout kalau invalid)
+└── useWishlist.js              # Hook wishlist
+```
+
+---
+
+## Arsitektur State
+
+Semua state disimpan di Zustand dengan `persist` middleware (localStorage). Tidak ada API route, tidak ada database.
+
+| Store | Persist Key | Keterangan |
+|---|---|---|
+| `authStore` | `egax-auth` | Session customer |
+| `adminAuthStore` | `egax-admin-auth` | Session admin |
+| `adminStore` | `egax-admin` | Data produk & banned users |
+| `cartStore` | `egax-cart` | Cart customer |
+| `orderStore` | `egax-orders` | Riwayat order |
+| `posStore` | `egax-pos` | Session & cart kasir |
+| `staffStore` | `egax-staff` | Data staff + credential hash |
+| `wishlistStore` | `egax-wishlist` | Wishlist customer |
+
+Semua store menggunakan `skipHydration: true` dan di-rehydrate secara manual lewat `StoreHydration` provider — ini mencegah hydration mismatch antara server render dan client.
+
+---
+
+## Keamanan (Client-side Auth)
+
+Project ini tidak punya backend, jadi auth berjalan sepenuhnya di client. Beberapa lapisan yang dipasang:
+
+**Credential hashing** (`lib/staffCrypto.js`): Password admin dan PIN kasir tidak disimpan plaintext di localStorage. Yang tersimpan adalah `hash + salt` (SHA-256 via Web Crypto API). Membuka DevTools → Application → Local Storage tidak akan membocorkan password/PIN asli.
+
+**Session token derivasi** (`deriveSessionToken`): Token sesi di-derive dari `staffId + credentialHash`. Mengetik `isLoggedIn: true` langsung di localStorage tidak cukup — `verifySession()` di `adminAuthStore` dan `posStore` akan mencocokkan token terhadap hash staff aktif. Token otomatis invalid kalau password/PIN staff diganti.
+
+**Auto-logout** (`useStaffSessionGuard`): Re-verifikasi sesi dijalankan setiap mount halaman protected. Sesi yang sudah tidak valid (staff dihapus/dinonaktifkan, credential berubah) akan di-logout otomatis.
+
+> **Catatan jujur:** Ini bukan pengganti backend auth sungguhan. Source code bisa dibaca browser, dan logic bisa di-reverse-engineer dengan usaha. Proteksi ini cukup untuk konteks demo/portfolio — bukan untuk data yang benar-benar sensitif di production.
+
+---
+
+## Simulasi Payment
+
+Diimplementasikan di `lib/mockPayment.js`:
+
+- **QRIS** — generate string QRIS mock sesuai format standar QRIS Indonesia
+- **Virtual Account** — generate nomor VA random dengan prefix bank (BCA `8277`, BNI `8887`, Mandiri `8998`)
+- **Delay realistis** — 1.8–3.2 detik (simulasi polling webhook payment gateway)
+- **Failure rate** — 4% kemungkinan gagal secara acak (saldo tidak cukup / koneksi bank)
+
+---
+
+## Kredensial Demo
+
+| Role | Field | Value |
+|---|---|---|
+| Admin | Username | `admin` |
+| Admin | Password | `egax2026` |
+| Kasir | PIN | `482917` |
+| Customer | Email | `admin@egaxstudios.com` |
+| Customer | Password | `password123` |
+
+Kredensial admin dan kasir di atas adalah seed default yang akan di-hash saat pertama kali app di-load. Bisa diganti lewat halaman `/admin/staff`.
+
+---
+
+## Setup & Development
+
 ```bash
+# Clone repo
+git clone https://github.com/evanrasyidd/egax-studios.git
+cd egax-studios
+
+# Install dependencies
 npm install
+
+# Jalankan dev server
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000)
+Buka [http://localhost:3000](http://localhost:3000).
 
-⚠️ Project ini sekarang pakai React Three Fiber + Rapier untuk 3D hero (lihat `components/three/`). Setelah pull, **wajib** `npm install` ulang karena ada dependency baru: `three@^0.184`, `@react-three/fiber@^9.6` (bukan v8 — v8 itu khusus React 18 dan akan bikin ERESOLVE error karena project ini React 19), `@react-three/rapier@^2.1` (bukan v1, yang masih nargetin fiber v8/React 18).
+| URL | Keterangan |
+|---|---|
+| `/` | Homepage |
+| `/catalog` | Katalog produk |
+| `/product/[slug]` | Detail produk |
+| `/checkout` | Checkout |
+| `/account` | Dashboard customer |
+| `/admin` | Admin dashboard |
+| `/pos` | POS kasir |
 
-**Kalau kamu pernah install versi sebelumnya yang masih ada `@react-three/drei`**: jalankan `npm install` lagi setelah pull untuk membersihkannya — drei sudah dihapus dari dependency karena fitur `Environment`/HDRI yang dipakainya (download environment map dari CDN eksternal) terbukti jadi kandidat kuat penyebab `THREE.WebGLRenderer: Context Lost`. Hero sekarang pakai lighting manual (ambient + directional + point light) yang tidak depend ke resource eksternal apa pun, lebih ringan dan lebih stabil.
+Tidak ada environment variable yang dibutuhkan — semua state berjalan lokal di browser.
 
-Kalau masih kena `ERESOLVE unable to resolve dependency tree` setelah ini, cek dulu `npm ls react` buat pastiin cuma ada satu versi React di tree, lalu `npm install` lagi. Sebagai jalan darurat (bukan solusi utama) bisa pakai `npm install --legacy-peer-deps`.
+---
 
-## Admin Access
-`/admin` sekarang ada di balik login gate (username + password) -- akun yang tidak ada di Staff Management tidak bisa masuk sama sekali.
+## Deployment (Vercel)
 
-**Kredensial admin default (seed awal, ganti setelah deploy):**
-- Username: `admin`
-- Password: `egax2026`
-- URL: `/admin`
+```bash
+npm run build
+```
 
-Setelah login pertama kali, kamu bisa tambah admin lain atau kasir baru lewat menu **Staff** di sidebar admin (`/admin/staff`). Admin baru login pakai username+password seperti di atas; kasir baru login pakai PIN saja (cukup ketik PIN di `/pos`, sistem otomatis cocokkan ke nama kasirnya -- tidak perlu pilih nama manual).
+Push ke GitHub, connect di Vercel, deploy. Tidak ada environment variable yang perlu diset — tidak ada API eksternal.
 
-Catatan keamanan: sistem tidak akan membiarkan satu-satunya admin aktif dihapus atau dinonaktifkan (siapa pun akunnya, bukan cuma akun default) — supaya tidak ada yang ke-lock out dari panel sendiri. Begitu ada admin lain yang aktif, akun default ini juga bisa dihapus/diganti seperti akun lainnya.
+**Catatan:** Karena state disimpan di localStorage, data tidak sinkron antar browser atau antar device. Setiap browser/tab baru mulai dari state awal (seed produk + seed staff).
 
-⚠️ **Kalau kamu pernah pakai versi project ini SEBELUM password/PIN di-hash** (localStorage browser kamu masih punya data lama), **wajib clear localStorage dulu** sebelum pakai versi ini: buka DevTools &rarr; Application &rarr; Local Storage &rarr; hapus semua key yang diawali `egax-` (terutama `egax-staff`, `egax-admin-auth`, `egax-pos`), lalu refresh. Tanpa ini, staff yang dibuat di versi lama tidak akan bisa login lagi karena field credential-nya berubah format (dari plaintext `password`/`pin` jadi `passwordHash`/`pinHash` + salt).
+---
 
-Soal keamanan credential: password admin dan PIN kasir sekarang disimpan sebagai **hash SHA-256 + salt** (lihat `lib/staffCrypto.js`), bukan plaintext. Login juga tidak lagi bisa di-bypass cuma dengan mengetik `isLoggedIn: true` di console DevTools — ada session token yang di-derive dari hash credential staff dan diverifikasi ulang secara periodik. Tetap penting dipahami: ini auth client-side tanpa backend asli, jadi levelnya cukup untuk demo/portfolio, bukan pengganti auth server-side untuk data yang benar-benar sensitif.
+## Scripts
 
-## POS Kasir
-- URL: `/pos` (standalone, login terpisah dari `/admin` — pakai PIN, bukan username/password)
-- **PIN kasir demo default: `482917`** (nama: "Kasir Demo") — sudah ada di seed awal, bisa langsung dicoba
-- Kasir login cukup ketik PIN-nya saja; sistem otomatis mencocokkan ke nama kasir yang sesuai (PIN dijamin unik antar kasir aktif)
-- Admin bisa tambah kasir lain lewat **Staff &rarr; Tambah Staff &rarr; Kasir** (isi nama + PIN 4-6 digit)
-- Kalau kasir dinonaktifkan/dihapus dari Staff Management, sesi yang sedang login otomatis logout dalam beberapa detik (auto-revalidasi)
-- Akses cepat juga tersedia lewat sidebar admin (tombol "POS Kasir")
+```bash
+npm run dev      # Development server
+npm run build    # Production build
+npm run start    # Jalankan production build lokal
+npm run lint     # ESLint check
+```
 
-## Pages
-- `/` — Homepage
-- `/catalog` — Product catalog with filter & sort
-- `/product/[slug]` — Product detail
-- `/checkout` — Checkout simulation (QRIS, E-Wallet, Virtual Account)
-- `/pos` — POS kasir (PIN-gated, terpisah dari admin)
-- `/editorial` — Editorial lookbook
-- `/gallery` — Photo gallery
-- `/about` — Brand story
-- `/contact` — Contact form
-- `/account` — Login / Register
-- `/account/orders` — Order history
-- `/account/wishlist` — Wishlist
-- `/admin` — Admin dashboard
+---
 
-## Features
-- Dark editorial aesthetic dengan 3D abstract fragmented geometry di hero (React Three Fiber + Rapier, lazy-mount via IntersectionObserver, fallback statis untuk device tanpa WebGL atau saat WebGL context loss terjadi, lighting manual tanpa dependency ke environment map/CDN eksternal)
-- Sticky navbar with underline animation
-- Mega menu dropdown (Catalog)
-- Mobile fullscreen menu
-- Cart drawer (Zustand + localStorage) dengan slide-in animation
-- Wishlist (Zustand + localStorage)
-- Search modal
-- Checkout simulation ala payment gateway: QRIS (dengan pseudo-QR visual), E-Wallet (GoPay/OVO/Dana), Virtual Account (BCA/BNI/Mandiri) — masing-masing punya state machine waiting → checking → success/failed dengan kemungkinan gagal acak (realistis, bukan instant-success)
-- 15-minute payment countdown
-- Order history dengan tanggal ISO timestamp (akurat untuk sorting/analitik)
-- Admin panel (products, orders, users) dengan dashboard revenue chart (mini bar chart 7 hari, dari data order asli)
-- POS kasir standalone dengan PIN auth sendiri, cart kasir terpisah dari cart customer, dan transaksi otomatis tercatat ke order store yang sama dengan shop online (dibedakan lewat field `channel`)
-- 25 mock products across 6 categories, masing-masing dengan representasi visual `GarmentIcon` per kategori (bukan foto asli — ganti ke foto produk real kapan saja sudah tersedia)
-- Pre Order, New Collection, Featured, Best Seller sections
-- White background product sections (YB LABS inspired)
-- Responsive: mobile, tablet, desktop
+## Author
 
-## Known limitations / next steps
-- `CompleteTheFit` (related products di halaman produk) baca dari `constants/products.js` langsung, bukan `useAdminStore` — jadi tidak ikut update kalau admin edit/hapus produk dari dashboard
-- Foto produk masih representasi `GarmentIcon`, bukan foto asli — ganti `product.images` dan render `<img>` begitu foto tersedia
-- Belum ada store customer terpusat — daftar di `/admin/users` diturunkan dari `order.customer`, bukan tabel user sungguhan
-
-## Security Notes
-Audit yang sudah dilakukan terhadap project ini:
-- **`.gitignore`** sudah ada (sebelumnya tidak ada sama sekali) — `node_modules`, `.next`, dan file `.env*` tidak akan ke-commit
-- **Tidak ada API key/secret pihak ketiga** yang ke-hardcode di kode manapun (sudah di-scan pattern Stripe/Google/AWS/GitHub/Supabase)
-- **Tidak ada endpoint API publik** — sebelumnya ada `/api/mock-payment` yang dead code (tidak dipanggil dari manapun) dan publicly exposed tanpa rate-limit, sudah dihapus. Semua fitur (checkout, POS, auth) berjalan client-side, tidak ada permukaan API untuk di-spam/DDoS
-- **Tidak ada `dangerouslySetInnerHTML`/`eval`** di kode manapun
-- **Password admin & PIN kasir disimpan sebagai hash SHA-256 + salt** (`lib/staffCrypto.js`), bukan plaintext — localStorage tidak lagi membocorkan credential asli kalau dibuka lewat DevTools
-- **Session token** untuk login admin/kasir di-derive dari hash credential staff, bukan boolean polos — mencegah bypass login dengan mengetik `isLoggedIn: true` langsung di console
-
-Batasan yang tetap berlaku (karakteristik dasar SPA tanpa backend, bukan bug):
-- Semua "auth" di project ini adalah **client-side only** — validasinya berjalan di browser, jadi levelnya cukup untuk demo/portfolio, bukan pengganti backend auth sungguhan untuk data yang benar-benar sensitif
-- Siapa pun dengan akses fisik/devtools ke browser yang sedang login bisa membaca state aplikasi saat itu juga (ini berlaku untuk semua SPA berbasis localStorage, bukan spesifik ke project ini)
-- Payment (QRIS/E-Wallet/VA) adalah simulasi murni, tidak terhubung gateway pembayaran asli — sesuai desain awal project ini
+**Evan Rasyid Ega Pratama**
+GitHub & Instagram: [@evanrasyidd](https://github.com/evanrasyidd)
