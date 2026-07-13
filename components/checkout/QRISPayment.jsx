@@ -44,8 +44,8 @@ export default function QRISPayment({ orderId, amount, onSuccess }) {
         <FakeQRCode seed={orderId} size={208} />
         {status === 'checking' && (
           <div className="absolute inset-0 bg-white/90 flex flex-col items-center justify-center gap-2">
-            <Loader2 size={28} className="text-bg animate-spin" />
-            <p className="text-[10px] font-semibold uppercase tracking-widest text-bg">Memverifikasi...</p>
+            <Loader2 size={28} className="text-text1 animate-spin" />
+            <p className="text-[10px] font-semibold uppercase tracking-widest text-text1">Memverifikasi...</p>
           </div>
         )}
         {status === 'success' && (
@@ -64,7 +64,7 @@ export default function QRISPayment({ orderId, amount, onSuccess }) {
 
       {status === 'waiting' && (
         <>
-          <div className={`text-[22px] font-bold font-mono ${sec < 60 ? 'text-red-400' : 'text-text1'}`}>{mm}:{ss}</div>
+          <div className={`text-[22px] font-bold font-mono ${sec < 60 ? 'text-red-600' : 'text-text1'}`}>{mm}:{ss}</div>
           <p className="text-[11px] text-text2 text-center max-w-xs leading-relaxed">
             Buka aplikasi e-wallet atau m-banking, lalu scan kode QR di atas. Halaman ini akan otomatis update setelah pembayaran terverifikasi.
           </p>
@@ -85,7 +85,7 @@ export default function QRISPayment({ orderId, amount, onSuccess }) {
 
       {status === 'failed' && (
         <div className="flex flex-col items-center gap-3 w-full max-w-xs">
-          <div className="flex items-center gap-2 text-red-400">
+          <div className="flex items-center gap-2 text-red-600">
             <XCircle size={18} />
             <p className="text-[11px] font-semibold uppercase tracking-widest">Verifikasi Gagal</p>
           </div>

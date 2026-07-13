@@ -52,15 +52,15 @@ export default function ProductPage({ params }) {
           <div className="flex flex-col gap-6">
             <div>
               <p className="text-[10px] font-semibold uppercase tracking-widest text-pink mb-1">{product.vendor}</p>
-              <h1 className="font-display text-[36px] tracking-widest text-bg leading-none mb-3">{product.name}</h1>
+              <h1 className="font-display text-[36px] tracking-widest text-text1 leading-none mb-3">{product.name}</h1>
               <div className="flex items-center gap-3">
                 {product.originalPrice && <span className="text-[14px] line-through text-gray-400">{formatPrice(product.originalPrice)}</span>}
-                <span className={`text-[22px] font-bold ${product.originalPrice ? 'text-pink' : 'text-bg'}`}>{formatPrice(product.price)}</span>
+                <span className={`text-[22px] font-bold ${product.originalPrice ? 'text-pink' : 'text-text1'}`}>{formatPrice(product.price)}</span>
               </div>
             </div>
 
             {product.preOrder && (
-              <div className="bg-bg text-pink text-[11px] font-semibold uppercase tracking-widest px-4 py-3 border-l-4 border-pink">
+              <div className="bg-text1 text-pink text-[11px] font-semibold uppercase tracking-widest px-4 py-3 border-l-4 border-pink">
                 ★ Pre Order — ships in 14-21 days
               </div>
             )}

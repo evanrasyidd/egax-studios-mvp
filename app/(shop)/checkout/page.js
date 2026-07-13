@@ -83,7 +83,7 @@ export default function CheckoutPage() {
       <div className="min-h-screen bg-white flex items-center justify-center">
         <div className="text-center">
           <p className="text-gray-400 mb-4">Your cart is empty.</p>
-          <Button variant="white" className="border border-bg bg-bg text-white" onClick={() => router.push('/catalog')}>
+          <Button variant="white" className="border border-text1 bg-text1 text-white" onClick={() => router.push('/catalog')}>
             Shop Now
           </Button>
         </div>
@@ -112,7 +112,7 @@ export default function CheckoutPage() {
   return (
     <div className="min-h-screen bg-white">
       <div className="px-6 md:px-10 py-10 max-w-6xl mx-auto">
-        <h1 className="font-display text-[40px] tracking-wider text-bg mb-6">Checkout</h1>
+        <h1 className="font-display text-[40px] tracking-wider text-text1 mb-6">Checkout</h1>
 
         {/* ── Step progress, ala payment gateway Snap-style ── */}
         <div className="flex items-center gap-2 mb-10 max-w-md">
@@ -124,11 +124,11 @@ export default function CheckoutPage() {
               <div key={label} className="flex items-center flex-1">
                 <div className="flex items-center gap-2">
                   <div className={`w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-bold shrink-0 transition-colors ${
-                    isDone ? 'bg-pink text-black' : isActive ? 'bg-bg text-white' : 'bg-gray-100 text-gray-400'
+                    isDone ? 'bg-pink text-black' : isActive ? 'bg-text1 text-white' : 'bg-gray-100 text-gray-400'
                   }`}>
                     {isDone ? <Check size={13} /> : idx}
                   </div>
-                  <span className={`text-[11px] font-semibold uppercase tracking-widest hidden sm:inline ${isActive ? 'text-bg' : isDone ? 'text-pink' : 'text-gray-400'}`}>
+                  <span className={`text-[11px] font-semibold uppercase tracking-widest hidden sm:inline ${isActive ? 'text-text1' : isDone ? 'text-pink' : 'text-gray-400'}`}>
                     {label}
                   </span>
                 </div>
@@ -143,7 +143,7 @@ export default function CheckoutPage() {
             {step === 1 && (
               <div className="space-y-8">
                 <CustomerForm data={customer} onChange={handleCustomerChange} errors={errors} />
-                <Button variant="white" className="border border-bg bg-bg text-white w-full md:w-auto" onClick={handleNext}>
+                <Button variant="white" className="border border-text1 bg-text1 text-white w-full md:w-auto" onClick={handleNext}>
                   Continue to Payment
                 </Button>
               </div>
@@ -153,8 +153,8 @@ export default function CheckoutPage() {
               <div className="space-y-8">
                 <PaymentSelector selected={payMethod} onChange={setPayMethod} />
                 <div className="flex gap-3">
-                  <Button variant="outline" className="border-gray-200 text-bg" onClick={() => setStep(1)}>Back</Button>
-                  <Button variant="white" className="border border-bg bg-bg text-white" onClick={handleNext}>
+                  <Button variant="outline" className="border-gray-200 text-text1" onClick={() => setStep(1)}>Back</Button>
+                  <Button variant="white" className="border border-text1 bg-text1 text-white" onClick={handleNext}>
                     Confirm Order
                   </Button>
                 </div>

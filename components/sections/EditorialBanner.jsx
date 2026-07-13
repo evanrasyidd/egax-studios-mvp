@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { EDITORIALS } from '@/constants/editorial'
 
-const COLORS = ['#4ADE80','#FF2D9B','#FACC15']
+const COLORS = ['#4ADE80','#FF2E7E','#FACC15']
 
 export default function EditorialBanner() {
   const items = EDITORIALS.slice(0, 3)

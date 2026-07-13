@@ -21,7 +21,7 @@ export function OrderTable({ orders }) {
               <td className="py-3 px-4 text-[13px] text-text2">{o.customer?.firstName} {o.customer?.lastName}</td>
               <td className="py-3 px-4 text-[13px] font-semibold text-text1">{formatPrice(o.total)}</td>
               <td className="py-3 px-4">
-                <span className="text-[10px] font-bold uppercase tracking-widest px-2 py-1 bg-green-900/30 text-green-400">
+                <span className="text-[10px] font-bold uppercase tracking-widest px-2 py-1 bg-green-100 text-green-700">
                   {o.status}
                 </span>
               </td>

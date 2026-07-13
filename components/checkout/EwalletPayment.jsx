@@ -87,7 +87,7 @@ export default function EwalletPayment({ wallet, amount, orderId, onSuccess }) {
 
       {status === 'waiting' && (
         <>
-          <div className={`text-[22px] font-bold font-mono ${sec < 60 ? 'text-red-400' : 'text-text1'}`}>{mm}:{ss}</div>
+          <div className={`text-[22px] font-bold font-mono ${sec < 60 ? 'text-red-600' : 'text-text1'}`}>{mm}:{ss}</div>
           <p className="text-[11px] text-text2 text-center max-w-xs leading-relaxed">
             Konfirmasi pembayaran di aplikasi {meta.label} kamu, lalu klik tombol di bawah.
           </p>
@@ -108,7 +108,7 @@ export default function EwalletPayment({ wallet, amount, orderId, onSuccess }) {
 
       {status === 'failed' && (
         <div className="flex flex-col items-center gap-3 w-full max-w-xs">
-          <div className="flex items-center gap-2 text-red-400">
+          <div className="flex items-center gap-2 text-red-600">
             <XCircle size={18} />
             <p className="text-[11px] font-semibold uppercase tracking-widest">Verifikasi Gagal</p>
           </div>

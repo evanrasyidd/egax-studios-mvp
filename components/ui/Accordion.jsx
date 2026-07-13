@@ -11,7 +11,7 @@ export default function Accordion({ items, variant = 'light' }) {
       {items.map((item, i) => (
         <div key={i}>
           <button className="w-full flex items-center justify-between py-4 text-left" onClick={() => setOpen(open === i ? null : i)}>
-            <span className={cn('text-[11px] font-semibold uppercase tracking-widest', isDark ? 'text-text1' : 'text-bg')}>{item.title}</span>
+            <span className={cn('text-[11px] font-semibold uppercase tracking-widest', isDark ? 'text-bg' : 'text-text1')}>{item.title}</span>
             <ChevronDown size={14} className={cn('transition-transform duration-200', isDark ? 'text-text2' : 'text-gray-400', open === i && 'rotate-180')}/>
           </button>
           {open === i && <div className={cn('pb-4 text-sm leading-relaxed', isDark ? 'text-text2' : 'text-gray-500')}>{item.content}</div>}

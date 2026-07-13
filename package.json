@@ -16,10 +16,7 @@
     "zustand": "^5.0.0",
     "lucide-react": "^0.400.0",
     "clsx": "^2.1.0",
-    "tailwind-merge": "^2.3.0",
-    "three": "^0.184.0",
-    "@react-three/fiber": "^9.6.1",
-    "@react-three/rapier": "^2.1.0"
+    "tailwind-merge": "^2.3.0"
   },
   "devDependencies": {
     "@types/node": "^22.0.0",

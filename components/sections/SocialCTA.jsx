@@ -1,5 +1,5 @@
 import { Instagram } from 'lucide-react'
-const COLORS = ['#4ADE80','#FF2D9B','#FACC15']
+const COLORS = ['#4ADE80','#FF2E7E','#FACC15']
 export default function SocialCTA() {
   return (
     <section className="bg-surface border-t border-border grid grid-cols-1 md:grid-cols-[1fr_3fr] min-h-[360px]">

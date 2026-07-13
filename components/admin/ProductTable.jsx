@@ -1,4 +1,4 @@
-import Image from 'next/image'
+import GarmentIcon from '@/components/product/GarmentIcon'
 import { formatPrice } from '@/lib/utils'
 
 export default function ProductTable({ products }) {
@@ -17,8 +17,8 @@ export default function ProductTable({ products }) {
             <tr key={p.id} className="hover:bg-surface/50">
               <td className="py-3 px-4">
                 <div className="flex items-center gap-3">
-                  <div className="relative w-10 h-14 shrink-0 overflow-hidden bg-card">
-                    <Image src={p.images[0]} alt={p.name} fill className="object-cover" />
+                  <div className="relative w-10 h-14 shrink-0 overflow-hidden bg-card flex items-center justify-center">
+                    <GarmentIcon category={p.category} fill="rgba(0,0,0,0.85)" shade="rgba(0,0,0,0.35)" detail="#FF2E7E" scale={1.7} />
                   </div>
                   <span className="text-[13px] text-text1 font-medium">{p.name}</span>
                 </div>
@@ -27,7 +27,7 @@ export default function ProductTable({ products }) {
               <td className="py-3 px-4 text-[13px] font-semibold text-text1">{formatPrice(p.price)}</td>
               <td className="py-3 px-4">
                 <span className={`text-[10px] font-bold uppercase tracking-widest px-2 py-1 ${
-                  p.soldOut ? 'bg-red-900/30 text-red-400' : 'bg-green-900/30 text-green-400'
+                  p.soldOut ? 'bg-red-100 text-red-700' : 'bg-green-100 text-green-700'
                 }`}>
                   {p.soldOut ? 'Sold Out' : 'Active'}
                 </span>

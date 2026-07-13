@@ -1,5 +1,5 @@
 import { LOOKBOOK } from '@/constants/lookbook'
-const COLORS = ['#4ADE80','#FF2D9B','#FACC15','#60A5FA','#F87171','#A78BFA','#34D399','#FB923C','#818CF8','#FCD34D','#6EE7B7','#FCA5A5']
+const COLORS = ['#4ADE80','#FF2E7E','#FACC15','#60A5FA','#F87171','#A78BFA','#34D399','#FB923C','#818CF8','#FCD34D','#6EE7B7','#FCA5A5']
 export default function GalleryPage() {
   return (
     <div className="bg-bg min-h-screen px-6 md:px-10 py-12">

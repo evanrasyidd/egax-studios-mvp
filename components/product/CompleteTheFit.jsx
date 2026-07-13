@@ -5,7 +5,7 @@ export default function CompleteTheFit({ currentId, category }) {
   if (related.length === 0) return null
   return (
     <section className="bg-white py-12 px-6 md:px-10 border-t border-gray-200">
-      <h3 className="font-display text-[28px] tracking-widest text-bg mb-6 pb-4 border-b border-gray-200">Complete the Fit</h3>
+      <h3 className="font-display text-[28px] tracking-widest text-text1 mb-6 pb-4 border-b border-gray-200">Complete the Fit</h3>
       <div className="grid grid-cols-2 md:grid-cols-4 gap-px bg-gray-100">
         {related.map((p,i) => <ProductCard key={p.id} product={p} index={i+40}/>)}
       </div>

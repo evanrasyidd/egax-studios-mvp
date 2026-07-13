@@ -45,12 +45,12 @@ export default function MiniBarChart({ orders }) {
             <g key={d.key}>
               <rect
                 x={x} y={y} width={barW} height={Math.max(h, 2)}
-                fill={isHover ? '#FF2D9B' : d.total > 0 ? 'rgba(255,45,155,0.55)' : 'rgba(255,255,255,0.08)'}
+                fill={isHover ? '#FF2E7E' : d.total > 0 ? 'rgba(255,46,126,0.55)' : 'rgba(255,255,255,0.08)'}
                 style={{ transition: 'fill 0.15s ease' }}
                 onMouseEnter={() => setHoverIdx(i)}
                 onMouseLeave={() => setHoverIdx(null)}
               />
-              <text x={x + barW / 2} y={H + 14} textAnchor="middle" fontSize="7" fill="#A1A1AA" fontFamily="monospace">
+              <text x={x + barW / 2} y={H + 14} textAnchor="middle" fontSize="7" fill="#514E48" fontFamily="monospace">
                 {d.label.toUpperCase().slice(0, 3)}
               </text>
             </g>
@@ -58,7 +58,7 @@ export default function MiniBarChart({ orders }) {
         })}
       </svg>
       {hoverIdx !== null && (
-        <div className="absolute top-0 left-0 font-pixel text-[7px] text-pink bg-bg border border-pink px-2 py-1">
+        <div className="absolute top-0 left-0 font-body font-bold text-[7px] text-pink bg-bg border border-pink px-2 py-1">
           {days[hoverIdx].total > 0
             ? new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(days[hoverIdx].total)
             : 'NO SALES'}

@@ -24,8 +24,8 @@ function AddressModal({ initial, onSave, onClose }) {
     <div className="fixed inset-0 z-[90] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
       <div className="bg-white border border-gray-200 shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between px-5 py-4 border-b border-gray-200 sticky top-0 bg-white">
-          <h3 className="font-semibold text-bg text-[15px]">{initial?.id ? 'Edit Address' : 'Add New Address'}</h3>
-          <button onClick={onClose} className="text-gray-400 hover:text-bg p-1"><X size={16}/></button>
+          <h3 className="font-semibold text-text1 text-[15px]">{initial?.id ? 'Edit Address' : 'Add New Address'}</h3>
+          <button onClick={onClose} className="text-gray-400 hover:text-text1 p-1"><X size={16}/></button>
         </div>
         <form onSubmit={e => { e.preventDefault(); onSave(form) }} className="p-5">
           <div className="grid grid-cols-2 gap-3">
@@ -34,7 +34,7 @@ function AddressModal({ initial, onSave, onClose }) {
                 <label className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 block mb-1">{label}</label>
                 <input value={form[k]} onChange={e => set(k, e.target.value)} placeholder={placeholder}
                   required={['label','firstName','lastName','address','city','postalCode'].includes(k)}
-                  className="w-full border border-gray-200 text-bg text-sm px-3 py-2.5 outline-none focus:border-pink transition-colors font-body"/>
+                  className="w-full border border-gray-200 text-text1 text-sm px-3 py-2.5 outline-none focus:border-pink transition-colors font-body"/>
               </div>
             ))}
           </div>
@@ -43,10 +43,10 @@ function AddressModal({ initial, onSave, onClose }) {
             <span className="text-[13px] text-gray-600">Set as default address</span>
           </label>
           <div className="flex gap-3 mt-5">
-            <button type="submit" className="flex-1 bg-bg text-white text-[11px] font-semibold uppercase tracking-widest py-3 hover:bg-pink transition-colors">
+            <button type="submit" className="flex-1 bg-text1 text-white text-[11px] font-semibold uppercase tracking-widest py-3 hover:bg-pink transition-colors">
               Save Address
             </button>
-            <button type="button" onClick={onClose} className="border border-gray-200 text-bg text-[11px] font-semibold uppercase tracking-widest px-6 py-3 hover:border-bg transition-colors">
+            <button type="button" onClick={onClose} className="border border-gray-200 text-text1 text-[11px] font-semibold uppercase tracking-widest px-6 py-3 hover:border-text1 transition-colors">
               Cancel
             </button>
           </div>
@@ -93,10 +93,10 @@ export default function AddressesPage() {
         <div className="flex items-center justify-between mb-6">
           <div>
             <p className="text-[10px] font-semibold uppercase tracking-widest text-pink mb-1">My Account</p>
-            <h1 className="font-display text-[32px] tracking-widest text-bg">Addresses</h1>
+            <h1 className="font-display text-[32px] tracking-widest text-text1">Addresses</h1>
           </div>
           <button onClick={() => { setEditAddr(null); setShowModal(true) }}
-            className="flex items-center gap-2 bg-bg text-white text-[11px] font-semibold uppercase tracking-widest px-5 py-2.5 hover:bg-pink transition-colors">
+            className="flex items-center gap-2 bg-text1 text-white text-[11px] font-semibold uppercase tracking-widest px-5 py-2.5 hover:bg-pink transition-colors">
             <Plus size={13}/> Add Address
           </button>
         </div>
@@ -106,7 +106,7 @@ export default function AddressesPage() {
             <MapPin size={32} className="text-gray-200 mx-auto mb-3"/>
             <p className="text-[13px] text-gray-400 mb-4">No saved addresses yet.</p>
             <button onClick={() => setShowModal(true)}
-              className="text-[11px] font-semibold uppercase tracking-widest text-bg border border-gray-200 px-5 py-2.5 hover:bg-bg hover:text-white transition-all">
+              className="text-[11px] font-semibold uppercase tracking-widest text-text1 border border-gray-200 px-5 py-2.5 hover:bg-text1 hover:text-white transition-all">
               + Add your first address
             </button>
           </div>
@@ -117,7 +117,7 @@ export default function AddressesPage() {
                 {addr.isDefault && (
                   <span className="absolute top-3 right-3 text-[9px] font-bold uppercase tracking-widest bg-pink text-black px-2 py-0.5">Default</span>
                 )}
-                <p className="text-[11px] font-bold uppercase tracking-widest text-bg mb-2">{addr.label}</p>
+                <p className="text-[11px] font-bold uppercase tracking-widest text-text1 mb-2">{addr.label}</p>
                 <p className="text-[13px] text-gray-700 font-medium">{addr.firstName} {addr.lastName}</p>
                 <p className="text-[13px] text-gray-500">{addr.phone}</p>
                 <p className="text-[13px] text-gray-500 mt-1">{addr.address}</p>
@@ -125,7 +125,7 @@ export default function AddressesPage() {
                 <p className="text-[13px] text-gray-500">{addr.province}</p>
                 <div className="flex items-center gap-2 mt-4 pt-3 border-t border-gray-100">
                   <button onClick={() => { setEditAddr(addr); setShowModal(true) }}
-                    className="text-[11px] font-semibold uppercase tracking-widest text-bg border border-gray-200 px-3 py-1.5 hover:border-bg transition-colors">
+                    className="text-[11px] font-semibold uppercase tracking-widest text-text1 border border-gray-200 px-3 py-1.5 hover:border-text1 transition-colors">
                     Edit
                   </button>
                   {!addr.isDefault && (
@@ -134,7 +134,7 @@ export default function AddressesPage() {
                       Set Default
                     </button>
                   )}
-                  <button onClick={() => setDeleteId(addr.id)} className="ml-auto text-gray-300 hover:text-red-400 transition-colors">
+                  <button onClick={() => setDeleteId(addr.id)} className="ml-auto text-gray-300 hover:text-red-600 transition-colors">
                     <Trash2 size={14}/>
                   </button>
                 </div>
@@ -155,11 +155,11 @@ export default function AddressesPage() {
       {deleteId && (
         <div className="fixed inset-0 z-[90] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
           <div className="bg-white border border-gray-200 shadow-2xl w-full max-w-sm p-6">
-            <h3 className="font-semibold text-bg text-[15px] mb-2">Delete Address?</h3>
+            <h3 className="font-semibold text-text1 text-[15px] mb-2">Delete Address?</h3>
             <p className="text-[13px] text-gray-500 mb-6">This address will be permanently removed.</p>
             <div className="flex gap-3">
               <button onClick={() => handleDelete(deleteId)} className="flex-1 bg-red-600 text-white text-[11px] font-semibold uppercase tracking-widest py-2.5 hover:bg-red-700 transition-colors">Delete</button>
-              <button onClick={() => setDeleteId(null)} className="flex-1 border border-gray-200 text-bg text-[11px] font-semibold uppercase tracking-widest py-2.5 hover:border-bg transition-colors">Cancel</button>
+              <button onClick={() => setDeleteId(null)} className="flex-1 border border-gray-200 text-text1 text-[11px] font-semibold uppercase tracking-widest py-2.5 hover:border-text1 transition-colors">Cancel</button>
             </div>
           </div>
         </div>

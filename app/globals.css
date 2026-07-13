@@ -3,15 +3,17 @@
 @tailwind utilities;
 
 :root {
-  --bg:        #0A0A0A;
-  --surface:   #141414;
-  --card:      #1B1B1B;
-  --text-1:    #F5F5F3;
-  --text-2:    #A1A1AA;
-  --border:    #2A2A2A;
-  --accent:    #540A21;
-  --pink:      #FF2D9B;
-  --pink-dark: #CC0077;
+  --bg:        #FAF7F0;
+  --surface:   #FFFFFF;
+  --card:      #FFFFFF;
+  --text-1:    #14120F;
+  --text-2:    #514E48;
+  --border:    #14120F;
+  --accent:    #2E4BFF;
+  --pink:      #FF2E7E;
+  --pink-dark: #CC1B5E;
+  --yellow:    #FFD400;
+  --ink:       #14120F;
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -24,15 +26,27 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-::selection { background: var(--pink); color: #000; }
+::selection { background: var(--yellow); color: var(--ink); }
 ::-webkit-scrollbar { width: 4px; height: 4px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--pink); }
+::-webkit-scrollbar-thumb { background: var(--ink); }
 
-/* === PIXEL UTILITIES (hero only) === */
-.font-pixel { font-family: var(--font-pixel), monospace; }
 .font-display { font-family: var(--font-display), sans-serif; }
+.font-comic { font-family: var(--font-comic), sans-serif; }
 .font-body { font-family: var(--font-body), sans-serif; }
+
+/* === INK-FRAME — signature bold-cartoon-streetwear treatment ===
+   Border tebal + solid offset shadow (tanpa blur) ala stiker komik nempel.
+   Dipake konsisten: product card, badge, button, admin table. */
+.ink-frame    { border: 3px solid var(--ink); box-shadow: 4px 4px 0 var(--ink); }
+.ink-frame-sm { border: 2px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); }
+.ink-frame-lg { border: 4px solid var(--ink); box-shadow: 8px 8px 0 var(--ink); }
+.ink-frame,
+.ink-frame-sm,
+.ink-frame-lg { transition: transform 0.15s ease, box-shadow 0.15s ease; }
+.ink-frame:active,
+.ink-frame-sm:active,
+.ink-frame-lg:active { transform: translate(2px, 2px); box-shadow: 0 0 0 var(--ink); }
 
 /* NAV UNDERLINE ANIMATION */
 .nav-underline {
@@ -51,19 +65,7 @@ body {
 .nav-underline:hover::after,
 .nav-underline.active::after { transform: scaleX(1); }
 
-/* === HERO PIXEL ANIMATIONS === */
-@keyframes dino-run {
-  0%   { transform: translateX(-200px); }
-  100% { transform: translateX(calc(100vw + 200px)); }
-}
-@keyframes dino-run-reverse {
-  0%   { transform: translateX(calc(100vw + 200px)) scaleX(-1); }
-  100% { transform: translateX(-200px) scaleX(-1); }
-}
-@keyframes cloud-drift {
-  0%   { transform: translateX(-220px); }
-  100% { transform: translateX(calc(100vw + 220px)); }
-}
+/* === HERO ANIMATIONS === */
 @keyframes pixel-float {
   0%, 100% { transform: translateY(0px); }
   50%       { transform: translateY(-10px); }
@@ -80,15 +82,6 @@ body {
   0%, 100% { opacity: 1; }
   50%       { opacity: 0; }
 }
-@keyframes grass-wave {
-  0%, 100% { transform: scaleX(1); }
-  50%       { transform: scaleX(1.02); }
-}
-
-.dino-main    { animation: dino-run 9s linear infinite; position: absolute; bottom: 88px; image-rendering: pixelated; }
-.dino-reverse { animation: dino-run-reverse 13s linear 5s infinite; position: absolute; bottom: 130px; image-rendering: pixelated; }
-.cloud-1 { animation: cloud-drift 22s linear infinite; position: absolute; top: 50px; }
-.cloud-2 { animation: cloud-drift 30s linear 12s infinite; position: absolute; top: 90px; }
 .pixel-float-1 { animation: pixel-float 3s ease-in-out infinite; }
 .pixel-float-2 { animation: pixel-float 4s ease-in-out 1s infinite; }
 .pixel-float-3 { animation: pixel-float 2.5s ease-in-out 0.5s infinite; }

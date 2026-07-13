@@ -87,23 +87,23 @@ export default function PosTerminal() {
       {/* ── Top bar ── */}
       <div className="flex items-center justify-between px-5 py-3 border-b-2 border-border bg-surface shrink-0">
         <div>
-          <p className="font-pixel text-[8px] text-pink">★ EGAX STUDIOS ★</p>
-          <h1 className="font-pixel text-[12px] text-text1">POS.EXE</h1>
+          <p className="font-body font-bold text-[8px] text-pink">★ EGAX STUDIOS ★</p>
+          <h1 className="font-display text-[12px] text-text1">POS.EXE</h1>
         </div>
         <div className="flex items-center gap-3">
-          <p className="font-pixel text-[7px] text-text2">KASIR: <span className="text-text1">{cashierName}</span></p>
+          <p className="font-body font-bold text-[7px] text-text2">KASIR: <span className="text-text1">{cashierName}</span></p>
           <button
             onClick={handleLock}
-            className="flex items-center gap-1.5 font-pixel text-[7px] text-text2 border-2 border-border px-3 py-2 hover:border-red-400 hover:text-red-400 transition-colors"
+            className="flex items-center gap-1.5 font-body font-bold text-[7px] text-text2 border-2 border-border px-3 py-2 hover:border-red-400 hover:text-red-600 transition-colors"
           >
             <LogOut size={11} /> KELUAR
           </button>
         </div>
       </div>
 
-      <div className="flex-1 flex overflow-hidden">
+      <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
         {/* ── Product grid ── */}
-        <div className="flex-1 flex flex-col overflow-hidden">
+        <div className="flex-1 flex flex-col overflow-hidden min-h-0">
           <div className="p-4 border-b-2 border-border shrink-0 space-y-3">
             <div className="relative">
               <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-text2" />
@@ -111,7 +111,7 @@ export default function PosTerminal() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="CARI PRODUK..."
-                className="w-full bg-bg border-2 border-border text-text1 font-pixel text-[8px] pl-9 pr-3 py-2.5 outline-none focus:border-pink"
+                className="w-full bg-bg border-2 border-border text-text1 font-body font-bold text-[8px] pl-9 pr-3 py-2.5 outline-none focus:border-pink"
               />
             </div>
             <div className="flex gap-2 overflow-x-auto pb-1">
@@ -119,7 +119,7 @@ export default function PosTerminal() {
                 <button
                   key={c}
                   onClick={() => setCategory(c)}
-                  className={`shrink-0 font-pixel text-[7px] px-3 py-2 border-2 transition-colors whitespace-nowrap ${
+                  className={`shrink-0 font-body font-bold text-[7px] px-3 py-2 border-2 transition-colors whitespace-nowrap ${
                     category === c ? 'border-pink text-pink bg-pink/10' : 'border-border text-text2 hover:border-text2'
                   }`}
                 >
@@ -131,11 +131,11 @@ export default function PosTerminal() {
 
           <div className="flex-1 overflow-y-auto p-4">
             {filtered.length === 0 ? (
-              <p className="font-pixel text-[8px] text-text2 text-center py-12">PRODUK TIDAK DITEMUKAN.</p>
+              <p className="font-body font-bold text-[8px] text-text2 text-center py-12">PRODUK TIDAK DITEMUKAN.</p>
             ) : (
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                 {filtered.map((p, i) => {
-                  const bgColors = ['#4ADE80','#FF2D9B','#FACC15','#60A5FA','#F87171','#A78BFA','#34D399','#FB923C']
+                  const bgColors = ['#4ADE80','#FF2E7E','#FACC15','#60A5FA','#F87171','#A78BFA','#34D399','#FB923C']
                   const bg = bgColors[(parseInt(p.id.replace('p','')) || i) % bgColors.length]
                   return (
                     <button
@@ -148,7 +148,7 @@ export default function PosTerminal() {
                       </div>
                       <div className="p-2.5 bg-surface">
                         <p className="font-body text-[11px] text-text1 leading-snug mb-1 line-clamp-2">{p.name}</p>
-                        <p className="font-pixel text-[8px] text-pink">{formatPrice(p.price)}</p>
+                        <p className="font-body font-bold text-[8px] text-pink">{formatPrice(p.price)}</p>
                       </div>
                     </button>
                   )
@@ -159,17 +159,17 @@ export default function PosTerminal() {
         </div>
 
         {/* ── Cart panel ── */}
-        <div className="w-[360px] border-l-4 border-pink bg-surface flex flex-col shrink-0">
+        <div className="w-full h-[42vh] lg:h-auto lg:w-[360px] border-t-4 lg:border-t-0 lg:border-l-4 border-pink bg-surface flex flex-col shrink-0">
           <div className="flex items-center gap-2 px-4 py-3 border-b-2 border-border">
             <ShoppingCart size={14} className="text-pink" />
-            <span className="font-pixel text-[9px] text-text1">KERANJANG ({itemCount})</span>
+            <span className="font-body font-bold text-[9px] text-text1">KERANJANG ({itemCount})</span>
           </div>
 
           <div className="flex-1 overflow-y-auto">
             {cart.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full gap-3 text-center px-6">
                 <ShoppingCart size={28} className="text-border" />
-                <p className="font-pixel text-[8px] text-text2">KERANJANG KOSONG</p>
+                <p className="font-body font-bold text-[8px] text-text2">KERANJANG KOSONG</p>
               </div>
             ) : (
               <div className="divide-y-2 divide-border">
@@ -177,20 +177,20 @@ export default function PosTerminal() {
                   <div key={item.key} className="flex gap-3 p-3">
                     <div className="flex-1 min-w-0">
                       <p className="font-body text-[12px] text-text1 leading-snug mb-1">{item.product.name}</p>
-                      <p className="font-pixel text-[7px] text-text2 mb-2">SIZE: {item.size}</p>
+                      <p className="font-body font-bold text-[7px] text-text2 mb-2">SIZE: {item.size}</p>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center border-2 border-border">
                           <button onClick={() => updateQty(item.key, item.qty - 1)} className="w-6 h-6 flex items-center justify-center text-text2 hover:text-pink">
                             <Minus size={9} />
                           </button>
-                          <span className="w-7 text-center font-pixel text-[8px] text-text1">{item.qty}</span>
+                          <span className="w-7 text-center font-body font-bold text-[8px] text-text1">{item.qty}</span>
                           <button onClick={() => updateQty(item.key, item.qty + 1)} className="w-6 h-6 flex items-center justify-center text-text2 hover:text-pink">
                             <Plus size={9} />
                           </button>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className="font-pixel text-[8px] text-text1">{formatPrice(item.product.price * item.qty)}</span>
-                          <button onClick={() => removeFromCart(item.key)} className="text-text2 hover:text-red-400">
+                          <span className="font-body font-bold text-[8px] text-text1">{formatPrice(item.product.price * item.qty)}</span>
+                          <button onClick={() => removeFromCart(item.key)} className="text-text2 hover:text-red-600">
                             <Trash2 size={11} />
                           </button>
                         </div>
@@ -203,15 +203,15 @@ export default function PosTerminal() {
           </div>
 
           <div className="border-t-4 border-border p-4 space-y-3">
-            <div className="flex justify-between font-pixel text-[10px]">
+            <div className="flex justify-between font-body font-bold text-[10px]">
               <span className="text-text2">TOTAL</span>
               <span className="text-pink">{formatPrice(total)}</span>
             </div>
             <button
               onClick={handleCheckout}
               disabled={cart.length === 0}
-              className="w-full font-pixel text-[9px] text-black py-3.5 transition-all hover:brightness-110 active:translate-x-0.5 active:translate-y-0.5 disabled:opacity-30 disabled:cursor-not-allowed"
-              style={{ background: '#FF2D9B', border: '2px solid #000', boxShadow: '3px 3px 0 #000' }}
+              className="w-full font-body font-bold text-[9px] text-black py-3.5 transition-all hover:brightness-110 active:translate-x-0.5 active:translate-y-0.5 disabled:opacity-30 disabled:cursor-not-allowed"
+              style={{ background: '#FF2E7E', border: '2px solid #14120F', boxShadow: '3px 3px 0 #14120F' }}
             >
               BAYAR &gt;&gt;
             </button>
@@ -222,13 +222,13 @@ export default function PosTerminal() {
       {/* ── Payment modal ── */}
       {showPayment && (
         <div className="fixed inset-0 z-[90] bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-surface border-2 border-pink w-full max-w-sm" style={{ boxShadow: '6px 6px 0 #000' }}>
+          <div className="bg-surface border-2 border-pink w-full max-w-sm" style={{ boxShadow: '6px 6px 0 #14120F' }}>
             <div className="flex items-center justify-between px-5 py-4 border-b-2 border-border">
-              <span className="font-pixel text-[10px] text-text1">PEMBAYARAN</span>
+              <span className="font-body font-bold text-[10px] text-text1">PEMBAYARAN</span>
               <button onClick={() => setShowPayment(false)} className="text-text2 hover:text-pink"><X size={16} /></button>
             </div>
             <div className="p-5 space-y-4">
-              <div className="flex justify-between font-pixel text-[12px]">
+              <div className="flex justify-between font-display text-[12px]">
                 <span className="text-text2">TOTAL BAYAR</span>
                 <span className="text-pink">{formatPrice(total)}</span>
               </div>
@@ -238,7 +238,7 @@ export default function PosTerminal() {
                   <button
                     key={m.id}
                     onClick={() => setPayMethod(m.id)}
-                    className={`font-pixel text-[7px] py-3 border-2 transition-colors ${
+                    className={`font-body font-bold text-[7px] py-3 border-2 transition-colors ${
                       payMethod === m.id ? 'border-pink text-pink bg-pink/10' : 'border-border text-text2 hover:border-text2'
                     }`}
                   >
@@ -249,18 +249,18 @@ export default function PosTerminal() {
 
               {payMethod === 'cash' && (
                 <div className="space-y-2">
-                  <label className="font-pixel text-[7px] text-text2">UANG DITERIMA</label>
+                  <label className="font-body font-bold text-[7px] text-text2">UANG DITERIMA</label>
                   <input
                     type="number"
                     value={cashGiven}
                     onChange={(e) => setCashGiven(e.target.value)}
                     placeholder="0"
-                    className="w-full bg-bg border-2 border-border text-text1 font-pixel text-[12px] px-4 py-2.5 outline-none focus:border-pink"
+                    className="w-full bg-bg border-2 border-border text-text1 font-display text-[12px] px-4 py-2.5 outline-none focus:border-pink"
                   />
                   {cashGiven && (
-                    <div className="flex justify-between font-pixel text-[9px] pt-1">
+                    <div className="flex justify-between font-body font-bold text-[9px] pt-1">
                       <span className="text-text2">KEMBALIAN</span>
-                      <span className={cashEnough ? 'text-pink' : 'text-red-400'}>
+                      <span className={cashEnough ? 'text-pink' : 'text-red-600'}>
                         {cashEnough ? formatPrice(change) : 'KURANG'}
                       </span>
                     </div>
@@ -269,7 +269,7 @@ export default function PosTerminal() {
               )}
 
               {payMethod !== 'cash' && (
-                <p className="font-pixel text-[7px] text-text2 leading-relaxed border-2 border-border p-3">
+                <p className="font-body font-bold text-[7px] text-text2 leading-relaxed border-2 border-border p-3">
                   ★ SIMULASI {payMethod === 'qris' ? 'QRIS' : 'KARTU DEBIT'} — TIDAK ADA GATEWAY PEMBAYARAN ASLI TERHUBUNG.
                 </p>
               )}
@@ -277,8 +277,8 @@ export default function PosTerminal() {
               <button
                 onClick={handleConfirmPayment}
                 disabled={!cashEnough}
-                className="w-full font-pixel text-[9px] text-black py-3.5 transition-all hover:brightness-110 disabled:opacity-30 disabled:cursor-not-allowed"
-                style={{ background: '#FF2D9B', border: '2px solid #000', boxShadow: '3px 3px 0 #000' }}
+                className="w-full font-body font-bold text-[9px] text-black py-3.5 transition-all hover:brightness-110 disabled:opacity-30 disabled:cursor-not-allowed"
+                style={{ background: '#FF2E7E', border: '2px solid #14120F', boxShadow: '3px 3px 0 #14120F' }}
               >
                 KONFIRMASI &gt;&gt;
               </button>
@@ -290,19 +290,19 @@ export default function PosTerminal() {
       {/* ── Success modal ── */}
       {showSuccess && (
         <div className="fixed inset-0 z-[90] bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-surface border-2 border-pink w-full max-w-sm text-center p-6" style={{ boxShadow: '6px 6px 0 #000' }}>
+          <div className="bg-surface border-2 border-pink w-full max-w-sm text-center p-6" style={{ boxShadow: '6px 6px 0 #14120F' }}>
             <div className="w-12 h-12 mx-auto mb-4 flex items-center justify-center border-2 border-pink rounded-full">
               <Check size={20} className="text-pink" />
             </div>
-            <p className="font-pixel text-[10px] text-text1 mb-2">TRANSAKSI BERHASIL</p>
-            <p className="font-pixel text-[7px] text-text2 mb-4">{showSuccess.orderId}</p>
+            <p className="font-body font-bold text-[10px] text-text1 mb-2">TRANSAKSI BERHASIL</p>
+            <p className="font-body font-bold text-[7px] text-text2 mb-4">{showSuccess.orderId}</p>
             <div className="space-y-1 mb-5 text-left border-2 border-border p-3">
-              <div className="flex justify-between font-pixel text-[8px]">
+              <div className="flex justify-between font-body font-bold text-[8px]">
                 <span className="text-text2">TOTAL</span>
                 <span className="text-text1">{formatPrice(showSuccess.total)}</span>
               </div>
               {showSuccess.change > 0 && (
-                <div className="flex justify-between font-pixel text-[8px]">
+                <div className="flex justify-between font-body font-bold text-[8px]">
                   <span className="text-text2">KEMBALIAN</span>
                   <span className="text-pink">{formatPrice(showSuccess.change)}</span>
                 </div>
@@ -310,8 +310,8 @@ export default function PosTerminal() {
             </div>
             <button
               onClick={() => setShowSuccess(null)}
-              className="w-full font-pixel text-[9px] text-black py-3.5 transition-all hover:brightness-110"
-              style={{ background: '#FF2D9B', border: '2px solid #000', boxShadow: '3px 3px 0 #000' }}
+              className="w-full font-body font-bold text-[9px] text-black py-3.5 transition-all hover:brightness-110"
+              style={{ background: '#FF2E7E', border: '2px solid #14120F', boxShadow: '3px 3px 0 #14120F' }}
             >
               TRANSAKSI BARU &gt;&gt;
             </button>

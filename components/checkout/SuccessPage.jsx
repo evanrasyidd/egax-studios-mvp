@@ -23,21 +23,21 @@ export default function SuccessPage({ order }) {
         </svg>
       </div>
       <div style={{ animation: mounted ? 'fadeUp 0.4s ease-out 0.15s backwards' : 'none', opacity: mounted ? undefined : 0 }}>
-        <p className="font-pixel text-[8px] text-pink mb-2">PAYMENT SUCCESS!</p>
-        <h1 className="font-pixel text-[18px] text-black mb-2">ORDER CONFIRMED</h1>
+        <p className="font-body font-bold text-[8px] text-pink mb-2">PAYMENT SUCCESS!</p>
+        <h1 className="font-display text-[18px] text-black mb-2">ORDER CONFIRMED</h1>
         <p className="font-body text-gray-500 mb-6 text-sm max-w-xs">Thank you for your order. We will process it shortly.</p>
       </div>
-      <div className="border-4 border-black p-5 w-full max-w-xs text-left mb-8" style={{boxShadow:'6px 6px 0 #FF2D9B', animation: mounted ? 'fadeUp 0.4s ease-out 0.3s backwards' : 'none', opacity: mounted ? undefined : 0}}>
-        <p className="font-pixel text-[7px] text-pink mb-3">ORDER DETAILS</p>
-        <div className="space-y-2 font-pixel text-[8px]">
+      <div className="border-4 border-black p-5 w-full max-w-xs text-left mb-8" style={{boxShadow:'6px 6px 0 #FF2E7E', animation: mounted ? 'fadeUp 0.4s ease-out 0.3s backwards' : 'none', opacity: mounted ? undefined : 0}}>
+        <p className="font-body font-bold text-[7px] text-pink mb-3">ORDER DETAILS</p>
+        <div className="space-y-2 font-body font-bold text-[8px]">
           <div className="flex justify-between"><span className="text-gray-400">ORDER ID</span><span className="text-black">{order?.id}</span></div>
           <div className="flex justify-between"><span className="text-gray-400">TOTAL</span><span className="text-pink">{formatPrice(order?.total||0)}</span></div>
           <div className="flex justify-between"><span className="text-gray-400">STATUS</span><span className="text-green-500">PAID</span></div>
         </div>
       </div>
       <div className="flex gap-3" style={{ animation: mounted ? 'fadeUp 0.4s ease-out 0.45s backwards' : 'none', opacity: mounted ? undefined : 0 }}>
-        <Link href="/account/orders" className="font-pixel text-[8px] border-2 border-black text-black px-5 py-2.5 pixel-btn hover:bg-pink">VIEW ORDERS</Link>
-        <Link href="/catalog" className="font-pixel text-[8px] bg-black text-white border-2 border-black px-5 py-2.5 pixel-btn hover:bg-pink hover:text-black">SHOP MORE</Link>
+        <Link href="/account/orders" className="font-body font-bold text-[8px] border-2 border-black text-black px-5 py-2.5 pixel-btn hover:bg-pink">VIEW ORDERS</Link>
+        <Link href="/catalog" className="font-body font-bold text-[8px] bg-black text-white border-2 border-black px-5 py-2.5 pixel-btn hover:bg-pink hover:text-black">SHOP MORE</Link>
       </div>
     </div>
   )

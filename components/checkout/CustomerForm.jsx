@@ -17,7 +17,7 @@ export default function CustomerForm({ data, onChange, errors }) {
             <label className="text-[11px] font-semibold uppercase tracking-widest text-text2 block mb-1.5">{label}</label>
             <input type={type} value={data[name]||''} onChange={e=>onChange(name,e.target.value)} placeholder={placeholder}
               className={`w-full bg-surface border text-text1 text-sm px-4 py-3 outline-none font-body placeholder:text-text2/40 focus:border-pink transition-colors ${errors?.[name]?'border-red-500':'border-border'}`}/>
-            {errors?.[name] && <p className="text-[11px] text-red-400 mt-1">{errors[name]}</p>}
+            {errors?.[name] && <p className="text-[11px] text-red-600 mt-1">{errors[name]}</p>}
           </div>
         ))}
       </div>

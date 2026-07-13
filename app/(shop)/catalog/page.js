@@ -44,7 +44,7 @@ function CatalogContent() {
       <div className="px-6 md:px-10 py-10">
         <div className="mb-8 pb-5 border-b border-gray-200">
           <p className="text-[10px] font-semibold uppercase tracking-widest text-pink mb-1">Shop</p>
-          <h1 className="font-display text-[48px] tracking-widest text-bg">
+          <h1 className="font-display text-[48px] tracking-widest text-text1">
             {category === 'all' ? 'All Products' : category.charAt(0).toUpperCase() + category.slice(1)}
           </h1>
           <p className="text-[12px] text-gray-400 mt-1">{filtered.length} products</p>

@@ -7,7 +7,7 @@ export default function ProductFilter({ active, onChange }) {
       {CATEGORIES.map(cat => (
         <button key={cat.slug} onClick={() => onChange(cat.slug)}
           className={cn('text-[10px] font-semibold uppercase tracking-widest px-3 py-2 border transition-all duration-150',
-            active === cat.slug ? 'bg-bg text-white border-bg' : 'bg-white text-bg border-gray-200 hover:border-bg')}>
+            active === cat.slug ? 'bg-text1 text-white border-text1' : 'bg-white text-text1 border-gray-200 hover:border-text1')}>
           {cat.label}
         </button>
       ))}

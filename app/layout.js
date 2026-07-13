@@ -1,18 +1,18 @@
-import { Press_Start_2P, Bebas_Neue, Inter } from 'next/font/google'
+import { Anton, Bangers, Inter } from 'next/font/google'
 import StoreHydration from '@/components/providers/StoreHydration'
 import './globals.css'
 
-const pressStart = Press_Start_2P({
-  weight: '400',
-  subsets: ['latin'],
-  variable: '--font-pixel',
-  display: 'swap',
-})
-
-const bebas = Bebas_Neue({
+const anton = Anton({
   weight: '400',
   subsets: ['latin'],
   variable: '--font-display',
+  display: 'swap',
+})
+
+const bangers = Bangers({
+  weight: '400',
+  subsets: ['latin'],
+  variable: '--font-comic',
   display: 'swap',
 })
 
@@ -23,13 +23,13 @@ const inter = Inter({
 })
 
 export const metadata = {
-  title: 'EGAX Studios — Built in the Dark. Worn in the Streets.',
-  description: 'Dark editorial streetwear brand. Limited drops, pixel aesthetic.',
+  title: 'EGAX Studios — Loud on the Streets.',
+  description: 'Bold streetwear brand. Limited drops, no volume.',
 }
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="id" className={`${pressStart.variable} ${bebas.variable} ${inter.variable}`}>
+    <html lang="id" className={`${anton.variable} ${bangers.variable} ${inter.variable}`}>
       <body>
         <StoreHydration>{children}</StoreHydration>
       </body>

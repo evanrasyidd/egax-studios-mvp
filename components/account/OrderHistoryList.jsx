@@ -19,10 +19,10 @@ function OrderDetailModal({ order, onClose }) {
       <div className="bg-white border border-gray-200 shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
         <div className="flex items-center justify-between px-5 py-4 border-b border-gray-200 sticky top-0 bg-white">
           <div>
-            <p className="font-semibold text-bg text-[14px]">Order Detail</p>
+            <p className="font-semibold text-text1 text-[14px]">Order Detail</p>
             <p className="font-mono text-[11px] text-gray-400 mt-0.5">{order.id}</p>
           </div>
-          <button onClick={onClose} className="text-gray-400 hover:text-bg p-1"><X size={16}/></button>
+          <button onClick={onClose} className="text-gray-400 hover:text-text1 p-1"><X size={16}/></button>
         </div>
         <div className="p-5 space-y-5">
           {/* Status */}
@@ -37,10 +37,10 @@ function OrderDetailModal({ order, onClose }) {
           <div className="border border-gray-100 p-4 bg-gray-50">
             <p className="text-[10px] font-semibold uppercase tracking-widest text-pink mb-3">Customer Info</p>
             <div className="grid grid-cols-2 gap-2 text-[13px]">
-              <div><span className="text-gray-400 text-[11px]">Name</span><p className="font-medium text-bg">{order.customer?.firstName} {order.customer?.lastName}</p></div>
-              <div><span className="text-gray-400 text-[11px]">Phone</span><p className="font-medium text-bg">{order.customer?.phone || '-'}</p></div>
-              <div className="col-span-2"><span className="text-gray-400 text-[11px]">Email</span><p className="font-medium text-bg">{order.customer?.email || '-'}</p></div>
-              <div className="col-span-2"><span className="text-gray-400 text-[11px]">Address</span><p className="font-medium text-bg">{order.customer?.address}, {order.customer?.city} {order.customer?.postalCode}</p></div>
+              <div><span className="text-gray-400 text-[11px]">Name</span><p className="font-medium text-text1">{order.customer?.firstName} {order.customer?.lastName}</p></div>
+              <div><span className="text-gray-400 text-[11px]">Phone</span><p className="font-medium text-text1">{order.customer?.phone || '-'}</p></div>
+              <div className="col-span-2"><span className="text-gray-400 text-[11px]">Email</span><p className="font-medium text-text1">{order.customer?.email || '-'}</p></div>
+              <div className="col-span-2"><span className="text-gray-400 text-[11px]">Address</span><p className="font-medium text-text1">{order.customer?.address}, {order.customer?.city} {order.customer?.postalCode}</p></div>
             </div>
           </div>
 
@@ -55,11 +55,11 @@ function OrderDetailModal({ order, onClose }) {
                       <span className="text-[10px] text-gray-400 font-bold">{item.product?.name?.[0]}</span>
                     </div>
                     <div>
-                      <p className="text-[13px] font-medium text-bg">{item.product?.name}</p>
+                      <p className="text-[13px] font-medium text-text1">{item.product?.name}</p>
                       <p className="text-[11px] text-gray-400">Size: {item.size} × {item.qty}</p>
                     </div>
                   </div>
-                  <span className="text-[13px] font-semibold text-bg">{formatPrice(item.product?.price * item.qty)}</span>
+                  <span className="text-[13px] font-semibold text-text1">{formatPrice(item.product?.price * item.qty)}</span>
                 </div>
               ))}
             </div>
@@ -69,14 +69,14 @@ function OrderDetailModal({ order, onClose }) {
           <div className="border-t border-gray-200 pt-4 space-y-1.5">
             <div className="flex justify-between text-[13px]">
               <span className="text-gray-400">Subtotal</span>
-              <span className="font-medium text-bg">{formatPrice(order.total)}</span>
+              <span className="font-medium text-text1">{formatPrice(order.total)}</span>
             </div>
             <div className="flex justify-between text-[13px]">
               <span className="text-gray-400">Shipping</span>
               <span className="font-medium text-green-600">Gratis</span>
             </div>
             <div className="flex justify-between text-[15px] font-bold pt-1 border-t border-gray-200">
-              <span className="text-bg">Total</span>
+              <span className="text-text1">Total</span>
               <span className="text-pink">{formatPrice(order.total)}</span>
             </div>
           </div>
@@ -84,12 +84,12 @@ function OrderDetailModal({ order, onClose }) {
           {/* Payment */}
           <div className="flex justify-between text-[12px] text-gray-400">
             <span>Payment Method</span>
-            <span className="font-semibold text-bg uppercase">{order.payMethod || 'QRIS'}</span>
+            <span className="font-semibold text-text1 uppercase">{order.payMethod || 'QRIS'}</span>
           </div>
 
           <div className="flex justify-between text-[12px] text-gray-400">
             <span>Order Date</span>
-            <span className="font-semibold text-bg">{formatDate(order.date)}</span>
+            <span className="font-semibold text-text1">{formatDate(order.date)}</span>
           </div>
         </div>
       </div>
@@ -117,7 +117,7 @@ export default function OrderHistoryList({ orders }) {
             className="w-full text-left border border-gray-200 p-4 hover:border-pink hover:shadow-sm transition-all group">
             <div className="flex items-start justify-between mb-2">
               <div>
-                <p className="font-mono text-[12px] font-bold text-bg">{order.id}</p>
+                <p className="font-mono text-[12px] font-bold text-text1">{order.id}</p>
                 <p className="text-[11px] text-gray-400 mt-0.5">{formatDate(order.date)}</p>
               </div>
               <div className="flex items-center gap-2">

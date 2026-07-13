@@ -9,7 +9,7 @@ import { useWishlistStore } from '@/store/wishlistStore'
 import { useHydrated } from '@/hooks/useHydrated'
 import { cn } from '@/lib/utils'
 
-const PLACEHOLDER_COLORS = ['#4ADE80','#FF2D9B','#FACC15','#60A5FA','#F87171','#A78BFA','#34D399','#FB923C','#818CF8','#FCD34D']
+const PLACEHOLDER_COLORS = ['#4ADE80','#FF2E7E','#FACC15','#60A5FA','#F87171','#A78BFA','#34D399','#FB923C','#818CF8','#FCD34D']
 
 export default function ProductCard({ product, index = 0, onDark = false }) {
   const [hovered, setHovered] = useState(false)
@@ -62,13 +62,13 @@ export default function ProductCard({ product, index = 0, onDark = false }) {
       <div className={cn('px-2 pt-2.5 pb-3', onDark ? 'bg-card' : 'bg-white')}>
         <p className="text-[10px] uppercase tracking-widest text-text2 mb-0.5">{product.vendor}</p>
         <Link href={`/product/${product.slug}`}>
-          <p className={cn('text-[13px] font-medium leading-snug mb-1 hover:text-pink transition-colors', onDark ? 'text-text1' : 'text-bg')}>
+          <p className={cn('text-[13px] font-medium leading-snug mb-1 hover:text-pink transition-colors', onDark ? 'text-bg' : 'text-text1')}>
             {product.name}
           </p>
         </Link>
         <div className="flex items-center gap-2">
           {product.originalPrice && <span className="text-[11px] line-through text-text2">{formatPrice(product.originalPrice)}</span>}
-          <span className={cn('text-[13px] font-semibold', product.originalPrice ? 'text-pink' : onDark ? 'text-text1' : 'text-bg')}>
+          <span className={cn('text-[13px] font-semibold', product.originalPrice ? 'text-pink' : onDark ? 'text-bg' : 'text-text1')}>
             {formatPrice(product.price)}
           </span>
         </div>

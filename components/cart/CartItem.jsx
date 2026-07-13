@@ -1,12 +1,12 @@
-import Image from 'next/image'
+import GarmentIcon from '@/components/product/GarmentIcon'
 import { Trash2 } from 'lucide-react'
 import { formatPrice } from '@/lib/utils'
 
 export default function CartItem({ item, onRemove, onUpdateQty }) {
   return (
     <div className="flex gap-4 py-4 border-b border-border">
-      <div className="relative w-16 h-22 shrink-0 overflow-hidden bg-card">
-        <Image src={item.product.images[0]} alt={item.product.name} fill className="object-cover" />
+      <div className="relative w-16 h-22 shrink-0 overflow-hidden bg-card flex items-center justify-center">
+        <GarmentIcon category={item.product.category} fill="rgba(0,0,0,0.85)" shade="rgba(0,0,0,0.35)" detail="#FF2E7E" scale={2.6} />
       </div>
       <div className="flex-1">
         <p className="text-[11px] uppercase tracking-widest text-text2">{item.product.vendor}</p>
@@ -14,7 +14,7 @@ export default function CartItem({ item, onRemove, onUpdateQty }) {
         <p className="text-[11px] text-text2 mt-0.5">Size: {item.size}</p>
         <div className="flex items-center justify-between mt-2">
           <span className="text-[13px] font-semibold text-text1">{formatPrice(item.product.price * item.qty)}</span>
-          <button onClick={() => onRemove(item.key)} className="text-text2 hover:text-red-400">
+          <button onClick={() => onRemove(item.key)} className="text-text2 hover:text-red-600">
             <Trash2 size={13} />
           </button>
         </div>

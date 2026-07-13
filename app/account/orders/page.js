@@ -8,7 +8,7 @@ export default function OrdersPage() {
   return (
     <div>
       <p className="text-[10px] font-semibold uppercase tracking-widest text-pink mb-1">My Account</p>
-      <h1 className="font-display text-[32px] tracking-widest text-bg mb-6">My Orders</h1>
+      <h1 className="font-display text-[32px] tracking-widest text-text1 mb-6">My Orders</h1>
       <OrderHistoryList orders={hydrated ? orders : []}/>
     </div>
   )

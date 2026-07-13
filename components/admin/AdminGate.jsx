@@ -39,39 +39,39 @@ function AdminLoginForm() {
     <div className="min-h-screen flex items-center justify-center bg-bg px-6">
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
-          <p className="font-pixel text-[8px] text-pink mb-2">★ EGAX STUDIOS ★</p>
-          <h1 className="font-pixel text-[18px] text-text1">ADMIN.LOGIN</h1>
-          <p className="font-pixel text-[7px] text-text2 mt-2">MASUKKAN KREDENSIAL ADMIN</p>
+          <p className="font-body font-bold text-[8px] text-pink mb-2">★ EGAX STUDIOS ★</p>
+          <h1 className="font-display text-[18px] text-text1">ADMIN.LOGIN</h1>
+          <p className="font-body font-bold text-[7px] text-text2 mt-2">MASUKKAN KREDENSIAL ADMIN</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div className="space-y-1.5">
-            <label className="font-pixel text-[7px] text-text2">USERNAME</label>
+            <label className="font-body font-bold text-[7px] text-text2">USERNAME</label>
             <input
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               autoComplete="username"
-              className="w-full bg-surface border-2 border-border text-text1 font-pixel text-[9px] px-4 py-3 outline-none focus:border-pink"
+              className="w-full bg-surface border-2 border-border text-text1 font-body font-bold text-[9px] px-4 py-3 outline-none focus:border-pink"
             />
           </div>
           <div className="space-y-1.5">
-            <label className="font-pixel text-[7px] text-text2">PASSWORD</label>
+            <label className="font-body font-bold text-[7px] text-text2">PASSWORD</label>
             <input
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               autoComplete="current-password"
-              className="w-full bg-surface border-2 border-border text-text1 font-pixel text-[9px] px-4 py-3 outline-none focus:border-pink"
+              className="w-full bg-surface border-2 border-border text-text1 font-body font-bold text-[9px] px-4 py-3 outline-none focus:border-pink"
             />
           </div>
 
-          {error && <p className="font-pixel text-[7px] text-red-400">{error}</p>}
+          {error && <p className="font-body font-bold text-[7px] text-red-600">{error}</p>}
 
           <button
             type="submit"
             disabled={loading}
-            className="w-full flex items-center justify-center gap-2 font-pixel text-[10px] text-black py-3.5 transition-all hover:brightness-110 active:translate-x-0.5 active:translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
-            style={{ background: '#FF2D9B', border: '2px solid #000', boxShadow: '3px 3px 0 #000' }}
+            className="w-full flex items-center justify-center gap-2 font-body font-bold text-[10px] text-black py-3.5 transition-all hover:brightness-110 active:translate-x-0.5 active:translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
+            style={{ background: '#FF2E7E', border: '2px solid #14120F', boxShadow: '3px 3px 0 #14120F' }}
           >
             <LogIn size={13} /> {loading ? 'MEMVERIFIKASI...' : 'MASUK >>'}
           </button>
@@ -99,9 +99,9 @@ export default function AdminGate({ children }) {
   if (!isLoggedIn) return <AdminLoginForm />
 
   return (
-    <div className="flex min-h-screen bg-bg">
+    <div className="min-h-screen bg-bg lg:flex">
       <AdminSidebar />
-      <div className="flex-1 p-8 overflow-auto">
+      <div className="flex-1 p-4 lg:p-8 overflow-auto">
         {children}
       </div>
     </div>

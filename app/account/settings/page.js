@@ -21,11 +21,11 @@ export default function SettingsPage() {
   return (
     <div className="max-w-sm">
       <p className="text-[10px] font-semibold uppercase tracking-widest text-pink mb-1">My Account</p>
-      <h1 className="font-display text-[32px] tracking-widest text-bg mb-6">Settings</h1>
+      <h1 className="font-display text-[32px] tracking-widest text-text1 mb-6">Settings</h1>
       <form onSubmit={handleSave} className="space-y-4">
         <Input label="Display Name" value={name} onChange={e=>setName(e.target.value)}/>
         <Input label="Email" value={hydrated ? (user?.email||'') : ''} disabled className="opacity-60 cursor-not-allowed"/>
-        <Button type="submit" variant="white" className="border border-bg bg-bg text-white">Save Changes</Button>
+        <Button type="submit" variant="white" className="border border-text1 bg-text1 text-white">Save Changes</Button>
       </form>
     </div>
   )

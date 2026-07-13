@@ -28,12 +28,12 @@ export default function AccountPage() {
   if (isAuthenticated && user) return (
     <div>
       <p className="text-[10px] font-semibold uppercase tracking-widest text-pink mb-1">My Account</p>
-      <h1 className="font-display text-[32px] tracking-widest text-bg mb-6">Profile</h1>
+      <h1 className="font-display text-[32px] tracking-widest text-text1 mb-6">Profile</h1>
       <div className="border border-gray-200 p-5 max-w-sm">
         {[['Name',user.name],['Email',user.email],['Role',user.role?.toUpperCase()]].map(([k,v])=>(
           <div key={k} className="flex gap-3 py-2.5 border-b border-gray-100 last:border-0">
             <span className="text-[11px] font-semibold uppercase tracking-widest text-gray-400 w-16 shrink-0 mt-0.5">{k}</span>
-            <span className="text-[14px] font-medium text-bg">{v}</span>
+            <span className="text-[14px] font-medium text-text1">{v}</span>
           </div>
         ))}
       </div>
@@ -42,7 +42,7 @@ export default function AccountPage() {
   return (
     <div className="max-w-sm">
       <p className="text-[10px] font-semibold uppercase tracking-widest text-pink mb-1">My Account</p>
-      <h1 className="font-display text-[32px] tracking-widest text-bg mb-6">{mode==='login'?'Sign In':'Register'}</h1>
+      <h1 className="font-display text-[32px] tracking-widest text-text1 mb-6">{mode==='login'?'Sign In':'Register'}</h1>
       <form onSubmit={handleSubmit} className="space-y-4">
         {mode==='register' && <Input label="Full Name" value={form.name} onChange={e=>setForm({...form,name:e.target.value})} placeholder="Your name"/>}
         <Input label="Email" type="email" value={form.email} onChange={e=>setForm({...form,email:e.target.value})} placeholder="you@email.com"/>

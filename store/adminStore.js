@@ -8,6 +8,9 @@ export const useAdminStore = create(
     (set, get) => ({
       products: PRODUCTS,
       bannedUsers: [],
+      heroPreOrderBadge: true,
+
+      toggleHeroPreOrderBadge: () => set({ heroPreOrderBadge: !get().heroPreOrderBadge }),
 
       // PRODUCTS CRUD
       addProduct: (product) => {

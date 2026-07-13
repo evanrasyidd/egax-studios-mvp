@@ -9,7 +9,7 @@ export default function Input({ label, error, className, ...props }) {
         'placeholder:text-text2/50 focus:border-pink transition-colors',
         error && 'border-red-500', className
       )} {...props}/>
-      {error && <p className="text-[11px] text-red-400">{error}</p>}
+      {error && <p className="text-[11px] text-red-600">{error}</p>}
     </div>
   )
 }

@@ -1,5 +1,5 @@
 import { EDITORIALS } from '@/constants/editorial'
-const COLORS = ['#4ADE80','#FF2D9B','#FACC15','#60A5FA','#F87171','#A78BFA']
+const COLORS = ['#4ADE80','#FF2E7E','#FACC15','#60A5FA','#F87171','#A78BFA']
 export default function EditorialPage() {
   return (
     <div className="bg-bg min-h-screen px-6 md:px-10 py-12">
@@ -15,7 +15,7 @@ export default function EditorialPage() {
                 <span className="font-display text-[36px] text-white">{(i+1).toString().padStart(2,'0')}</span>
               </div>
             </div>
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent group-hover:from-black/60 transition-all"/>
+            <div className="absolute inset-x-0 bottom-0 h-1/2 bg-text1/70 group-hover:bg-text1/55 transition-all"/>
             <div className="absolute bottom-0 left-0 p-5">
               <div className="flex gap-1 mb-2 flex-wrap">
                 {item.tags.map(tag=><span key={tag} className="text-[9px] font-bold uppercase tracking-widest border border-pink/60 text-pink px-1.5 py-0.5">{tag}</span>)}

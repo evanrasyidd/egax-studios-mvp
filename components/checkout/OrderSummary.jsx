@@ -1,7 +1,7 @@
 import { formatPrice } from '@/lib/utils'
 import GarmentIcon from '@/components/product/GarmentIcon'
 
-const THUMB_COLORS = ['#4ADE80','#FF2D9B','#FACC15','#60A5FA','#F87171','#A78BFA','#34D399','#FB923C']
+const THUMB_COLORS = ['#4ADE80','#FF2E7E','#FACC15','#60A5FA','#F87171','#A78BFA','#34D399','#FB923C']
 
 export default function OrderSummary({ items, total }) {
   return (
@@ -26,7 +26,7 @@ export default function OrderSummary({ items, total }) {
       </div>
       <div className="space-y-1.5">
         <div className="flex justify-between text-[13px]"><span className="text-text2">Subtotal</span><span className="font-semibold text-text1">{formatPrice(total)}</span></div>
-        <div className="flex justify-between text-[12px]"><span className="text-text2">Shipping</span><span className="text-green-400 font-medium">Gratis</span></div>
+        <div className="flex justify-between text-[12px]"><span className="text-text2">Shipping</span><span className="text-green-600 font-medium">Gratis</span></div>
         <div className="flex justify-between text-[15px] font-bold pt-2 border-t border-border"><span className="text-text1">Total</span><span className="text-pink">{formatPrice(total)}</span></div>
       </div>
     </div>

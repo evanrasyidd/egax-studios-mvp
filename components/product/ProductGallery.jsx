@@ -2,7 +2,7 @@
 import { useState } from 'react'
 import GarmentIcon from '@/components/product/GarmentIcon'
 
-const COLORS = ['#4ADE80','#FF2D9B','#FACC15','#60A5FA','#F87171','#A78BFA','#34D399','#FB923C']
+const COLORS = ['#4ADE80','#FF2E7E','#FACC15','#60A5FA','#F87171','#A78BFA','#34D399','#FB923C']
 
 export default function ProductGallery({ name, category, productIndex = 0 }) {
   const [hover, setHover] = useState(false)

@@ -59,7 +59,7 @@ export default function VirtualAccount({ bank, vaNumber, amount, orderId, onSucc
           <p className="text-[18px] font-bold font-mono text-text1 tracking-widest">{vaNumber}</p>
         </div>
         <button onClick={copy} className="flex items-center gap-1.5 text-[11px] font-semibold uppercase tracking-widest text-text2 border border-border px-3 py-2 hover:border-pink hover:text-pink transition-all">
-          {copied ? <Check size={12} className="text-green-400" /> : <Copy size={12} />} {copied ? 'Disalin' : 'Salin'}
+          {copied ? <Check size={12} className="text-green-600" /> : <Copy size={12} />} {copied ? 'Disalin' : 'Salin'}
         </button>
       </div>
 
@@ -77,7 +77,7 @@ export default function VirtualAccount({ bank, vaNumber, amount, orderId, onSucc
 
       {status === 'waiting' && (
         <>
-          <div className={`text-[20px] font-bold font-mono ${sec < 60 ? 'text-red-400' : 'text-text1'}`}>{mm}:{ss}</div>
+          <div className={`text-[20px] font-bold font-mono ${sec < 60 ? 'text-red-600' : 'text-text1'}`}>{mm}:{ss}</div>
           <button onClick={handleCheckStatus} className="w-full bg-pink text-black text-[11px] font-semibold uppercase tracking-widest py-3 hover:bg-pink-dark transition-colors">
             Cek Status Pembayaran
           </button>
@@ -93,7 +93,7 @@ export default function VirtualAccount({ bank, vaNumber, amount, orderId, onSucc
 
       {status === 'failed' && (
         <div className="flex flex-col gap-3">
-          <div className="flex items-center gap-2 text-red-400">
+          <div className="flex items-center gap-2 text-red-600">
             <XCircle size={16} />
             <p className="text-[11px] font-semibold uppercase tracking-widest">Belum Terdeteksi</p>
           </div>

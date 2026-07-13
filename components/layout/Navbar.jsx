@@ -115,7 +115,7 @@ export default function Navbar() {
             ))}
           </div>
           <div className="mt-auto pb-10 border-t border-border pt-5">
-            <p className="text-[11px] uppercase tracking-widest text-text2">Built in the Dark. Worn in the Streets.</p>
+            <p className="text-[11px] uppercase tracking-widest text-text2">Loud on the streets. No volume knob.</p>
           </div>
         </div>
       )}

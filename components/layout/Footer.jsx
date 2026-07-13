@@ -10,7 +10,7 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-4 gap-8 mb-10 pb-10 border-b border-border">
           <div>
             <div className="font-display text-[26px] tracking-widest text-text1 mb-1">EGAX STUDIOS</div>
-            <p className="text-[12px] text-text2 tracking-wider mb-6">Built in the Dark. Worn in the Streets.</p>
+            <p className="text-[12px] text-text2 tracking-wider mb-6">Loud on the streets. No volume knob.</p>
             <form onSubmit={e=>e.preventDefault()} className="flex border border-border overflow-hidden">
               <input type="email" value={email} onChange={e=>setEmail(e.target.value)} placeholder="Enter your email"
                 className="flex-1 bg-transparent px-3 py-2.5 text-[12px] text-text1 placeholder:text-text2/50 outline-none"/>
@@ -29,7 +29,10 @@ export default function Footer() {
           ))}
         </div>
         <div className="flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
-          <p className="text-[11px] text-text2">© 2025 EGAX STUDIOS. All rights reserved.</p>
+          <div>
+            <p className="text-[11px] text-text2">© 2025 EGAX STUDIOS. All rights reserved.</p>
+            <p className="text-[10px] text-text2/70">Built by <a href="https://github.com/evanrasyidd" target="_blank" rel="noopener noreferrer" className="hover:text-pink transition-colors">Evan Rasyid Ega Pratama</a></p>
+          </div>
           <div className="flex items-center gap-2">
             {['QRIS','BCA','BNI','Mandiri','OVO'].map(p => (
               <span key={p} className="text-[9px] font-bold uppercase tracking-wider text-text2 border border-border px-2 py-0.5 hover:border-pink transition-colors">{p}</span>

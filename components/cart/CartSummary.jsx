@@ -9,7 +9,7 @@ export default function CartSummary({ total, itemCount }) {
       </div>
       <div className="flex justify-between text-[12px] text-text2">
         <span>Shipping</span>
-        <span className="text-green-400 font-medium">Gratis</span>
+        <span className="text-green-600 font-medium">Gratis</span>
       </div>
       <div className="flex justify-between text-[15px] pt-2 border-t border-border">
         <span className="font-semibold text-text1">Total</span>
