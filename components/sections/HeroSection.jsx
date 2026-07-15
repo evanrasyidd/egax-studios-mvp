@@ -18,20 +18,20 @@ export default function HeroSection() {
         }
       `}</style>
 
-      {/* ── Ilustrasi flat-vector (hoodie/cap), bukan 3D lagi ── */}
+      {/* ── Signature: boombox comic + sound-burst, ganti cluster 4-icon lama ── */}
       <HeroIllustration />
 
-      {/* ── Vignette ringan di sisi kiri biar teks tetap kebaca kalau
-          ilustrasi melebar ── */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: 'linear-gradient(to right, var(--bg) 0%, var(--bg) 38%, transparent 62%)',
-        }}
-      />
-
       <div className="relative h-full max-w-6xl mx-auto px-6 md:px-10 flex items-center">
-        <div className="max-w-lg">
+        {/*
+          Sticker plate solid (bukan gradient fade) buat jaga legibility teks
+          di atas ilustrasi -- sekalian bikin efek "paste-up" nempel sedikit
+          ke ilustrasi, konsisten sama bahasa ink-frame yang udah dipake di
+          badge/tombol/product card.
+        */}
+        <div
+          className="ink-frame-lg bg-bg max-w-lg px-7 py-8 md:px-9 md:py-10 lg:mr-[-32px] z-10"
+          style={{ transform: 'rotate(-1deg)' }}
+        >
           <div className="ink-frame-sm inline-flex items-center gap-2 font-comic text-xs text-text1 bg-yellow mb-5 px-3 py-2">
             <span style={{ animation: 'blink-cursor 1s step-end infinite' }}>★</span>
             {dropCount > 0 ? `${dropCount} PRE-ORDER OPEN` : 'NEW DROP — SS 2025'}
@@ -39,9 +39,9 @@ export default function HeroSection() {
 
           <h1
             className="font-display text-text1 mb-2 uppercase"
-            style={{ fontSize: 'clamp(40px, 8vw, 88px)', lineHeight: 0.95, textShadow: '4px 4px 0 rgba(20,18,15,0.15)' }}
+            style={{ fontSize: 'clamp(40px, 8vw, 80px)', lineHeight: 0.95, textShadow: '4px 4px 0 rgba(20,18,15,0.15)' }}
           >
-            LOUD ON<br />THE STREETS.
+            <span className="text-pink">LOUD</span> ON<br />THE STREETS.
           </h1>
 
           <p className="font-comic text-accent mb-4" style={{ fontSize: 'clamp(18px, 3vw, 30px)' }}>
