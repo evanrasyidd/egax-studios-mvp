@@ -1,20 +1,23 @@
-'use client'
+﻿'use client'
 import { useState, useMemo } from 'react'
-import { Search, Plus, Minus, Trash2, LogOut, ShoppingCart, X, Check } from 'lucide-react'
+import { Search, Plus, Minus, Trash2, LogOut, ShoppingCart, X, Check, Printer } from 'lucide-react'
 import { useAdminStore } from '@/store/adminStore'
 import { useOrderStore } from '@/store/orderStore'
 import { usePosStore } from '@/store/posStore'
 import GarmentIcon from '@/components/product/GarmentIcon'
 import { formatPrice, generateOrderId } from '@/lib/utils'
 import { toast } from '@/components/ui/Toast'
+import Button from '@/components/ui/Button'
+import { useI18n } from '@/store/i18nStore'
 
 const PAY_METHODS = [
-  { id: 'cash', label: 'TUNAI' },
-  { id: 'qris', label: 'QRIS' },
-  { id: 'debit', label: 'DEBIT' },
+  { id: 'cash', key: 'pos.cash' },
+  { id: 'qris', key: 'pos.qris' },
+  { id: 'debit', key: 'pos.debit' },
 ]
 
 export default function PosTerminal() {
+  const { t, productName } = useI18n()
   const { products } = useAdminStore()
   const { addOrder } = useOrderStore()
   const {
@@ -28,6 +31,7 @@ export default function PosTerminal() {
   const [payMethod, setPayMethod] = useState('cash')
   const [cashGiven, setCashGiven] = useState('')
   const [showSuccess, setShowSuccess] = useState(null)
+  const [showLockConfirm, setShowLockConfirm] = useState(false)
 
   const categories = useMemo(() => {
     const set = new Set(products.map((p) => p.category))
@@ -38,7 +42,7 @@ export default function PosTerminal() {
     return products.filter((p) => {
       if (p.soldOut) return false
       const matchCat = category === 'all' || p.category === category
-      const matchSearch = p.name.toLowerCase().includes(search.toLowerCase())
+      const matchSearch = p.name.toLowerCase().includes(search.toLowerCase()) || (p.nameId || '').toLowerCase().includes(search.toLowerCase())
       return matchCat && matchSearch
     })
   }, [products, category, search])
@@ -49,14 +53,14 @@ export default function PosTerminal() {
   const cashEnough = payMethod !== 'cash' || (Number(cashGiven) || 0) >= total
 
   const handleCheckout = () => {
-    if (cart.length === 0) { toast('Keranjang masih kosong.', 'error'); return }
+    if (cart.length === 0) { toast(t('pos.cartEmptyToast'), 'error'); return }
     setShowPayment(true)
     setCashGiven('')
     setPayMethod('cash')
   }
 
   const handleConfirmPayment = () => {
-    if (!cashEnough) { toast('Uang tunai belum cukup.', 'error'); return }
+    if (!cashEnough) { toast(t('pos.cashNotEnoughToast'), 'error'); return }
     const orderId = generateOrderId()
     const order = {
       id: orderId,
@@ -69,34 +73,39 @@ export default function PosTerminal() {
       channel: 'pos',
     }
     addOrder(order)
-    setShowSuccess({ orderId, total, change })
+    setShowSuccess({ orderId, total, change, items: cart, date: new Date().toISOString() })
     clearCart()
     setShowPayment(false)
   }
 
   const handleLock = () => {
     if (cart.length > 0) {
-      toast('Selesaikan atau kosongkan keranjang dulu sebelum keluar.', 'error')
+      toast(t('pos.lockToast'), 'error')
       return
     }
+    setShowLockConfirm(true)
+  }
+
+  const confirmLock = () => {
+    setShowLockConfirm(false)
     lock()
   }
 
   return (
     <div className="h-screen flex flex-col">
       {/* ── Top bar ── */}
-      <div className="flex items-center justify-between px-5 py-3 border-b-2 border-border bg-surface shrink-0">
+      <div className="flex items-center justify-between px-5 py-3 border-b border-border bg-surface shrink-0">
         <div>
-          <p className="font-body font-bold text-[8px] text-pink">★ EGAX STUDIOS ★</p>
-          <h1 className="font-display text-[12px] text-text1">POS.EXE</h1>
+          <p className="font-mono text-[10px] font-medium text-pink">{t('pos.badge')}</p>
+          <h1 className="font-display text-[12px] text-text1">{t('pos.title')}</h1>
         </div>
         <div className="flex items-center gap-3">
-          <p className="font-body font-bold text-[7px] text-text2">KASIR: <span className="text-text1">{cashierName}</span></p>
+          <p className="font-mono text-[10px] font-medium text-text2">{t('pos.cashier')}<span className="text-text1">{cashierName}</span></p>
           <button
             onClick={handleLock}
-            className="flex items-center gap-1.5 font-body font-bold text-[7px] text-text2 border-2 border-border px-3 py-2 hover:border-red-400 hover:text-red-600 transition-colors"
+            className="flex items-center gap-1.5 font-mono text-[10px] font-medium text-text2 border border-border px-3 py-2 hover:border-red-400 hover:text-red-600 transition-colors"
           >
-            <LogOut size={11} /> KELUAR
+            <LogOut size={11} /> {t('pos.logout')}
           </button>
         </div>
       </div>
@@ -104,14 +113,14 @@ export default function PosTerminal() {
       <div className="flex-1 flex flex-col lg:flex-row overflow-hidden">
         {/* ── Product grid ── */}
         <div className="flex-1 flex flex-col overflow-hidden min-h-0">
-          <div className="p-4 border-b-2 border-border shrink-0 space-y-3">
+          <div className="p-4 border-b border-border shrink-0 space-y-3">
             <div className="relative">
               <Search size={13} className="absolute left-3 top-1/2 -translate-y-1/2 text-text2" />
               <input
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
-                placeholder="CARI PRODUK..."
-                className="w-full bg-bg border-2 border-border text-text1 font-body font-bold text-[8px] pl-9 pr-3 py-2.5 outline-none focus:border-pink"
+                placeholder={t('pos.search')}
+                className="w-full bg-bg border border-border text-text1 font-mono text-[10px] font-medium pl-9 pr-3 py-2.5 outline-none focus:border-text1"
               />
             </div>
             <div className="flex gap-2 overflow-x-auto pb-1">
@@ -119,11 +128,11 @@ export default function PosTerminal() {
                 <button
                   key={c}
                   onClick={() => setCategory(c)}
-                  className={`shrink-0 font-body font-bold text-[7px] px-3 py-2 border-2 transition-colors whitespace-nowrap ${
-                    category === c ? 'border-pink text-pink bg-pink/10' : 'border-border text-text2 hover:border-text2'
+                  className={`shrink-0 font-mono text-[10px] font-medium px-3 py-2 border transition-colors whitespace-nowrap ${
+                    category === c ? 'border-text1 text-text1 bg-bg' : 'border-border text-text2 hover:border-text1'
                   }`}
                 >
-                  {c === 'all' ? 'SEMUA' : c.toUpperCase()}
+                  {c === 'all' ? t('pos.all') : t(`cat.${c.toLowerCase()}`).toUpperCase()}
                 </button>
               ))}
             </div>
@@ -131,24 +140,24 @@ export default function PosTerminal() {
 
           <div className="flex-1 overflow-y-auto p-4">
             {filtered.length === 0 ? (
-              <p className="font-body font-bold text-[8px] text-text2 text-center py-12">PRODUK TIDAK DITEMUKAN.</p>
+              <p className="font-mono text-[10px] font-medium text-text2 text-center py-12">{t('pos.notFound')}</p>
             ) : (
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
                 {filtered.map((p, i) => {
-                  const bgColors = ['#4ADE80','#FF2E7E','#FACC15','#60A5FA','#F87171','#A78BFA','#34D399','#FB923C']
+                  const bgColors = ['#A6A29A','#77736C','#5A5751','#3A3936','#222220','#8F8B84','#6E6A63','#4A4844']
                   const bg = bgColors[(parseInt(p.id.replace('p','')) || i) % bgColors.length]
                   return (
                     <button
                       key={p.id}
-                      onClick={() => { addToCart(p, p.sizes?.[0]); toast(`${p.name} ditambahkan`) }}
-                      className="border-2 border-border hover:border-pink transition-colors text-left group"
+                      onClick={() => { addToCart(p, p.sizes?.[0]); toast(t('pos.added', { name: productName(p) })) }}
+                      className="border border-border hover:border-text1 transition-colors text-left group"
                     >
                       <div className="aspect-square flex items-center justify-center" style={{ background: bg }}>
-                        <GarmentIcon category={p.category} fill="rgba(255,255,255,0.92)" shade="rgba(0,0,0,0.22)" detail="#0A0A0A" scale={5} />
+                        <GarmentIcon category={p.category} fill="rgba(255,255,255,0.92)" shade="rgba(0,0,0,0.22)" detail="#111111" scale={5} />
                       </div>
                       <div className="p-2.5 bg-surface">
-                        <p className="font-body text-[11px] text-text1 leading-snug mb-1 line-clamp-2">{p.name}</p>
-                        <p className="font-body font-bold text-[8px] text-pink">{formatPrice(p.price)}</p>
+                        <p className="font-body text-[11px] text-text1 leading-snug mb-1 line-clamp-2">{productName(p)}</p>
+                        <p className="font-mono text-[10px] font-medium text-pink">{formatPrice(p.price)}</p>
                       </div>
                     </button>
                   )
@@ -159,37 +168,37 @@ export default function PosTerminal() {
         </div>
 
         {/* ── Cart panel ── */}
-        <div className="w-full h-[42vh] lg:h-auto lg:w-[360px] border-t-4 lg:border-t-0 lg:border-l-4 border-pink bg-surface flex flex-col shrink-0">
-          <div className="flex items-center gap-2 px-4 py-3 border-b-2 border-border">
+        <div className="w-full h-[42vh] lg:h-auto lg:w-[360px] border-t lg:border-t-0 lg:border-l border-pink bg-surface flex flex-col shrink-0">
+          <div className="flex items-center gap-2 px-4 py-3 border-b border-border">
             <ShoppingCart size={14} className="text-pink" />
-            <span className="font-body font-bold text-[9px] text-text1">KERANJANG ({itemCount})</span>
+            <span className="font-mono text-[11px] font-medium text-text1">{t('pos.cart', { n: itemCount })}</span>
           </div>
 
           <div className="flex-1 overflow-y-auto">
             {cart.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full gap-3 text-center px-6">
                 <ShoppingCart size={28} className="text-border" />
-                <p className="font-body font-bold text-[8px] text-text2">KERANJANG KOSONG</p>
+                <p className="font-mono text-[10px] font-medium text-text2">{t('pos.cartEmpty')}</p>
               </div>
             ) : (
-              <div className="divide-y-2 divide-border">
+              <div className="divide-y divide-border">
                 {cart.map((item) => (
                   <div key={item.key} className="flex gap-3 p-3">
                     <div className="flex-1 min-w-0">
-                      <p className="font-body text-[12px] text-text1 leading-snug mb-1">{item.product.name}</p>
-                      <p className="font-body font-bold text-[7px] text-text2 mb-2">SIZE: {item.size}</p>
+                      <p className="font-body text-[12px] text-text1 leading-snug mb-1">{productName(item.product)}</p>
+                      <p className="font-mono text-[10px] font-medium text-text2 mb-2">{t('pos.size', { size: item.size })}</p>
                       <div className="flex items-center justify-between">
-                        <div className="flex items-center border-2 border-border">
+                        <div className="flex items-center border border-border">
                           <button onClick={() => updateQty(item.key, item.qty - 1)} className="w-6 h-6 flex items-center justify-center text-text2 hover:text-pink">
                             <Minus size={9} />
                           </button>
-                          <span className="w-7 text-center font-body font-bold text-[8px] text-text1">{item.qty}</span>
+                          <span className="w-7 text-center font-mono text-[10px] font-medium text-text1">{item.qty}</span>
                           <button onClick={() => updateQty(item.key, item.qty + 1)} className="w-6 h-6 flex items-center justify-center text-text2 hover:text-pink">
                             <Plus size={9} />
                           </button>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className="font-body font-bold text-[8px] text-text1">{formatPrice(item.product.price * item.qty)}</span>
+                          <span className="font-mono text-[10px] font-medium text-text1">{formatPrice(item.product.price * item.qty)}</span>
                           <button onClick={() => removeFromCart(item.key)} className="text-text2 hover:text-red-600">
                             <Trash2 size={11} />
                           </button>
@@ -204,32 +213,50 @@ export default function PosTerminal() {
 
           <div className="border-t-4 border-border p-4 space-y-3">
             <div className="flex justify-between font-body font-bold text-[10px]">
-              <span className="text-text2">TOTAL</span>
+              <span className="text-text2">{t('pos.total')}</span>
               <span className="text-pink">{formatPrice(total)}</span>
             </div>
             <button
               onClick={handleCheckout}
               disabled={cart.length === 0}
-              className="w-full font-body font-bold text-[9px] text-black py-3.5 transition-all hover:brightness-110 active:translate-x-0.5 active:translate-y-0.5 disabled:opacity-30 disabled:cursor-not-allowed"
-              style={{ background: '#FF2E7E', border: '2px solid #14120F', boxShadow: '3px 3px 0 #14120F' }}
+              className="w-full font-mono text-[11px] font-medium text-bg bg-text1 border border-text1 py-3.5 transition-colors hover:bg-text2 disabled:opacity-30 disabled:cursor-not-allowed"
             >
-              BAYAR &gt;&gt;
+              {t('pos.pay')}
             </button>
           </div>
         </div>
       </div>
 
+      {/* ── Lock confirm ── */}
+      {showLockConfirm && (
+        <div className="fixed inset-0 z-[90] bg-text1/60 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="anim-rise bg-surface border border-text1 w-full max-w-sm">
+            <div className="flex items-center justify-between px-5 py-2.5 bg-text1">
+              <span className="arch-label text-bg">{t('pos.lockTitle')}</span>
+              <button onClick={() => setShowLockConfirm(false)} className="text-bg/70 hover:text-bg p-1"><X size={14} /></button>
+            </div>
+            <div className="p-5">
+              <p className="text-[13px] text-text2 mb-5 leading-relaxed">{t('pos.lockSure')}</p>
+              <div className="flex gap-2">
+                <Button variant="outline" className="flex-1" onClick={() => setShowLockConfirm(false)}>{t('admin.cancel')}</Button>
+                <Button variant="primary" className="flex-1" onClick={confirmLock}>{t('pos.lockYes')}</Button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* ── Payment modal ── */}
       {showPayment && (
         <div className="fixed inset-0 z-[90] bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-surface border-2 border-pink w-full max-w-sm" style={{ boxShadow: '6px 6px 0 #14120F' }}>
-            <div className="flex items-center justify-between px-5 py-4 border-b-2 border-border">
-              <span className="font-body font-bold text-[10px] text-text1">PEMBAYARAN</span>
-              <button onClick={() => setShowPayment(false)} className="text-text2 hover:text-pink"><X size={16} /></button>
+          <div className="anim-rise bg-surface border border-text1 w-full max-w-sm">
+            <div className="flex items-center justify-between px-5 py-2.5 bg-text1">
+              <span className="arch-label text-bg">{t('pos.payment')}</span>
+              <button onClick={() => setShowPayment(false)} className="text-bg/70 hover:text-bg p-1"><X size={14} /></button>
             </div>
             <div className="p-5 space-y-4">
               <div className="flex justify-between font-display text-[12px]">
-                <span className="text-text2">TOTAL BAYAR</span>
+                <span className="text-text2">{t('pos.totalPay')}</span>
                 <span className="text-pink">{formatPrice(total)}</span>
               </div>
 
@@ -238,30 +265,30 @@ export default function PosTerminal() {
                   <button
                     key={m.id}
                     onClick={() => setPayMethod(m.id)}
-                    className={`font-body font-bold text-[7px] py-3 border-2 transition-colors ${
-                      payMethod === m.id ? 'border-pink text-pink bg-pink/10' : 'border-border text-text2 hover:border-text2'
+                    className={`font-mono text-[10px] font-medium py-3 border transition-colors ${
+                      payMethod === m.id ? 'border-text1 text-text1 bg-bg' : 'border-border text-text2 hover:border-text1'
                     }`}
                   >
-                    {m.label}
+                    {t(m.key)}
                   </button>
                 ))}
               </div>
 
               {payMethod === 'cash' && (
                 <div className="space-y-2">
-                  <label className="font-body font-bold text-[7px] text-text2">UANG DITERIMA</label>
+                  <label className="font-mono text-[10px] font-medium text-text2">{t('pos.cashReceived')}</label>
                   <input
                     type="number"
                     value={cashGiven}
                     onChange={(e) => setCashGiven(e.target.value)}
                     placeholder="0"
-                    className="w-full bg-bg border-2 border-border text-text1 font-display text-[12px] px-4 py-2.5 outline-none focus:border-pink"
+                    className="w-full bg-bg border border-border text-text1 font-display text-[12px] px-4 py-2.5 outline-none focus:border-text1"
                   />
                   {cashGiven && (
-                    <div className="flex justify-between font-body font-bold text-[9px] pt-1">
-                      <span className="text-text2">KEMBALIAN</span>
+                    <div className="flex justify-between font-mono text-[11px] font-medium pt-1">
+                      <span className="text-text2">{t('pos.change')}</span>
                       <span className={cashEnough ? 'text-pink' : 'text-red-600'}>
-                        {cashEnough ? formatPrice(change) : 'KURANG'}
+                        {cashEnough ? formatPrice(change) : t('pos.notEnough')}
                       </span>
                     </div>
                   )}
@@ -269,18 +296,17 @@ export default function PosTerminal() {
               )}
 
               {payMethod !== 'cash' && (
-                <p className="font-body font-bold text-[7px] text-text2 leading-relaxed border-2 border-border p-3">
-                  ★ SIMULASI {payMethod === 'qris' ? 'QRIS' : 'KARTU DEBIT'} — TIDAK ADA GATEWAY PEMBAYARAN ASLI TERHUBUNG.
+                <p className="font-mono text-[10px] font-medium text-text2 leading-relaxed border border-border p-3">
+                  {t('pos.simulate', { method: payMethod === 'qris' ? t('pos.simulateQris') : t('pos.simulateDebit') })}
                 </p>
               )}
 
               <button
                 onClick={handleConfirmPayment}
                 disabled={!cashEnough}
-                className="w-full font-body font-bold text-[9px] text-black py-3.5 transition-all hover:brightness-110 disabled:opacity-30 disabled:cursor-not-allowed"
-                style={{ background: '#FF2E7E', border: '2px solid #14120F', boxShadow: '3px 3px 0 #14120F' }}
+                className="w-full font-mono text-[11px] font-medium text-bg bg-text1 border border-text1 py-3.5 transition-colors hover:bg-text2 disabled:opacity-30 disabled:cursor-not-allowed"
               >
-                KONFIRMASI &gt;&gt;
+                {t('pos.confirm')}
               </button>
             </div>
           </div>
@@ -290,31 +316,46 @@ export default function PosTerminal() {
       {/* ── Success modal ── */}
       {showSuccess && (
         <div className="fixed inset-0 z-[90] bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-surface border-2 border-pink w-full max-w-sm text-center p-6" style={{ boxShadow: '6px 6px 0 #14120F' }}>
-            <div className="w-12 h-12 mx-auto mb-4 flex items-center justify-center border-2 border-pink rounded-full">
-              <Check size={20} className="text-pink" />
-            </div>
-            <p className="font-body font-bold text-[10px] text-text1 mb-2">TRANSAKSI BERHASIL</p>
-            <p className="font-body font-bold text-[7px] text-text2 mb-4">{showSuccess.orderId}</p>
-            <div className="space-y-1 mb-5 text-left border-2 border-border p-3">
-              <div className="flex justify-between font-body font-bold text-[8px]">
-                <span className="text-text2">TOTAL</span>
-                <span className="text-text1">{formatPrice(showSuccess.total)}</span>
+          <div className="bg-surface border border-text1 w-full max-w-sm text-center" style={{ boxShadow: '0 6px 24px rgba(35,33,27,0.16)' }}>
+            {/* Area struk yang di-print */}
+            <div className="receipt-print p-6 text-left border-b border-border">
+              <div className="text-center mb-4">
+                <p className="font-display font-bold text-[16px] text-text1 tracking-[0.08em]">EGAX STUDIOS</p>
+                <p className="font-mono text-[8px] uppercase tracking-[0.18em] text-text2 mt-1">Jakarta · {t('pos.receipt')}</p>
+                <p className="font-mono text-[8px] text-text2 mt-1">{showSuccess.orderId}</p>
+                <p className="font-mono text-[8px] text-text2">{new Date(showSuccess.date || Date.now()).toLocaleString('id-ID')}</p>
+              </div>
+              <div className="border-t border-dashed border-text1 pt-3 mb-2">
+                {(showSuccess.items || []).map((item) => (
+                  <div key={item.key} className="flex justify-between gap-3 font-mono text-[9px] text-text1 py-0.5">
+                    <span className="truncate">{productName(item.product)} · {item.size} ×{item.qty}</span>
+                    <span className="shrink-0">{formatPrice(item.product.price * item.qty)}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="flex justify-between font-mono text-[10px] font-semibold text-text1 pt-2 border-t border-text1">
+                <span>{t('pos.total')}</span>
+                <span>{formatPrice(showSuccess.total)}</span>
               </div>
               {showSuccess.change > 0 && (
-                <div className="flex justify-between font-body font-bold text-[8px]">
-                  <span className="text-text2">KEMBALIAN</span>
-                  <span className="text-pink">{formatPrice(showSuccess.change)}</span>
+                <div className="flex justify-between font-mono text-[9px] text-text2 pt-1">
+                  <span>{t('pos.change')}</span>
+                  <span>{formatPrice(showSuccess.change)}</span>
                 </div>
               )}
+              <p className="text-center font-mono text-[9px] uppercase tracking-[0.2em] text-text2 mt-4">— {t('pos.thanksNote')} —</p>
             </div>
-            <button
-              onClick={() => setShowSuccess(null)}
-              className="w-full font-body font-bold text-[9px] text-black py-3.5 transition-all hover:brightness-110"
-              style={{ background: '#FF2E7E', border: '2px solid #14120F', boxShadow: '3px 3px 0 #14120F' }}
-            >
-              TRANSAKSI BARU &gt;&gt;
-            </button>
+            {/* Aksi */}
+            <div className="p-5 grid grid-cols-2 gap-3">
+              <button onClick={() => window.print()}
+                className="flex items-center justify-center gap-2 font-mono text-[11px] font-medium text-bg bg-text1 border border-text1 py-3 hover:bg-text2 transition-colors">
+                <Printer size={13} /> {t('pos.print')}
+              </button>
+              <button onClick={() => setShowSuccess(null)}
+                className="font-mono text-[11px] font-medium text-text1 border border-border py-3 hover:border-text1 transition-colors">
+                {t('pos.newTransaction')}
+              </button>
+            </div>
           </div>
         </div>
       )}

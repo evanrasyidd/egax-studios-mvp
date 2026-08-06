@@ -1,14 +1,17 @@
-'use client'
+﻿'use client'
 import { useCallback, useState } from 'react'
-import { LogIn } from 'lucide-react'
 import { useAdminAuthStore } from '@/store/adminAuthStore'
 import { useStaffStore } from '@/store/staffStore'
 import { useHydrated } from '@/hooks/useHydrated'
 import { useStaffSessionGuard } from '@/hooks/useStaffSessionGuard'
 import { toast } from '@/components/ui/Toast'
 import AdminSidebar from '@/components/admin/AdminSidebar'
+import Button from '@/components/ui/Button'
+import { FieldInput, FieldLabel } from '@/components/ui/Field'
+import { useI18n } from '@/store/i18nStore'
 
 function AdminLoginForm() {
+  const { t } = useI18n()
   const { login } = useAdminAuthStore()
   const { findAdminByCredentials } = useStaffStore()
   const [username, setUsername] = useState('')
@@ -20,62 +23,53 @@ function AdminLoginForm() {
     e.preventDefault()
     setError('')
     if (!username.trim() || !password) {
-      setError('Username dan password wajib diisi.')
+      setError(t('admin.required'))
       return
     }
     setLoading(true)
     const match = await findAdminByCredentials(username, password)
     if (!match) {
-      setError('Username atau password salah, atau akun tidak aktif.')
+      setError(t('admin.invalidCred'))
       setLoading(false)
       return
     }
     await login(match.id)
-    toast(`Selamat datang, ${match.name}!`)
+    toast(t('admin.welcome', { name: match.name }))
     setLoading(false)
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-bg px-6">
+    <div className="min-h-screen flex items-center justify-center bg-bg grid-paper px-6">
       <div className="w-full max-w-sm">
-        <div className="text-center mb-8">
-          <p className="font-body font-bold text-[8px] text-pink mb-2">★ EGAX STUDIOS ★</p>
-          <h1 className="font-display text-[18px] text-text1">ADMIN.LOGIN</h1>
-          <p className="font-body font-bold text-[7px] text-text2 mt-2">MASUKKAN KREDENSIAL ADMIN</p>
+        <div className="border border-text1 bg-surface mb-8">
+          <div className="flex items-center justify-between px-6 py-3 bg-text1">
+            <span className="arch-label text-bg">EGAX STUDIOS</span>
+            <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-bg/60">ADMIN</span>
+          </div>
+          <div className="p-6">
+            <p className="arch-label text-pink mb-2">{t('admin.loginBadge')}</p>
+            <h1 className="font-display text-[24px] font-bold tracking-[-0.01em] text-text1 mb-1">{t('admin.loginTitle')}</h1>
+            <p className="text-[12px] text-text2 mb-6">{t('admin.loginSub')}</p>
+
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <div>
+                <FieldLabel>{t('admin.username')}</FieldLabel>
+                <FieldInput value={username} onChange={(e) => setUsername(e.target.value)} autoComplete="username" placeholder="admin" />
+              </div>
+              <div>
+                <FieldLabel>{t('admin.password')}</FieldLabel>
+                <FieldInput type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" placeholder="••••••••" />
+              </div>
+
+              {error && <p className="font-mono text-[11px] text-red-600">{error}</p>}
+
+              <Button type="submit" disabled={loading} className="w-full">
+                {loading ? t('admin.verifying') : t('admin.loginBtn')}
+              </Button>
+            </form>
+          </div>
         </div>
-
-        <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="space-y-1.5">
-            <label className="font-body font-bold text-[7px] text-text2">USERNAME</label>
-            <input
-              value={username}
-              onChange={(e) => setUsername(e.target.value)}
-              autoComplete="username"
-              className="w-full bg-surface border-2 border-border text-text1 font-body font-bold text-[9px] px-4 py-3 outline-none focus:border-pink"
-            />
-          </div>
-          <div className="space-y-1.5">
-            <label className="font-body font-bold text-[7px] text-text2">PASSWORD</label>
-            <input
-              type="password"
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              autoComplete="current-password"
-              className="w-full bg-surface border-2 border-border text-text1 font-body font-bold text-[9px] px-4 py-3 outline-none focus:border-pink"
-            />
-          </div>
-
-          {error && <p className="font-body font-bold text-[7px] text-red-600">{error}</p>}
-
-          <button
-            type="submit"
-            disabled={loading}
-            className="w-full flex items-center justify-center gap-2 font-body font-bold text-[10px] text-black py-3.5 transition-all hover:brightness-110 active:translate-x-0.5 active:translate-y-0.5 disabled:opacity-50 disabled:cursor-not-allowed"
-            style={{ background: '#FF2E7E', border: '2px solid #14120F', boxShadow: '3px 3px 0 #14120F' }}
-          >
-            <LogIn size={13} /> {loading ? 'MEMVERIFIKASI...' : 'MASUK >>'}
-          </button>
-        </form>
+        <p className="text-center font-mono text-[9px] uppercase tracking-[0.2em] text-text2/60">{t('admin.loginHint')}</p>
       </div>
     </div>
   )
@@ -84,10 +78,11 @@ function AdminLoginForm() {
 export default function AdminGate({ children }) {
   const hydrated = useHydrated()
   const { isLoggedIn, logout, verifySession } = useAdminAuthStore()
+  const { t } = useI18n()
 
   const handleInvalidSession = useCallback(() => {
-    toast('Akun kamu sudah tidak aktif. Silakan login ulang.', 'error')
-  }, [])
+    toast(t('admin.invalidSession'), 'error')
+  }, [t])
 
   useStaffSessionGuard({ hydrated, isLoggedIn, verifySession, logout, onInvalid: handleInvalidSession })
 

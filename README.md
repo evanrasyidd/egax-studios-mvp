@@ -1,6 +1,8 @@
 # EGAX Studios
 
-Fashion e-commerce built with Next.js 15, Tailwind CSS, Framer Motion, Zustand, React Three Fiber + Rapier.
+Fashion e-commerce built with Next.js 15, Tailwind CSS, Framer Motion, Zustand.
+
+**Design language:** minimal archive / brutalist — putih-hitam monochrome (paper #FAFAF8, ink #111111), satu typeface Archivo untuk semua peran, tanpa shadow/dekorasi, hairline rules tipis, archive numbering (Nº serial produk, section 01–05). Signaturnya: hero archive catalog card (Nº + visual garmen + harga di atas putih).
 
 ## Requirements
 - Node.js v18+
@@ -14,11 +16,9 @@ npm run dev
 
 Open [http://localhost:3000](http://localhost:3000)
 
-⚠️ Project ini sekarang pakai React Three Fiber + Rapier untuk 3D hero (lihat `components/three/`). Setelah pull, **wajib** `npm install` ulang karena ada dependency baru: `three@^0.184`, `@react-three/fiber@^9.6` (bukan v8 — v8 itu khusus React 18 dan akan bikin ERESOLVE error karena project ini React 19), `@react-three/rapier@^2.1` (bukan v1, yang masih nargetin fiber v8/React 18).
+Env opsional: `NEXT_PUBLIC_SITE_URL` (domain production) dipakai `app/sitemap.js` & `app/robots.js`. Kalau tidak di-set, fallback ke `https://egax-studios.vercel.app`.
 
-**Kalau kamu pernah install versi sebelumnya yang masih ada `@react-three/drei`**: jalankan `npm install` lagi setelah pull untuk membersihkannya — drei sudah dihapus dari dependency karena fitur `Environment`/HDRI yang dipakainya (download environment map dari CDN eksternal) terbukti jadi kandidat kuat penyebab `THREE.WebGLRenderer: Context Lost`. Hero sekarang pakai lighting manual (ambient + directional + point light) yang tidak depend ke resource eksternal apa pun, lebih ringan dan lebih stabil.
-
-Kalau masih kena `ERESOLVE unable to resolve dependency tree` setelah ini, cek dulu `npm ls react` buat pastiin cuma ada satu versi React di tree, lalu `npm install` lagi. Sebagai jalan darurat (bukan solusi utama) bisa pakai `npm install --legacy-peer-deps`.
+> Catatan: dependency Three.js (`three`, `@react-three/fiber`, `@react-three/rapier`) sudah dihapus karena 3D scene hero tidak pernah di-mount dan jadi dead code. Kalau suatu saat 3D dibutuhkan lagi, tinggal install ulang — versi yang dipakai sebelumnya: `three@^0.185`, `@react-three/fiber@^9.6` (khusus React 19, bukan v8), `@react-three/rapier@^2.2`.
 
 ## Admin Access
 `/admin` sekarang ada di balik login gate (username + password) -- akun yang tidak ada di Staff Management tidak bisa masuk sama sekali.
@@ -47,20 +47,22 @@ Soal keamanan credential: password admin dan PIN kasir sekarang disimpan sebagai
 ## Pages
 - `/` — Homepage
 - `/catalog` — Product catalog with filter & sort
-- `/product/[slug]` — Product detail
-- `/checkout` — Checkout simulation (QRIS, E-Wallet, Virtual Account)
-- `/pos` — POS kasir (PIN-gated, terpisah dari admin)
+- `/product/[slug]` — Product detail (spec sheet + size guide)
+- `/compare` — Compare up to 4 products side-by-side
+- `/checkout` — Checkout simulation (QRIS, E-Wallet, Virtual Account, voucher code)
+- `/pos` — POS kasir (PIN-gated, terpisah dari admin, print struk)
 - `/editorial` — Editorial lookbook
 - `/gallery` — Photo gallery
 - `/about` — Brand story
 - `/contact` — Contact form
 - `/account` — Login / Register
-- `/account/orders` — Order history
+- `/account/orders` — Order history + tracking timeline
 - `/account/wishlist` — Wishlist
 - `/admin` — Admin dashboard
+- `/admin/vouchers` — Kelola promo code (admin)
 
 ## Features
-- Dark editorial aesthetic dengan 3D abstract fragmented geometry di hero (React Three Fiber + Rapier, lazy-mount via IntersectionObserver, fallback statis untuk device tanpa WebGL atau saat WebGL context loss terjadi, lighting manual tanpa dependency ke environment map/CDN eksternal)
+- Hero archive catalog: headline grotesk hitam besar (WEAR / THE NOISE.) + kartu katalog bernomor (Nº serial, visual garmen di tone abu garment, nama & harga) sebagai signature element — semuanya tipografi/SVG, tanpa foto stock
 - Sticky navbar with underline animation
 - Mega menu dropdown (Catalog)
 - Mobile fullscreen menu
@@ -74,7 +76,7 @@ Soal keamanan credential: password admin dan PIN kasir sekarang disimpan sebagai
 - POS kasir standalone dengan PIN auth sendiri, cart kasir terpisah dari cart customer, dan transaksi otomatis tercatat ke order store yang sama dengan shop online (dibedakan lewat field `channel`)
 - 25 mock products across 6 categories, masing-masing dengan representasi visual `GarmentIcon` per kategori (bukan foto asli — ganti ke foto produk real kapan saja sudah tersedia)
 - Pre Order, New Collection, Featured, Best Seller sections
-- White background product sections (YB LABS inspired)
+- Paper-white sections dengan hairline rules & archive numbering (01/02/03)
 - Responsive: mobile, tablet, desktop
 
 ## Known limitations / next steps

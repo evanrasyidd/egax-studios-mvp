@@ -29,7 +29,11 @@ export const useCartStore = create(
       updateQty: (key, qty) => {
         if (qty < 1) return
         set({
-          items: get().items.map((i) => (i.key === key ? { ...i, qty } : i)),
+          items: get().items.map((i) => {
+            if (i.key !== key) return i
+            const left = i.product.stock?.[i.size] ?? 99
+            return { ...i, qty: Math.min(qty, left) }
+          }),
         })
       },
 

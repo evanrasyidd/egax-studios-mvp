@@ -1,37 +1,43 @@
-import { Anton, Bangers, Inter } from 'next/font/google'
+﻿import { Archivo } from 'next/font/google'
 import StoreHydration from '@/components/providers/StoreHydration'
+import LanguageSync from '@/components/providers/LanguageSync'
+import ScrollAnimations from '@/components/providers/ScrollAnimations'
+import Preloader from '@/components/providers/Preloader'
 import './globals.css'
 
-const anton = Anton({
-  weight: '400',
+const archivo = Archivo({
   subsets: ['latin'],
   variable: '--font-display',
   display: 'swap',
 })
 
-const bangers = Bangers({
-  weight: '400',
-  subsets: ['latin'],
-  variable: '--font-comic',
-  display: 'swap',
-})
-
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-body',
-  display: 'swap',
-})
-
 export const metadata = {
-  title: 'EGAX Studios — Loud on the Streets.',
-  description: 'Bold streetwear brand. Limited drops, no volume.',
+  title: {
+    default: 'EGAX Studios · Everyday Workwear',
+    template: '%s · EGAX Studios',
+  },
+  description: 'Jakarta-based clothing brand for everyday wear. Duck chore jackets, trucker denim, flannel, chinos, tees. Regular, loose fit and wide leg jeans.',
+  icons: {
+    icon: '/favicon.svg',
+    apple: '/apple-icon.svg',
+  },
+  openGraph: {
+    title: 'EGAX Studios · Everyday Workwear',
+    description: 'Jakarta-based clothing brand for everyday wear. Duck chore jackets, trucker denim, flannel, chinos, tees.',
+    type: 'website',
+    locale: 'id_ID',
+    siteName: 'EGAX Studios',
+  },
 }
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="id" className={`${anton.variable} ${bangers.variable} ${inter.variable}`}>
+    <html lang="id" className={archivo.variable}>
       <body>
         <StoreHydration>{children}</StoreHydration>
+        <LanguageSync />
+        <ScrollAnimations />
+        <Preloader />
       </body>
     </html>
   )

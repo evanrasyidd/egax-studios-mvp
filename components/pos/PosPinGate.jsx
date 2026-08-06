@@ -1,10 +1,12 @@
-'use client'
+﻿'use client'
 import { useState } from 'react'
 import { Delete } from 'lucide-react'
 import { usePosStore } from '@/store/posStore'
 import { toast } from '@/components/ui/Toast'
+import { useI18n } from '@/store/i18nStore'
 
 export default function PosPinGate() {
+  const { t } = useI18n()
   const { unlock } = usePosStore()
   const [pin, setPin] = useState('')
   const [error, setError] = useState('')
@@ -27,7 +29,7 @@ export default function PosPinGate() {
       setLoading(false)
       return
     }
-    toast(`Selamat bertugas, ${result.name}!`)
+    toast(t('pos.welcome', { name: result.name }))
     setLoading(false)
   }
 
@@ -35,9 +37,9 @@ export default function PosPinGate() {
     <div className="min-h-screen flex items-center justify-center px-6">
       <div className="w-full max-w-[340px]">
         <div className="text-center mb-8">
-          <p className="font-body font-bold text-[8px] text-pink mb-2">★ EGAX STUDIOS ★</p>
-          <h1 className="font-display text-[18px] text-text1">POS.EXE</h1>
-          <p className="font-body font-bold text-[7px] text-text2 mt-2">MASUKKAN PIN KASIR</p>
+          <p className="arch-label text-pink mb-2">{t('pos.badge')}</p>
+          <h1 className="font-display text-[18px] text-text1">{t('pos.title')}</h1>
+          <p className="font-mono text-[10px] font-medium text-text2 mt-2">{t('pos.pinSub')}</p>
         </div>
 
         {/* PIN dots display */}
@@ -45,14 +47,14 @@ export default function PosPinGate() {
           {Array.from({ length: 6 }).map((_, i) => (
             <div
               key={i}
-              className="w-3 h-3 border-2 border-border"
-              style={{ background: i < pin.length ? '#FF2E7E' : 'transparent' }}
+              className="w-3 h-3 border border-border"
+              style={{ background: i < pin.length ? '#111111' : 'transparent' }}
             />
           ))}
         </div>
 
         {error && (
-          <p className="text-center font-body font-bold text-[7px] text-red-600 mb-4">{error}</p>
+          <p className="text-center font-mono text-[10px] font-medium text-red-600 mb-4">{error}</p>
         )}
 
         {/* Numpad */}
@@ -61,27 +63,27 @@ export default function PosPinGate() {
             <button
               key={d}
               onClick={() => handleDigit(d)}
-              className="aspect-square bg-surface border-2 border-border text-text1 font-display text-[14px] hover:border-pink hover:text-pink transition-colors"
+              className="aspect-square bg-surface border border-border text-text1 font-display text-[14px] hover:border-text1 hover:text-text1 transition-colors"
             >
               {d}
             </button>
           ))}
           <button
             onClick={() => setPin('')}
-            className="aspect-square bg-surface border-2 border-border text-text2 font-body font-bold text-[8px] hover:border-red-400 hover:text-red-600 transition-colors"
+            className="aspect-square bg-surface border border-border text-text2 font-mono text-[10px] font-medium hover:border-red-400 hover:text-red-600 transition-colors"
           >
-            CLR
+            {t('pos.clr')}
           </button>
           <button
             onClick={() => handleDigit('0')}
-            className="aspect-square bg-surface border-2 border-border text-text1 font-display text-[14px] hover:border-pink hover:text-pink transition-colors"
+            className="aspect-square bg-surface border border-border text-text1 font-display text-[14px] hover:border-text1 hover:text-text1 transition-colors"
           >
             0
           </button>
           <button
             onClick={handleBackspace}
-            className="aspect-square bg-surface border-2 border-border text-text2 flex items-center justify-center hover:border-pink hover:text-pink transition-colors"
-            aria-label="Backspace"
+            className="aspect-square bg-surface border border-border text-text2 flex items-center justify-center hover:border-text1 hover:text-text1 transition-colors"
+            aria-label={t('pos.backspace')}
           >
             <Delete size={14} />
           </button>
@@ -90,10 +92,9 @@ export default function PosPinGate() {
         <button
           onClick={handleSubmit}
           disabled={pin.length === 0 || loading}
-          className="w-full font-body font-bold text-[10px] text-black py-3.5 transition-all hover:brightness-110 active:translate-x-0.5 active:translate-y-0.5 disabled:opacity-30 disabled:cursor-not-allowed"
-          style={{ background: '#FF2E7E', border: '2px solid #14120F', boxShadow: '3px 3px 0 #14120F' }}
+          className="w-full font-mono text-[11px] font-medium text-bg bg-text1 border border-text1 py-3.5 transition-colors hover:bg-text2 disabled:opacity-30 disabled:cursor-not-allowed"
         >
-          {loading ? 'MEMERIKSA...' : 'MASUK >>'}
+          {loading ? t('pos.checking') : t('pos.enter')}
         </button>
       </div>
     </div>

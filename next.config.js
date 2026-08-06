@@ -1,11 +1,12 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  // next/image gak dipake sama sekali di project ini (semua placeholder
-  // produk pake GarmentIcon SVG, bukan foto remote) -- jadi gak ada
-  // remotePatterns yang perlu didaftarin, dan quota "Image Optimization -
-  // Transformations" di Vercel gak akan ke-charge sama sekali.
+  // Tidak ada gambar remote yang di-render di project ini:
+  // - Semua placeholder produk pakai GarmentIcon SVG (bukan foto)
+  // - Hero memakai tipografi + SVG signature, bukan hotlink Unsplash
+  // Kalau nanti foto produk asli masuk lewat next/image, daftarin
+  // domain-nya di `images.remotePatterns` dulu atau next/image bakal 500.
   experimental: {
-    optimizePackageImports: ['lucide-react', 'framer-motion'],
+    optimizePackageImports: ['lucide-react', 'gsap'],
   },
 }
 

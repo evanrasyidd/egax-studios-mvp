@@ -3,17 +3,20 @@
 @tailwind utilities;
 
 :root {
-  --bg:        #FAF7F0;
+  --bg:        #FAFAF8;
   --surface:   #FFFFFF;
   --card:      #FFFFFF;
-  --text-1:    #14120F;
-  --text-2:    #514E48;
-  --border:    #14120F;
-  --accent:    #2E4BFF;
-  --pink:      #FF2E7E;
-  --pink-dark: #CC1B5E;
-  --yellow:    #FFD400;
-  --ink:       #14120F;
+  --text-1:    #111111;
+  --text-2:    #7A7A7A;
+  --border:    #E5E4E0;
+  --accent:    #111111;
+  --pink:      #111111;
+  --pink-dark: #000000;
+  --yellow:    #ECEBE6;
+  --ink:       #111111;
+  /* Satu typeface (Archivo) buat semua peran — mono/body alias display */
+  --font-body: var(--font-display);
+  --font-mono: var(--font-display);
 }
 
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -26,38 +29,71 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
-::selection { background: var(--yellow); color: var(--ink); }
-::-webkit-scrollbar { width: 4px; height: 4px; }
-::-webkit-scrollbar-track { background: var(--bg); }
-::-webkit-scrollbar-thumb { background: var(--ink); }
+::selection { background: var(--text-1); color: var(--bg); }
+
+/* Scrollbar halaman dihapus (progress bar di navbar jadi indikatornya).
+   Scrollbar tipis hitam tetap ada di area scroll internal (drawer, admin, POS). */
+html { scrollbar-width: none; -ms-overflow-style: none; }
+html::-webkit-scrollbar { display: none; }
+html body *::-webkit-scrollbar { width: 4px; height: 4px; }
+html body *::-webkit-scrollbar-track { background: transparent; }
+html body *::-webkit-scrollbar-thumb { background: var(--ink); }
 
 .font-display { font-family: var(--font-display), sans-serif; }
-.font-comic { font-family: var(--font-comic), sans-serif; }
+.font-mono { font-family: var(--font-mono), sans-serif; }
 .font-body { font-family: var(--font-body), sans-serif; }
 
-/* === INK-FRAME — signature bold-cartoon-streetwear treatment ===
-   Border tebal + solid offset shadow (tanpa blur) ala stiker komik nempel.
-   Dipake konsisten: product card, badge, button, admin table. */
-.ink-frame    { border: 3px solid var(--ink); box-shadow: 4px 4px 0 var(--ink); }
-.ink-frame-sm { border: 2px solid var(--ink); box-shadow: 2px 2px 0 var(--ink); }
-.ink-frame-lg { border: 4px solid var(--ink); box-shadow: 8px 8px 0 var(--ink); }
-.ink-frame,
-.ink-frame-sm,
-.ink-frame-lg { transition: transform 0.15s ease, box-shadow 0.15s ease; }
-.ink-frame:active,
-.ink-frame-sm:active,
-.ink-frame-lg:active { transform: translate(2px, 2px); box-shadow: 0 0 0 var(--ink); }
+/* === FRAME — hairline minimal archive ===
+   Class names dipertahankan dari versi lama (biar pemakai lama aman),
+   tapi sekarang cuma 1px rule hitam tanpa shadow. */
+.ink-frame    { border: 1px solid var(--ink); }
+.ink-frame-sm { border: 1px solid var(--ink); }
+.ink-frame-lg { border: 1px solid var(--ink); }
 
-/* NAV UNDERLINE ANIMATION */
+/* === ARCHIVE LABEL — micro label uppercase grotesk === */
+.arch-label {
+  font-family: var(--font-body), sans-serif;
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+}
+
+/* === CORNER BRACKETS — registration mark kecil buat komponen interaktif === */
+.corner-brackets { position: relative; }
+.corner-brackets::before,
+.corner-brackets::after {
+  content: '';
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+.corner-brackets::before {
+  top: 3px; left: 3px;
+  border-top: 2px solid currentColor;
+  border-left: 2px solid currentColor;
+}
+.corner-brackets::after {
+  bottom: 3px; right: 3px;
+  border-bottom: 2px solid currentColor;
+  border-right: 2px solid currentColor;
+}
+.corner-brackets:hover::before,
+.corner-brackets:hover::after { opacity: 1; }
+
+/* NAV UNDERLINE — rule tipis hitam */
 .nav-underline {
   position: relative;
 }
 .nav-underline::after {
   content: '';
   position: absolute;
-  bottom: -2px; left: 0;
-  width: 100%; height: 2px;
-  background: var(--pink);
+  bottom: -1px; left: 0;
+  width: 100%; height: 1px;
+  background: var(--ink);
   transform: scaleX(0);
   transform-origin: left;
   transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
@@ -65,27 +101,53 @@ body {
 .nav-underline:hover::after,
 .nav-underline.active::after { transform: scaleX(1); }
 
-/* === HERO ANIMATIONS === */
-@keyframes pixel-float {
-  0%, 100% { transform: translateY(0px); }
-  50%       { transform: translateY(-10px); }
-}
-@keyframes star-twinkle {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50%       { opacity: 0.3; transform: scale(0.6); }
-}
+/* === TICKER — strip tipis === */
 @keyframes ticker {
   0%   { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
-@keyframes blink-cursor {
-  0%, 100% { opacity: 1; }
-  50%       { opacity: 0; }
+.ticker-track { animation: ticker 32s linear infinite; white-space: nowrap; display: flex; }
+
+/* === PRELOADER — visible dari CSS (gak nunggu hydration),
+   auto-hide 2.6s jadi safety net tanpa JS; reduced-motion = gak muncul === */
+.preloader {
+  animation: preloader-hide 2.6s steps(1, end) forwards;
 }
-.pixel-float-1 { animation: pixel-float 3s ease-in-out infinite; }
-.pixel-float-2 { animation: pixel-float 4s ease-in-out 1s infinite; }
-.pixel-float-3 { animation: pixel-float 2.5s ease-in-out 0.5s infinite; }
-.star-1 { animation: star-twinkle 1.2s ease-in-out infinite; }
-.star-2 { animation: star-twinkle 1.8s ease-in-out 0.4s infinite; }
-.star-3 { animation: star-twinkle 1.4s ease-in-out 0.9s infinite; }
-.ticker-track { animation: ticker 24s linear infinite; white-space: nowrap; display: flex; }
+@keyframes preloader-hide {
+  to { visibility: hidden; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .preloader { display: none; }
+}
+
+/* === PRINT — cuma struk receipt yang ke-print, sisanya disembunyiin === */
+@media print {
+  body * { visibility: hidden; }
+  .receipt-print, .receipt-print * { visibility: visible; }
+  .receipt-print {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    border: none !important;
+  }
+}
+
+/* === UX MICRO MOTION — transform/opacity only, hormat reduced-motion === */
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade-slide-in {
+  from { opacity: 0; transform: translateY(-6px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes toast-in {
+  from { opacity: 0; transform: translateY(16px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+.anim-rise  { animation: rise-in 0.45s cubic-bezier(0.16,1,0.3,1) both; }
+.anim-mega  { animation: fade-slide-in 0.25s cubic-bezier(0.16,1,0.3,1) both; }
+.anim-toast { animation: toast-in 0.35s cubic-bezier(0.16,1,0.3,1) both; }
+@media (prefers-reduced-motion: reduce) {
+  .anim-rise, .anim-mega, .anim-toast { animation: none; }
+}

@@ -1,4 +1,4 @@
-import Navbar from '@/components/layout/Navbar'
+﻿import Navbar from '@/components/layout/Navbar'
 import Footer from '@/components/layout/Footer'
 import MarqueeTicker from '@/components/layout/MarqueeTicker'
 import CartDrawer from '@/components/cart/CartDrawer'
@@ -14,7 +14,7 @@ export default function AccountLayout({ children }) {
       <SearchModal />
       <CartDrawer />
       <ToastContainer />
-      <div className="min-h-screen bg-white px-6 md:px-10 py-10">
+      <div className="min-h-screen bg-surface px-6 md:px-10 py-10">
         <div className="max-w-5xl mx-auto">
           <div className="flex flex-col md:flex-row gap-10">
             <AccountSidebar />

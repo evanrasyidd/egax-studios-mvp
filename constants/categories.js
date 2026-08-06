@@ -1,12 +1,11 @@
 export const CATEGORIES = [
+  { label: 'Jacket', slug: 'jacket', count: 3 },
   { label: 'Tops', slug: 'tops', count: 5 },
-  { label: 'Hoodie & Sweatshirt', slug: 'hoodie', count: 8 },
-  { label: 'Sweater & Cardigan', slug: 'sweater', count: 2 },
   { label: 'Shirt', slug: 'shirt', count: 4 },
-  { label: 'Pants', slug: 'pants', count: 5 },
-  { label: 'Essentials', slug: 'essentials', count: 3 },
-  { label: 'Accessories', slug: 'accessories', count: 4 },
-  { label: 'All Products', slug: 'all', count: 25 },
+  { label: 'Pants', slug: 'pants', count: 7 },
+  { label: 'Essentials', slug: 'essentials', count: 2 },
+  { label: 'Accessories', slug: 'accessories', count: 3 },
+  { label: 'All Products', slug: 'all', count: 24 },
 ]
 
 export const NAV_LINKS = [

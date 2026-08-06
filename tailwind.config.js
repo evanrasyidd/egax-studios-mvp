@@ -7,27 +7,27 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        bg:      '#FAF7F0', // Paper — base bg terang, ganti dari dark editorial
-        surface: '#FFFFFF',
+        bg:      '#FAFAF8', // Paper putih hangat — base archive
+        surface: '#FFFFFF', // Putih bersih — panel/card
         card:    '#FFFFFF',
-        text1:   '#14120F', // Ink — teks utama & outline kartun
-        text2:   '#514E48', // Ink muted
-        border:  '#14120F', // Ink juga — border tebal cartoon butuh kontras penuh, bukan abu tipis
-        accent:  '#2E4BFF', // Riot Blue — pop primer
-        pink:    '#FF2E7E', // Pop Pink — versi cerah dari brand pink lama
-        'pink-dark': '#CC1B5E',
-        yellow:  '#FFD400', // Sunburst — pop kedua, buat CTA/badge
+        text1:   '#111111', // Hitam pekat — teks utama
+        text2:   '#7A7A7A', // Abu — teks sekunder
+        border:  '#E5E4E0', // Rule tipis abu terang
+        accent:  '#111111', // Hitam — badge solid
+        pink:    '#111111', // "Pop" monochrome = hitam
+        'pink-dark': '#000000',
+        yellow:  '#ECEBE6', // Highlight abu hampir tak terlihat
       },
       fontFamily: {
-        pixel:   ['var(--font-display)', 'sans-serif'], // dead alias, semua caller sudah dipindah ke font-display
         display: ['var(--font-display)', 'sans-serif'],
-        comic:   ['var(--font-comic)', 'sans-serif'],
+        mono:    ['var(--font-mono)', 'sans-serif'],
         body:    ['var(--font-body)', 'sans-serif'],
       },
       boxShadow: {
-        ink:    '4px 4px 0 #14120F',
-        'ink-sm': '2px 2px 0 #14120F',
-        'ink-lg': '8px 8px 0 #14120F',
+        ink:    'none',
+        'ink-sm': 'none',
+        'ink-lg': 'none',
+        panel:  'none',
       },
     },
   },

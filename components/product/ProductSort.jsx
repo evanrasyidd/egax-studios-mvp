@@ -1,15 +1,17 @@
-'use client'
+﻿'use client'
+import { FieldSelect } from '@/components/ui/Field'
+import { useI18n } from '@/store/i18nStore'
 export default function ProductSort({ value, onChange }) {
+  const { t } = useI18n()
   return (
     <div className="flex items-center gap-2 shrink-0">
-      <span className="text-[10px] font-semibold uppercase tracking-widest text-gray-400 hidden md:block">Sort</span>
-      <select value={value} onChange={e => onChange(e.target.value)}
-        className="bg-white border border-gray-200 text-text1 text-[11px] font-semibold uppercase tracking-wider px-3 py-2 outline-none cursor-pointer hover:border-text1 transition-colors">
-        <option value="default">Featured</option>
-        <option value="price-asc">Price: Low → High</option>
-        <option value="price-desc">Price: High → Low</option>
-        <option value="name-asc">Name A–Z</option>
-      </select>
+      <span className="arch-label text-text2 hidden md:block">{t('sort.label')}</span>
+      <FieldSelect value={value} onChange={e => onChange(e.target.value)} className="w-auto py-2 text-[10px] uppercase tracking-[0.14em]">
+        <option value="default">{t('sort.featured')}</option>
+        <option value="price-asc">{t('sort.priceAsc')}</option>
+        <option value="price-desc">{t('sort.priceDesc')}</option>
+        <option value="name-asc">{t('sort.nameAZ')}</option>
+      </FieldSelect>
     </div>
   )
 }
