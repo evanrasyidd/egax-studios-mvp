@@ -1,13 +1,18 @@
 ﻿'use client'
-import { useState, useEffect, use } from 'react'
+import { useState, useEffect, useRef, use } from 'react'
 import Link from 'next/link'
 import { notFound, useRouter } from 'next/navigation'
 import { Heart, ArrowLeft, GitCompareArrows } from 'lucide-react'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useGSAP } from '@gsap/react'
 import { useAdminStore } from '@/store/adminStore'
 import { useCompareStore } from '@/store/compareStore'
 import { useRecentStore } from '@/store/recentStore'
 import { useI18n } from '@/store/i18nStore'
 import { useHydrated } from '@/hooks/useHydrated'
+
+gsap.registerPlugin(ScrollTrigger, useGSAP)
 import ProductGallery from '@/components/product/ProductGallery'
 import SizeSelector from '@/components/product/SizeSelector'
 import QuantitySelector from '@/components/product/QuantitySelector'
@@ -73,6 +78,25 @@ export default function ProductPage({ params }) {
   useEffect(() => {
     if (product) addRecent(product.id)
   }, [product, addRecent])
+
+  // Parallax halus: gallery & info bergerak beda kecepatan pas scroll
+  const pdRef = useRef(null)
+  useGSAP(() => {
+    const mm = gsap.matchMedia()
+    mm.add('(min-width: 768px) and (prefers-reduced-motion: no-preference)', () => {
+      gsap.fromTo('.pd-gallery', { yPercent: 0 }, {
+        yPercent: -6,
+        ease: 'none',
+        scrollTrigger: { trigger: pdRef.current, start: 'top top', end: 'bottom top', scrub: 0.6 },
+      })
+      gsap.fromTo('.pd-info', { yPercent: 0 }, {
+        yPercent: 8,
+        ease: 'none',
+        scrollTrigger: { trigger: pdRef.current, start: 'top top', end: 'bottom top', scrub: 0.6 },
+      })
+    })
+    return () => mm.revert()
+  }, { scope: pdRef })
   const wishlisted = hydrated && product ? isWishlisted(product.id) : false
   const pidx = product ? parseInt(product.id.replace('p','')) || 0 : 0
 
@@ -119,10 +143,12 @@ export default function ProductPage({ params }) {
           </nav>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16">
+        <div ref={pdRef} className="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16">
+          <div className="pd-gallery">
           <ProductGallery name={productName(product)} category={product.category} productIndex={pidx} />
 
-          <div className="flex flex-col gap-6">
+          </div>
+          <div className="pd-info flex flex-col gap-6">
             <div>
               <div className="flex items-center justify-between mb-1">
                 <p className="arch-label text-pink">{product.vendor}</p>

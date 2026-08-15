@@ -1,12 +1,16 @@
 ﻿'use client'
-import { useState, useMemo, useEffect, Suspense } from 'react'
+import { useState, useMemo, useEffect, useRef, Suspense } from 'react'
 import { useSearchParams, useRouter } from 'next/navigation'
+import { gsap } from 'gsap'
+import { Flip } from 'gsap/Flip'
 import { useAdminStore } from '@/store/adminStore'
 import { useI18n } from '@/store/i18nStore'
 import { useHydrated } from '@/hooks/useHydrated'
 import ProductFilter from '@/components/product/ProductFilter'
 import ProductSort from '@/components/product/ProductSort'
 import ProductCard from '@/components/product/ProductCard'
+
+gsap.registerPlugin(Flip)
 
 function CatalogContent() {
   const searchParams = useSearchParams()
@@ -18,15 +22,38 @@ function CatalogContent() {
   const [category, setCategory] = useState(paramCat)
   const [sort, setSort] = useState('default')
 
+  // Flip: tangkap posisi kartu SEBELUM filter/sort, lalu animasikan
+  // pindah posisi setelah daftar baru render (pola CodePen favorit).
+  const flipStateRef = useRef(null)
+
+  useEffect(() => {
+    if (flipStateRef.current) {
+      Flip.from(flipStateRef.current, {
+        duration: 0.5,
+        ease: 'power2.inOut',
+        stagger: 0.02,
+        absolute: true,
+        props: 'opacity',
+      })
+      flipStateRef.current = null
+    }
+  }, [category, sort, hydrated])
+
   // Sync URL param → state when user navigates via mega menu
   useEffect(() => {
     setCategory(searchParams.get('category') || 'all')
   }, [searchParams])
 
   const handleCategoryChange = (cat) => {
+    flipStateRef.current = Flip.getState('.product-card')
     setCategory(cat)
     if (cat === 'all') router.push('/catalog')
     else router.push(`/catalog?category=${cat}`)
+  }
+
+  const handleSortChange = (s) => {
+    flipStateRef.current = Flip.getState('.product-card')
+    setSort(s)
   }
 
   const filtered = useMemo(() => {
@@ -47,7 +74,7 @@ function CatalogContent() {
         <div className="mb-8 pb-5 border-b border-border flex items-baseline justify-between">
           <div className="flex items-baseline gap-4">
             <span className="arch-label text-pink">{t('catalog.shop')}</span>
-            <h1 className="font-display text-[40px] font-bold tracking-[-0.01em] text-text1">
+            <h1 data-skew className="font-display text-[40px] font-bold tracking-[-0.01em] text-text1">
               {t(`cat.${category}`)}
             </h1>
           </div>
@@ -55,7 +82,7 @@ function CatalogContent() {
         </div>
         <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-6">
           <ProductFilter active={category} onChange={handleCategoryChange}/>
-          <ProductSort value={sort} onChange={setSort}/>
+          <ProductSort value={sort} onChange={handleSortChange}/>
         </div>
         {filtered.length === 0 ? (
           <div className="py-24 text-center border border-border">

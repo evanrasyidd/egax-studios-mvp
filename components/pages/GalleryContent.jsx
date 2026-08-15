@@ -10,7 +10,7 @@ export default function GalleryContent() {
       <div className="mb-10 pb-5 border-b border-border flex items-baseline justify-between">
         <div className="flex items-baseline gap-4">
           <span className="arch-label text-pink">{t('gallery.label')}</span>
-          <h1 className="font-display text-[40px] font-bold tracking-[-0.01em] text-text1">{t('gallery.title')}</h1>
+          <h1 data-skew className="font-display text-[40px] font-bold tracking-[-0.01em] text-text1">{t('gallery.title')}</h1>
         </div>
         <span className="hidden sm:block font-mono text-[8px] uppercase tracking-[0.24em] text-text2/70">SS26 · {LOOKBOOK.length} Frames</span>
       </div>

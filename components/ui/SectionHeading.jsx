@@ -12,6 +12,7 @@ gsap.registerPlugin(ScrollTrigger, SplitText, useGSAP)
 export default function SectionHeading({ no, title, href, linkLabel }) {
   const root = useRef(null)
   const titleRef = useRef(null)
+  const ruleRef = useRef(null)
 
   useGSAP(() => {
     const mm = gsap.matchMedia()
@@ -26,6 +27,13 @@ export default function SectionHeading({ no, title, href, linkLabel }) {
         .fromTo(split.words, { yPercent: 110 }, { yPercent: 0, duration: 0.8, ease: 'power4.out', stagger: 0.045 }, '-=0.25')
         .fromTo(q('.sh-link'), { y: 12, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5, ease: 'power3.out' }, '-=0.5')
 
+      // Rule bawah heading tumbuh dari kiri — nyambung sama bahasa hairline
+      gsap.fromTo(ruleRef.current, { scaleX: 0 }, {
+        scaleX: 1,
+        ease: 'none',
+        scrollTrigger: { trigger: root.current, start: 'top 85%', end: 'top 45%', scrub: 0.4 },
+      })
+
       return () => split.revert()
     })
 
@@ -33,17 +41,20 @@ export default function SectionHeading({ no, title, href, linkLabel }) {
   }, { scope: root, dependencies: [title] })
 
   return (
-    <div ref={root} className="flex items-baseline justify-between mb-8 pb-3 border-b border-border">
-      <div className="flex items-baseline gap-4">
-        <span className="sh-no arch-label text-text2">{no}</span>
-        <h2 ref={titleRef} className="font-display text-[30px] md:text-[34px] font-bold tracking-[-0.01em] text-text1">{title}</h2>
+    <div ref={root} className="mb-8 pb-3 border-b border-border relative">
+      <div ref={ruleRef} aria-hidden="true" className="absolute bottom-[-1px] left-0 h-px w-full bg-text1 origin-left scale-x-0" />
+      <div className="flex items-baseline justify-between">
+        <div className="flex items-baseline gap-4">
+          <span className="sh-no arch-label text-text2">{no}</span>
+          <h2 ref={titleRef} className="font-display text-[30px] md:text-[34px] font-bold tracking-[-0.01em] text-text1">{title}</h2>
+        </div>
+        {href && (
+          <Link href={href} className="sh-link hidden sm:inline-flex items-center gap-2 arch-label text-text2 hover:text-text1 group">
+            {linkLabel}
+            <ArrowRight size={11} className="group-hover:translate-x-0.5 transition-transform" />
+          </Link>
+        )}
       </div>
-      {href && (
-        <Link href={href} className="sh-link hidden sm:inline-flex items-center gap-2 arch-label text-text2 hover:text-text1 group">
-          {linkLabel}
-          <ArrowRight size={11} className="group-hover:translate-x-0.5 transition-transform" />
-        </Link>
-      )}
     </div>
   )
 }

@@ -1,7 +1,9 @@
 ﻿'use client'
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import Link from 'next/link'
 import { Heart, GitCompareArrows } from 'lucide-react'
+import { gsap } from 'gsap'
+import { useGSAP } from '@gsap/react'
 import Badge from '@/components/ui/Badge'
 import GarmentIcon from '@/components/product/GarmentIcon'
 import { formatPrice } from '@/lib/utils'
@@ -10,6 +12,8 @@ import { useCompareStore } from '@/store/compareStore'
 import { useI18n } from '@/store/i18nStore'
 import { useHydrated } from '@/hooks/useHydrated'
 import { cn } from '@/lib/utils'
+
+gsap.registerPlugin(useGSAP)
 
 const PLACEHOLDER_COLORS = ['#A6A29A','#77736C','#5A5751','#3A3936','#222220','#8F8B84','#6E6A63','#4A4844','#9C9890','#2E2D2B']
 
@@ -34,8 +38,38 @@ export default function ProductCard({ product, index = 0, onDark = false }) {
         ? { variant: 'sale', label: badgeLabel }
         : null
 
+  // 3D tilt hover (desktop + pointer halus) — inner wrapper biar gak
+  // bentrok sama transform reveal dari ScrollTrigger di root card.
+  const tiltRef = useRef(null)
+
+  useGSAP(() => {
+    const mm = gsap.matchMedia()
+    mm.add('(min-width: 768px) and (pointer: fine) and (prefers-reduced-motion: no-preference)', () => {
+      const el = tiltRef.current
+      if (!el) return
+      const rx = gsap.quickTo(el, 'rotationX', { duration: 0.4, ease: 'power3' })
+      const ry = gsap.quickTo(el, 'rotationY', { duration: 0.4, ease: 'power3' })
+      const move = (e) => {
+        const r = el.getBoundingClientRect()
+        const px = (e.clientX - r.left) / r.width - 0.5
+        const py = (e.clientY - r.top) / r.height - 0.5
+        ry(px * 7)
+        rx(-py * 7)
+      }
+      const leave = () => { rx(0); ry(0) }
+      el.addEventListener('mousemove', move)
+      el.addEventListener('mouseleave', leave)
+      return () => {
+        el.removeEventListener('mousemove', move)
+        el.removeEventListener('mouseleave', leave)
+      }
+    })
+    return () => mm.revert()
+  }, { scope: tiltRef })
+
   return (
-    <div className={cn('product-card group cursor-pointer', onDark ? 'bg-card' : 'bg-surface')}>
+    <div className={cn('product-card group cursor-pointer [perspective:900px]', onDark ? 'bg-card' : 'bg-surface')}>
+      <div ref={tiltRef} className="will-change-transform" style={{ transformStyle: 'preserve-3d' }}>
       <Link href={`/product/${product.slug}`}>
         <div className="relative overflow-hidden" style={{aspectRatio:'3/4'}}
           onMouseEnter={() => setHovered(true)}
@@ -92,6 +126,7 @@ export default function ProductCard({ product, index = 0, onDark = false }) {
             {formatPrice(product.price)}
           </span>
         </div>
+      </div>
       </div>
     </div>
   )

@@ -34,7 +34,8 @@ export default function HeroSection() {
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       const q = gsap.utils.selector(root)
       const headline = q('.hero-headline')
-      const split = SplitText.create(headline, { type: 'lines,words' })
+      // Char-level: "WEAR" & "EVERYDAY." kebuka huruf per huruf di dalam mask
+      const split = SplitText.create(headline, { type: 'words' })
       const words = split.words
       const card = q('.hero-card')
 
@@ -47,31 +48,40 @@ export default function HeroSection() {
         if (started) return
         started = true
         const tl = gsap.timeline({ defaults: { ease: 'power4.out' } })
-        tl.fromTo(words, { yPercent: 118, rotation: 3 }, {
-          yPercent: 0, rotation: 0, duration: 0.9, stagger: 0.05,
+        tl.fromTo(words, { yPercent: 130 }, {
+          yPercent: 0, duration: 0.9, stagger: 0.12,
         }, 0.1)
-          .fromTo(q('.hero-badge'), { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5 }, 0.3)
-          .fromTo(q('.hero-sub'), { y: 26, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7 }, 0.5)
-          .fromTo(q('.hero-cta'), { y: 26, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, stagger: 0.09 }, 0.6)
-          .fromTo(card, { y: 48, opacity: 0 }, { y: 0, opacity: 1, duration: 0.9 }, 0.65)
+          .fromTo(q('.hero-badge'), { y: 18, opacity: 0 }, { y: 0, opacity: 1, duration: 0.5 }, 0.35)
+          .fromTo(q('.hero-sub'), { y: 26, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7 }, 0.6)
+          .fromTo(q('.hero-cta'), { y: 26, opacity: 0 }, { y: 0, opacity: 1, duration: 0.7, stagger: 0.09 }, 0.75)
+          // Kartu: kebuka dari bawah (clip), bukan fade polos
+          .fromTo(card, { clipPath: 'inset(100% 0% 0% 0%)', y: 40 }, {
+            clipPath: 'inset(0% 0% 0% 0%)', y: 0, duration: 0.95, ease: 'power3.inOut',
+          }, 0.8)
+          // Ghost number naik pelan
+          .fromTo(q('.hero-ghost'), { opacity: 0, y: 60 }, { opacity: 1, y: 0, duration: 1.2 }, 0.5)
           // Scroll-out dibuat SETELAH intro selesai + start state eksplisit —
           // kalau dibuat barengan, ScrollTrigger nyomot state kata yang lagi
           // setengah animasi jadi start value → kata nyangkut & konflik tween.
           .add(() => {
-            gsap.fromTo(words, { yPercent: 0, opacity: 1 }, {
-              yPercent: 85,
+            gsap.fromTo(headline, { yPercent: 0, opacity: 1 }, {
+              yPercent: 60,
               opacity: 0,
               ease: 'none',
-              stagger: 0.03,
               scrollTrigger: { trigger: root.current, start: 'top top', end: 'bottom 35%', scrub: 0.6 },
             })
             gsap.fromTo(card, { yPercent: 0 }, {
-              yPercent: 14,
+              yPercent: 26,
               ease: 'none',
               scrollTrigger: { trigger: root.current, start: 'top top', end: 'bottom top', scrub: 0.6 },
             })
             gsap.fromTo(headline, { yPercent: 0 }, {
-              yPercent: -8,
+              yPercent: -14,
+              ease: 'none',
+              scrollTrigger: { trigger: root.current, start: 'top top', end: 'bottom top', scrub: 0.6 },
+            })
+            gsap.fromTo(q('.hero-ghost'), { yPercent: 0 }, {
+              yPercent: -70,
               ease: 'none',
               scrollTrigger: { trigger: root.current, start: 'top top', end: 'bottom top', scrub: 0.6 },
             })
@@ -121,7 +131,11 @@ export default function HeroSection() {
   }, { scope: root })
 
   return (
-    <section ref={root} className="relative bg-bg min-h-[92vh] min-h-[560px] flex flex-col">
+    <section ref={root} className="relative bg-bg min-h-[92vh] min-h-[560px] flex flex-col overflow-hidden">
+      {/* Ghost number — angka arsip raksasa di belakang, paralaks pas scroll */}
+      <span aria-hidden="true" className="hero-ghost absolute top-24 right-6 md:right-16 font-display font-black leading-none text-[clamp(120px,22vw,260px)] text-text1/[0.04] tracking-[-0.04em] pointer-events-none select-none">
+        001
+      </span>
       <div className="flex-1 flex items-center">
         <div className="relative w-full max-w-6xl mx-auto px-6 md:px-10 py-16 lg:py-0">
           <div className="grid grid-cols-1 lg:grid-cols-[1.25fr_0.75fr] gap-12 lg:gap-20 items-center">

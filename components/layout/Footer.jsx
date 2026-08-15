@@ -4,10 +4,11 @@ import Link from 'next/link'
 import { ArrowRight, Instagram } from 'lucide-react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { SplitText } from 'gsap/SplitText'
 import { useGSAP } from '@gsap/react'
 import { useI18n } from '@/store/i18nStore'
 
-gsap.registerPlugin(ScrollTrigger, useGSAP)
+gsap.registerPlugin(ScrollTrigger, SplitText, useGSAP)
 
 export default function Footer() {
   const { t } = useI18n()
@@ -20,9 +21,12 @@ export default function Footer() {
 
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       const q = gsap.utils.selector(root)
-      gsap.fromTo(q('.footer-wordmark'), { yPercent: 100 }, {
+      // Wordmark: kebuka huruf per huruf (cascade) sambil slide-up scrub
+      const split = SplitText.create(q('.footer-wordmark')[0], { type: 'chars' })
+      gsap.fromTo(split.chars, { yPercent: 110 }, {
         yPercent: 0,
         ease: 'none',
+        stagger: 0.03,
         scrollTrigger: { trigger: q('.footer-wordmark-wrap'), start: 'top bottom', end: 'top 68%', scrub: 0.6 },
       })
       gsap.fromTo(q('.footer-wordmark'), { opacity: 0.3 }, {
@@ -30,6 +34,7 @@ export default function Footer() {
         ease: 'none',
         scrollTrigger: { trigger: q('.footer-wordmark-wrap'), start: 'top bottom', end: 'top 68%', scrub: 0.6 },
       })
+      return () => split.revert()
     })
 
     return () => mm.revert()
@@ -57,11 +62,11 @@ export default function Footer() {
             </form>
           </div>
           {[
-            { title: t('footer.customerCare'), links: [{ l: t('footer.contact'), h: '/contact' }, { l: t('footer.refund'), h: '/contact' }, { l: t('footer.privacy'), h: '/contact' }, { l: t('footer.shipping'), h: '/contact' }] },
+            { title: t('footer.customerCare'), links: [{ l: t('footer.contact'), h: '/contact' }, { l: t('footer.refund'), h: '/policies' }, { l: t('footer.privacy'), h: '/policies' }, { l: t('footer.shipping'), h: '/policies' }] },
             { title: t('footer.brand'), links: [{ l: t('footer.aboutUs'), h: '/about' }, { l: t('footer.editorial'), h: '/editorial' }, { l: t('footer.gallery'), h: '/gallery' }, { l: t('footer.catalog'), h: '/catalog' }] },
-            { title: t('footer.legal'), links: [{ l: t('footer.terms'), h: '/contact' }, { l: t('footer.legalNotice'), h: '/contact' }, { l: t('footer.cookie'), h: '/contact' }] },
+            { title: t('footer.legal'), links: [{ l: t('footer.terms'), h: '/policies' }, { l: t('footer.legalNotice'), h: '/policies' }, { l: t('footer.cookie'), h: '/policies' }] },
           ].map(col => (
-            <div key={col.title}>
+            <div key={col.title} data-reveal>
               <p className="arch-label text-text2 mb-4">{col.title}</p>
               {col.links.map(l => <Link key={l.l} href={l.h} className="block text-[13px] text-text2 hover:text-pink mb-2 transition-colors">{l.l}</Link>)}
             </div>

@@ -61,6 +61,7 @@ export default function Navbar() {
     { label: t('nav.editorial'), href: '/editorial' },
     { label: t('nav.gallery'), href: '/gallery' },
     { label: t('nav.about'), href: '/about' },
+    { label: t('nav.policies'), href: '/policies' },
     { label: t('nav.contact'), href: '/contact' },
   ]
 

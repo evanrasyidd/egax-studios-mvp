@@ -32,12 +32,12 @@ body {
 ::selection { background: var(--text-1); color: var(--bg); }
 
 /* Scrollbar halaman dihapus (progress bar di navbar jadi indikatornya).
-   Scrollbar tipis hitam tetap ada di area scroll internal (drawer, admin, POS). */
+   Scrollbar di area scroll internal (modal, drawer, admin, POS) juga
+   dihapus total — kontennya pendek & scroll-nya ketahuan dari gerakan. */
 html { scrollbar-width: none; -ms-overflow-style: none; }
 html::-webkit-scrollbar { display: none; }
-html body *::-webkit-scrollbar { width: 4px; height: 4px; }
-html body *::-webkit-scrollbar-track { background: transparent; }
-html body *::-webkit-scrollbar-thumb { background: var(--ink); }
+html body * { scrollbar-width: none; -ms-overflow-style: none; }
+html body *::-webkit-scrollbar { display: none; }
 
 .font-display { font-family: var(--font-display), sans-serif; }
 .font-mono { font-family: var(--font-mono), sans-serif; }
@@ -101,12 +101,15 @@ html body *::-webkit-scrollbar-thumb { background: var(--ink); }
 .nav-underline:hover::after,
 .nav-underline.active::after { transform: scaleX(1); }
 
-/* === TICKER — strip tipis === */
+/* === TICKER — strip tipis (GSAP loop; CSS cuma fallback non-GSAP) === */
+.ticker-track { white-space: nowrap; display: flex; }
+@media (prefers-reduced-motion: no-preference) {
+  .ticker-track { animation: ticker 28s linear infinite; }
+}
 @keyframes ticker {
   0%   { transform: translateX(0); }
   100% { transform: translateX(-50%); }
 }
-.ticker-track { animation: ticker 32s linear infinite; white-space: nowrap; display: flex; }
 
 /* === PRELOADER — visible dari CSS (gak nunggu hydration),
    auto-hide 2.6s jadi safety net tanpa JS; reduced-motion = gak muncul === */

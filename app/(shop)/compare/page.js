@@ -1,4 +1,4 @@
-'use client'
+﻿'use client'
 import Link from 'next/link'
 import { GitCompareArrows, X } from 'lucide-react'
 import { useAdminStore } from '@/store/adminStore'
@@ -62,7 +62,7 @@ export default function ComparePage() {
         <div className="flex items-baseline justify-between mb-8 pb-4 border-b border-border">
           <div className="flex items-baseline gap-4">
             <span className="arch-label text-pink">{t('compare.label')}</span>
-            <h1 className="font-display text-[34px] font-bold tracking-[-0.01em] text-text1">{t('compare.title')}</h1>
+            <h1 data-skew className="font-display text-[34px] font-bold tracking-[-0.01em] text-text1">{t('compare.title')}</h1>
           </div>
           <button onClick={clear} className="arch-label text-text2 hover:text-red-600 transition-colors">{t('compare.clear')}</button>
         </div>
