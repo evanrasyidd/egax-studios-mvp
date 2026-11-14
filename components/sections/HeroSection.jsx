@@ -1,19 +1,17 @@
 ﻿'use client'
 import { useRef } from 'react'
 import Link from 'next/link'
-import { ArrowRight } from 'lucide-react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { SplitText } from 'gsap/SplitText'
 import { useGSAP } from '@gsap/react'
-import GarmentIcon from '@/components/product/GarmentIcon'
+import GarmentPlate from '@/components/product/GarmentPlate'
 import { useAdminStore } from '@/store/adminStore'
 import { useI18n } from '@/store/i18nStore'
 import { useHydrated } from '@/hooks/useHydrated'
+import { formatPrice } from '@/lib/utils'
 
 gsap.registerPlugin(ScrollTrigger, SplitText, useGSAP)
-
-const GARMENT_TONES = ['#F0EFEA', '#E4E2DC', '#D8D6CF', '#C6C3BB', '#A6A29A', '#77736C', '#4A4844', '#222220']
 
 export default function HeroSection() {
   const root = useRef(null)
@@ -23,10 +21,15 @@ export default function HeroSection() {
   const dropCount = hydrated && heroPreOrderBadge ? products.filter(p => p.preOrder).length : 0
   const featured = hydrated ? products.find(p => p.featured) : null
   const productName = productNameOf(featured) || 'Duck Chore Jacket'
-  const productPrice = featured ? `IDR ${featured.price.toLocaleString('id-ID')}` : 'IDR 698K'
+  const productPrice = featured ? formatPrice(featured.price) : 'Rp 698.000'
   const productCategory = featured?.category ?? 'Jacket'
   const serial = String([...productName].reduce((a, c) => (a * 31 + c.charCodeAt(0)) % 100000, 7)).padStart(4, '0')
-  const toneIdx = parseInt(featured?.id?.replace('p', '') || '1') % GARMENT_TONES.length
+  const plateProduct = featured || {
+    id: 'p001',
+    name: productName,
+    category: productCategory,
+    fabric: 'Heavyweight duck canvas · 12oz',
+  }
 
   useGSAP(() => {
     const mm = gsap.matchMedia()
@@ -35,7 +38,7 @@ export default function HeroSection() {
       const q = gsap.utils.selector(root)
       const headline = q('.hero-headline')
       // Char-level: "WEAR" & "EVERYDAY." kebuka huruf per huruf di dalam mask
-      const split = SplitText.create(headline, { type: 'words' })
+      const split = SplitText.create(headline, { type: 'words', mask: 'lines' })
       const words = split.words
       const card = q('.hero-card')
 
@@ -72,11 +75,6 @@ export default function HeroSection() {
             })
             gsap.fromTo(card, { yPercent: 0 }, {
               yPercent: 26,
-              ease: 'none',
-              scrollTrigger: { trigger: root.current, start: 'top top', end: 'bottom top', scrub: 0.6 },
-            })
-            gsap.fromTo(headline, { yPercent: 0 }, {
-              yPercent: -14,
               ease: 'none',
               scrollTrigger: { trigger: root.current, start: 'top top', end: 'bottom top', scrub: 0.6 },
             })
@@ -131,53 +129,51 @@ export default function HeroSection() {
   }, { scope: root })
 
   return (
-    <section ref={root} className="relative bg-bg min-h-[92vh] min-h-[560px] flex flex-col overflow-hidden">
+    <section ref={root} className="relative bg-bg min-h-[92svh] flex flex-col overflow-hidden">
       {/* Ghost number — angka arsip raksasa di belakang, paralaks pas scroll */}
       <span aria-hidden="true" className="hero-ghost absolute top-24 right-6 md:right-16 font-display font-black leading-none text-[clamp(120px,22vw,260px)] text-text1/[0.04] tracking-[-0.04em] pointer-events-none select-none">
         001
       </span>
       <div className="flex-1 flex items-center">
-        <div className="relative w-full max-w-6xl mx-auto px-6 md:px-10 py-16 lg:py-0">
-          <div className="grid grid-cols-1 lg:grid-cols-[1.25fr_0.75fr] gap-12 lg:gap-20 items-center">
+        <div className="relative mx-auto w-full max-w-6xl px-5 py-10 md:px-10 md:py-16 lg:py-0">
+          <div className="grid grid-cols-1 items-center gap-8 lg:grid-cols-[1.25fr_0.75fr] lg:gap-20">
             {/* Kiri: headline */}
             <div>
-              <div className="hero-badge flex items-center gap-4 mb-10">
+              <div className="hero-badge mb-6 flex items-center gap-4 md:mb-10">
                 {dropCount > 0 ? (
                   <span className="arch-label text-text1 border border-text1 px-3 py-1.5">{t('hero.preorderOpen', { n: dropCount })}</span>
                 ) : (
                   <span className="arch-label text-text1 border border-text1 px-3 py-1.5">{t('hero.fallbackBadge')}</span>
                 )}
-                <span className="hidden sm:block text-[11px] font-medium uppercase tracking-[0.2em] text-text2">{t('hero.dropInfo')}</span>
+                <span className="hidden sm:block text-[11px] font-medium uppercase tracking-[0.14em] text-text2">{t('hero.dropInfo')}</span>
               </div>
 
               <h1 className="hero-headline font-display font-black uppercase leading-[0.88] text-text1 tracking-[-0.03em]">
-                <span className="block text-[clamp(64px,10.5vw,128px)]">WEAR</span>
-                <span className="block text-[clamp(56px,9vw,110px)] mt-2">EVERYDAY.</span>
+                <span className="block text-[clamp(56px,10.5vw,128px)]">WEAR</span>
+                <span className="mt-1 block text-[clamp(48px,9vw,110px)] md:mt-2">EVERYDAY.</span>
               </h1>
 
-              <p className="hero-sub text-sm text-text2 font-medium mt-8 tracking-wide max-w-[400px]">
+              <p className="hero-sub mt-6 max-w-[400px] text-sm font-medium tracking-wide text-text2 md:mt-8">
                 {t('hero.productLine', { name: productName, category: productCategory, drop: dropCount > 0 ? `${dropCount} PRE-ORDER` : t('tag.limited') })}
               </p>
 
-              <div className="flex flex-wrap items-center gap-5 mt-10">
+              <div className="mt-8 flex flex-wrap items-center gap-4 md:mt-10 md:gap-5">
                 <Link href="/catalog"
-                  className="hero-cta group relative inline-flex items-center gap-3 overflow-hidden bg-text1 text-bg px-8 py-4">
+                  className="hero-cta group relative inline-flex items-center overflow-hidden bg-text1 text-bg px-8 py-4">
                   <span aria-hidden="true" className="btn-sweep-fill absolute inset-0 bg-bg translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
                   <span className="relative z-10 arch-label transition-colors duration-300 group-hover:text-text1">{t('hero.shop')}</span>
-                  <ArrowRight size={12} className="relative z-10 transition-all duration-300 group-hover:text-text1 group-hover:translate-x-1" />
                 </Link>
                 <Link href="/editorial"
-                  className="hero-cta group relative inline-flex items-center gap-3 overflow-hidden border border-text1 text-text1 px-8 py-4">
+                  className="hero-cta group relative inline-flex items-center overflow-hidden border border-text1 text-text1 px-8 py-4">
                   <span aria-hidden="true" className="btn-sweep-fill absolute inset-0 bg-text1 translate-y-full group-hover:translate-y-0 transition-transform duration-300 ease-out" />
                   <span className="relative z-10 arch-label transition-colors duration-300 group-hover:text-bg">{t('hero.lookbook')}</span>
-                  <ArrowRight size={12} className="relative z-10 transition-all duration-300 group-hover:text-bg group-hover:translate-x-1" />
                 </Link>
               </div>
             </div>
 
             {/* Kanan: archive product card */}
             <div className="hero-card flex justify-center lg:justify-end">
-              <div className="w-full max-w-[340px]">
+              <div className="w-full max-w-[320px] md:max-w-[340px]">
                 <div className="flex items-center justify-between mb-3">
                   <span className="arch-label text-text1">Nº {serial}</span>
                   <span className="arch-label text-text2">{t('tag.limited')}</span>
@@ -188,15 +184,15 @@ export default function HeroSection() {
                     <span className="arch-label text-text1">EGAX Studios</span>
                     <span className="arch-label text-text2">SS 2026</span>
                   </div>
-                  <div className="flex items-center justify-center border-b border-border" style={{ aspectRatio: '1/1', background: GARMENT_TONES[toneIdx % GARMENT_TONES.length] }}>
-                    <GarmentIcon category={productCategory} fill="rgba(255,255,255,0.9)" shade="rgba(0,0,0,0.16)" detail="#111111" scale={7} />
+                  <div className="border-b border-border">
+                    <GarmentPlate product={plateProduct} showMeta={false} className="aspect-[3/4]" />
                   </div>
                   <div className="flex items-end justify-between px-5 py-4">
                     <div>
                       <p className="text-[13px] font-semibold text-text1 leading-snug">{productName}</p>
-                      <p className="text-[10px] uppercase tracking-[0.18em] text-text2 mt-1">{productCategory}</p>
+                      <p className="text-[11px] uppercase tracking-[0.12em] text-text2 mt-1">{productCategory}</p>
                     </div>
-                    <span className="text-[14px] font-bold text-text1 shrink-0 ml-4">{productPrice}</span>
+                    <span className="tnum text-[14px] font-bold text-text1 shrink-0 ml-4">{productPrice}</span>
                   </div>
                 </div>
               </div>
@@ -208,8 +204,8 @@ export default function HeroSection() {
       {/* Footer strip hero */}
       <div className="border-t border-border">
         <div className="max-w-6xl mx-auto px-6 md:px-10 py-3 flex items-center justify-between">
-          <span className="text-[10px] uppercase tracking-[0.2em] text-text2">{t('hero.corner')}</span>
-          <span className="text-[10px] uppercase tracking-[0.2em] text-text2">Jakarta · Drop 01</span>
+          <span className="text-[11px] uppercase tracking-[0.14em] text-text2">{t('hero.corner')}</span>
+          <span className="text-[11px] uppercase tracking-[0.14em] text-text2">Jakarta · Drop 01</span>
         </div>
       </div>
     </section>

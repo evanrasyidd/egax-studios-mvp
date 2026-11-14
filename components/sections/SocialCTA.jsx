@@ -1,30 +1,41 @@
 ﻿'use client'
+import Link from 'next/link'
 import { Instagram } from 'lucide-react'
+import GarmentPlate from '@/components/product/GarmentPlate'
+import { useAdminStore } from '@/store/adminStore'
 import { useI18n } from '@/store/i18nStore'
-import SectionHeading from '@/components/ui/SectionHeading'
-
-const COLORS = ['#E4E2DC', '#D8D6CF', '#C6C3BB']
 
 export default function SocialCTA() {
-  const { t } = useI18n()
+  const { t, productName } = useI18n()
+  const { products } = useAdminStore()
+  const plates = [0, 8, 14].map((i) => products[i]).filter(Boolean)
+
   return (
-    <section className="bg-bg border-b border-border grid grid-cols-1 md:grid-cols-[1fr_3fr]">
-      <div data-reveal className="flex flex-col justify-center px-8 md:px-10 py-12 border-b md:border-b-0 md:border-r border-border">
-        <p className="arch-label text-pink mb-4">{t('social.label')}</p>
-        <h2 className="font-display text-[44px] md:text-[52px] font-bold leading-[0.95] tracking-[-0.01em] text-text1 mb-8">{t('social.title1')}<br/>{t('social.title2')}</h2>
-        <a href="https://instagram.com/egaxstudios" target="_blank" rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-text1 border border-text1 px-5 py-3 hover:bg-text1 hover:text-bg transition-all w-fit">
-          <Instagram size={14}/> @egaxstudios
+    <section className="grid grid-cols-1 border-b border-border bg-bg md:grid-cols-[1fr_2.4fr]">
+      <div data-reveal className="flex flex-col justify-center border-b border-border px-8 py-12 md:border-b-0 md:border-r md:px-10">
+        <p className="arch-label mb-4 text-text2">{t('social.label')}</p>
+        <h2 className="mb-8 font-display text-[40px] font-bold leading-[0.95] tracking-[-0.02em] text-text1 md:text-[52px]">
+          {t('social.title1')}<br />{t('social.title2')}
+        </h2>
+        <a
+          href="https://instagram.com/egaxstudios"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex w-fit items-center gap-2 border border-text1 px-5 py-3 font-mono text-[11px] font-medium uppercase tracking-[0.1em] text-text1 transition-colors hover:bg-text1 hover:text-bg"
+        >
+          <Instagram size={15} aria-hidden="true" /> @egaxstudios
         </a>
       </div>
+
       <div className="grid grid-cols-3 gap-px bg-border p-px">
-        {COLORS.map((c, i) => (
-          <div key={i} className="archive-tile relative overflow-hidden border border-border hover:border-text1 transition-colors" style={{aspectRatio:'1', background:c}}>
-            <div data-zoom className="w-full h-full flex flex-col items-center justify-center gap-1">
-              <span className="font-display text-[28px] font-bold text-text1">{(i+1).toString().padStart(2,'0')}</span>
-              <span data-speed="0.45" className="font-mono text-[7px] uppercase tracking-[0.2em] text-text2">DOC · SS26</span>
+        {plates.map((p, i) => (
+          <Link key={p.id} href={`/product/${p.slug}`} className="archive-tile group relative overflow-hidden bg-surface">
+            <GarmentPlate product={p} showMeta={false} compact marks={false} className="aspect-[3/4] w-full transition-transform duration-700 ease-out group-hover:scale-[1.02]" />
+            <div className="absolute inset-x-0 bottom-0 flex items-center justify-between gap-2 border-t border-border bg-bg px-2.5 py-2">
+              <span className="truncate font-mono text-[11px] uppercase tracking-[0.08em] text-text1">{productName(p)}</span>
+              <span className="shrink-0 font-mono text-[11px] uppercase tracking-[0.08em] text-text2">IG / {String(i + 1).padStart(2, '0')}</span>
             </div>
-          </div>
+          </Link>
         ))}
       </div>
     </section>

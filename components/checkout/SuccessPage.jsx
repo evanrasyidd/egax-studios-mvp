@@ -36,8 +36,8 @@ export default function SuccessPage({ order }) {
         </div>
       </div>
       <div className="flex gap-3" style={{ animation: mounted ? 'fadeUp 0.4s ease-out 0.45s backwards' : 'none', opacity: mounted ? undefined : 0 }}>
-        <Link href="/account/orders" className="font-mono text-[9px] font-semibold uppercase tracking-[0.18em] border border-text1 text-text1 px-5 py-2.5 hover:bg-text1 hover:text-bg transition-colors">{t('pay.viewOrders')}</Link>
-        <Link href="/catalog" className="font-mono text-[9px] font-semibold uppercase tracking-[0.18em] bg-text1 text-bg border border-text1 px-5 py-2.5 hover:bg-text2 hover:border-text2 transition-colors">{t('pay.shopMore')}</Link>
+        <Link href="/account/orders" className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] border border-text1 text-text1 px-5 py-2.5 hover:bg-text1 hover:text-bg transition-colors">{t('pay.viewOrders')}</Link>
+        <Link href="/catalog" className="font-mono text-[11px] font-semibold uppercase tracking-[0.18em] bg-text1 text-bg border border-text1 px-5 py-2.5 hover:bg-text2 hover:border-text2 transition-colors">{t('pay.shopMore')}</Link>
       </div>
     </div>
   )

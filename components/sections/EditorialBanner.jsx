@@ -1,32 +1,56 @@
 ﻿'use client'
 import Link from 'next/link'
-import { useI18n } from '@/store/i18nStore'
 import SectionHeading from '@/components/ui/SectionHeading'
+import GarmentPlate from '@/components/product/GarmentPlate'
 import { EDITORIALS } from '@/constants/editorial'
-
-const COLORS = ['#D8D6CF', '#C6C3BB', '#A6A29A']
+import { useAdminStore } from '@/store/adminStore'
+import { useI18n } from '@/store/i18nStore'
 
 export default function EditorialBanner() {
   const { t, locale } = useI18n()
+  const { products } = useAdminStore()
   const items = EDITORIALS.slice(0, 3)
+  const plates = products.slice(0, 3)
+
   return (
-    <section className="relative overflow-hidden bg-surface py-14 px-6 md:px-10 border-b border-border">
-      <span aria-hidden="true" data-ghost className="absolute top-8 right-4 md:right-10 font-display font-black leading-none text-[clamp(96px,18vw,220px)] text-text1/[0.04] tracking-[-0.04em] pointer-events-none select-none">05</span>
-      <SectionHeading no="05" title={t('editorial.title')} href="/editorial" linkLabel={t('sections.viewAll')} />
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-border">
-        {items.map((item, i) => (
-          <Link key={item.id} href="/editorial" className="archive-tile group relative block overflow-hidden border-b border-border md:border-b-0" style={{aspectRatio:'3/4'}}>
-            <div data-zoom className="w-full h-full flex flex-col items-center justify-center gap-3" style={{background: COLORS[i % COLORS.length]}}>
-              <span className="font-display text-[44px] font-bold leading-none text-text1/80">{(i+1).toString().padStart(2,'0')}</span>
-              <span aria-hidden="true" className="w-10 h-px bg-text1/30" />
-              <span className="font-mono text-[8px] uppercase tracking-[0.2em] text-text2">{`ED ${(i+1).toString().padStart(2,'0')} · SS26`}</span>
-            </div>
-            <div className="absolute bottom-0 left-0 p-5 w-full bg-bg border-t border-border">
-              <p className="arch-label text-pink mb-1">{locale === 'id' && item.subtitleId ? item.subtitleId : item.subtitle}</p>
-              <p className="font-display text-[20px] font-bold tracking-tight text-text1">{locale === 'id' && item.titleId ? item.titleId : item.title}</p>
-            </div>
-          </Link>
-        ))}
+    <section className="border-b border-border bg-bg">
+      <div className="mx-auto max-w-6xl px-6 py-14 md:px-10">
+        <SectionHeading no="05" title={t('editorial.title')} href="/editorial" linkLabel={t('sections.viewAll')} />
+
+        <div className="border-t border-text1">
+          {items.map((item, i) => (
+            <Link
+              key={item.id}
+              href="/editorial"
+              data-reveal
+              className="group grid grid-cols-[40px_1fr_96px] items-stretch gap-4 border-b border-border py-4 md:grid-cols-[64px_1fr_150px] md:gap-6 md:py-5"
+            >
+              <span className="pt-1 font-mono text-[12px] text-text2 tnum">ED {String(i + 1).padStart(2, '0')}</span>
+
+              <div className="flex min-w-0 flex-col justify-center">
+                <p className="arch-label mb-1 text-text2">
+                  {locale === 'id' && item.subtitleId ? item.subtitleId : item.subtitle}
+                </p>
+                <p className="font-display text-[24px] font-bold leading-[1.05] tracking-[-0.02em] text-text1 transition-transform duration-300 group-hover:translate-x-1 md:text-[38px]">
+                  {locale === 'id' && item.titleId ? item.titleId : item.title}
+                </p>
+                <div className="mt-2 flex flex-wrap gap-1.5">
+                  {(locale === 'id' && item.tagsId ? item.tagsId : item.tags).map((tag) => (
+                    <span key={tag} className="border border-border px-2 py-0.5 font-mono text-[11px] uppercase tracking-[0.08em] text-text2">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {plates[i] ? (
+                <GarmentPlate product={plates[i]} showMeta={false} compact marks={false} className="aspect-[3/4] w-full border border-border transition-transform duration-500 group-hover:scale-[1.02]" />
+              ) : (
+                <div className="aspect-[3/4] w-full border border-border bg-surface" />
+              )}
+            </Link>
+          ))}
+        </div>
       </div>
     </section>
   )

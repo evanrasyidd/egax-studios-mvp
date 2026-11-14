@@ -1,11 +1,12 @@
 ﻿'use client'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { User, Package, Heart, MapPin, Settings, LogOut, ChevronRight, X } from 'lucide-react'
 import { useAuthStore } from '@/store/authStore'
 import { useI18n } from '@/store/i18nStore'
 import { useHydrated } from '@/hooks/useHydrated'
+import { useFocusTrap } from '@/hooks/useFocusTrap'
 import { cn } from '@/lib/utils'
 
 export default function AccountSidebar() {
@@ -16,6 +17,8 @@ export default function AccountSidebar() {
   const { user, logout } = useAuthStore()
   const displayUser = hydrated ? user : null
   const [showLogoutConfirm, setShowLogoutConfirm] = useState(false)
+  const logoutRef = useRef(null)
+  useFocusTrap(showLogoutConfirm, logoutRef, () => setShowLogoutConfirm(false))
 
   const LINKS = [
     { href:'/account', label: t('account.profile'), icon:User },
@@ -45,7 +48,7 @@ export default function AccountSidebar() {
         <nav className="flex flex-col gap-0.5">
           {LINKS.map(({ href, label, icon: Icon }) => (
             <Link key={href} href={href}
-              className={cn('flex items-center gap-3 px-3 py-2.5 text-[13px] font-medium transition-all rounded-none',
+              className={cn('flex items-center gap-3 px-3 py-2.5 text-[13px] font-medium transition-colors rounded-none',
                 pathname === href ? 'bg-text1 text-white' : 'text-text2 hover:text-text1 hover:bg-surface')}>
               <Icon size={14}/>{label}
               {pathname === href && <ChevronRight size={12} className="ml-auto"/>}
@@ -60,18 +63,18 @@ export default function AccountSidebar() {
 
       {/* Logout confirmation modal */}
       {showLogoutConfirm && (
-        <div className="fixed inset-0 z-[90] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-surface border border-border shadow-2xl w-full max-w-sm p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h3 className="font-semibold text-text1 text-[15px]">{t('account.confirmLogout')}</h3>
-              <button onClick={() => setShowLogoutConfirm(false)} className="text-text2 hover:text-text1"><X size={16}/></button>
+        <div className="fixed inset-0 z-[90] flex items-center justify-center bg-text1/60 p-4">
+          <div ref={logoutRef} role="dialog" aria-modal="true" aria-labelledby="logout-title" className="w-full max-w-sm border border-border bg-surface p-6">
+            <div className="mb-4 flex items-center justify-between">
+              <h3 id="logout-title" className="text-[15px] font-semibold text-text1">{t('account.confirmLogout')}</h3>
+              <button type="button" onClick={() => setShowLogoutConfirm(false)} aria-label={t('nav.close')} className="flex h-11 w-11 items-center justify-center text-text2 hover:text-text1"><X size={16} aria-hidden="true"/></button>
             </div>
-            <p className="text-[13px] text-text2 mb-6">{t('account.logoutSure')}</p>
+            <p className="mb-6 text-[13px] text-text2">{t('account.logoutSure')}</p>
             <div className="flex gap-3">
-              <button onClick={handleLogout} className="flex-1 bg-text1 text-bg arch-label py-2.5 hover:bg-text2 transition-colors">
+              <button type="button" onClick={handleLogout} className="min-h-11 flex-1 bg-text1 py-2.5 text-bg font-mono text-[11px] uppercase tracking-[0.1em] transition-colors hover:bg-text2">
                 {t('account.yesLogout')}
               </button>
-              <button onClick={() => setShowLogoutConfirm(false)} className="flex-1 border border-border text-text1 arch-label py-2.5 hover:border-text1 transition-colors">
+              <button type="button" onClick={() => setShowLogoutConfirm(false)} className="min-h-11 flex-1 border border-border py-2.5 font-mono text-[11px] uppercase tracking-[0.1em] text-text1 transition-colors hover:border-text1">
                 {t('account.cancel')}
               </button>
             </div>

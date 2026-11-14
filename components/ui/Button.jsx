@@ -10,7 +10,7 @@ import { cn } from '@/lib/utils'
  * - Reduced-motion: sweep tetap jalan (solid color, aman)
  */
 export default function Button({ children, variant = 'primary', size = 'md', className, disabled, onClick, type = 'button', href, ...props }) {
-  const base = 'group relative inline-flex items-center justify-center gap-2 overflow-hidden font-mono font-semibold uppercase tracking-[0.18em] transition-all duration-200 ease-out disabled:opacity-40 disabled:cursor-not-allowed active:translate-y-px active:shadow-none will-change-transform select-none corner-brackets'
+  const base = 'group relative inline-flex select-none items-center justify-center gap-2 overflow-hidden font-mono font-semibold uppercase tracking-[0.1em] transition-colors duration-200 ease-out disabled:cursor-not-allowed disabled:opacity-40 active:translate-y-px corner-brackets'
   const variants = {
     primary: 'bg-text1 text-bg border border-text1 shadow-ink-sm',
     outline: 'bg-transparent text-text1 border border-text1',
@@ -32,7 +32,7 @@ export default function Button({ children, variant = 'primary', size = 'md', cla
     accent:  'group-hover:text-text1',
     danger:  'group-hover:text-white',
   }
-  const sizes = { sm: 'text-[10px] px-4 py-2', md: 'text-[11px] px-6 py-3', lg: 'text-[11px] px-8 py-3.5' }
+  const sizes = { sm: 'min-h-11 text-[11px] px-4 py-2', md: 'min-h-11 text-[11px] px-6 py-3', lg: 'min-h-11 text-[11px] px-8 py-3.5' }
 
   const sweep = sweeps[variant]
   const swap = textSwap[variant]

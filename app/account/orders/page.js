@@ -24,7 +24,7 @@ export default function OrdersPage() {
           <p className="arch-label text-pink mb-1">{t('account.myAccount')}</p>
           <h1 className="font-display text-[32px] font-bold tracking-[-0.01em] text-text1">{t('account.myOrders')}</h1>
         </div>
-        {!user && <span className="arch-label text-text2/70 hidden sm:block">{t('account.guestOrders')}</span>}
+        {!user && <span className="arch-label text-text2 hidden sm:block">{t('account.guestOrders')}</span>}
       </div>
       <OrderHistoryList orders={myOrders} />
     </div>

@@ -77,7 +77,7 @@ export default function AdminOrdersPage() {
         <div>
           <p className="arch-label text-pink mb-1">{t('admin.panel')}</p>
           <h1 className="font-display text-[18px] font-bold tracking-[-0.01em] text-text1">{t('admin.ordersTitle')}</h1>
-          <p className="font-mono text-[10px] font-medium text-text2 mt-1">{t('admin.totalOrders', { n: orders.length })}</p>
+          <p className="font-mono text-[11px] font-medium text-text2 mt-1">{t('admin.totalOrders', { n: orders.length })}</p>
         </div>
         <Button onClick={exportCSV} size="sm">
           <Download size={12} /> {t('admin.exportCsv')}
@@ -87,11 +87,11 @@ export default function AdminOrdersPage() {
       {/* Filters */}
       <div className="flex flex-col md:flex-row gap-3">
         <input value={search} onChange={e=>setSearch(e.target.value)} placeholder={t('admin.searchOrders')}
-          className="flex-1 bg-surface border border-border text-text1 font-mono text-[10px] font-medium px-4 py-2.5 outline-none focus:border-pink" />
+          className="flex-1 bg-surface border border-border text-text1 font-mono text-[11px] font-medium px-4 py-2.5 focus:border-pink" />
         <div className="flex gap-1 flex-wrap">
           {['all', ...STATUS_OPTIONS].map(s => (
             <button key={s} onClick={() => setStatusFilter(s)}
-              className={`font-mono text-[10px] font-medium px-3 py-2 border transition-all ${statusFilter===s ? 'bg-text1 text-bg border-text1' : 'bg-surface text-text2 border-border hover:border-text1'}`}>
+              className={`font-mono text-[11px] font-medium px-3 py-2 border transition-colors ${statusFilter===s ? 'bg-text1 text-bg border-text1' : 'bg-surface text-text2 border-border hover:border-text1'}`}>
               {s === 'all' ? t('admin.all') : t(`status.${s}`).toUpperCase()}
             </button>
           ))}
@@ -104,38 +104,38 @@ export default function AdminOrdersPage() {
           <thead>
             <tr className="border-b border-border bg-surface">
               {[t('admin.colOrderId'),t('admin.colCustomer'),t('admin.colChannel'),t('admin.colTotal'),t('admin.colPayment'),t('admin.colStatus'),t('admin.colDate'),t('admin.colActions')].map(h => (
-                <th key={h} className="text-left py-3 px-4 font-mono text-[10px] font-medium text-pink">{h}</th>
+                <th key={h} className="text-left py-3 px-4 font-mono text-[11px] font-medium text-pink">{h}</th>
               ))}
             </tr>
           </thead>
           <tbody className="divide-y divide-border">
             {filtered.length === 0 ? (
-              <tr><td colSpan={8} className="py-10 text-center font-mono text-[10px] font-medium text-text2">{t('admin.noOrdersFound')}</td></tr>
+              <tr><td colSpan={8} className="py-10 text-center font-mono text-[11px] font-medium text-text2">{t('admin.noOrdersFound')}</td></tr>
             ) : (
               filtered.map((o) => {
                 const status = getStatus(o)
                 const isPos = o.channel === 'pos'
                 return (
                   <tr key={o.id} className="hover:bg-surface/50 transition-colors">
-                    <td className="py-3 px-4 font-mono text-[10px] font-medium text-text2">{o.id}</td>
+                    <td className="py-3 px-4 font-mono text-[11px] font-medium text-text2">{o.id}</td>
                     <td className="py-3 px-4 font-body text-[13px] text-text1">{o.customer?.firstName} {o.customer?.lastName}</td>
                     <td className="py-3 px-4">
-                      <span className={`font-mono text-[9px] font-medium px-2 py-1 border ${isPos ? 'border-cyan-700 text-cyan-400' : 'border-border text-text2'}`}>
+                      <span className={`font-mono text-[11px] font-medium px-2 py-1 border ${isPos ? 'border-cyan-700 text-cyan-400' : 'border-border text-text2'}`}>
                         {isPos ? 'POS' : t('admin.online')}
                       </span>
                     </td>
-                    <td className="py-3 px-4 font-mono text-[10px] font-medium text-pink">{formatPrice(o.total)}</td>
-                    <td className="py-3 px-4 font-mono text-[10px] font-medium text-text2">{(o.payMethod||'qris').toUpperCase()}</td>
+                    <td className="py-3 px-4 font-mono text-[11px] font-medium text-pink">{formatPrice(o.total)}</td>
+                    <td className="py-3 px-4 font-mono text-[11px] font-medium text-text2">{(o.payMethod||'qris').toUpperCase()}</td>
                     <td className="py-3 px-4">
                       <select value={status} onChange={e => updateStatus(o.id, e.target.value)}
-                        className={`font-mono text-[10px] font-medium px-2 py-1 border bg-transparent cursor-pointer outline-none ${STATUS_COLORS[status] || 'border-border text-text2'}`}>
+                        className={`font-mono text-[11px] font-medium px-2 py-1 border bg-transparent cursor-pointer ${STATUS_COLORS[status] || 'border-border text-text2'}`}>
                         {STATUS_OPTIONS.map(s => <option key={s} value={s}>{t(`status.${s}`)}</option>)}
                       </select>
                     </td>
-                    <td className="py-3 px-4 font-mono text-[10px] font-medium text-text2">{formatDate(o.date)}</td>
+                    <td className="py-3 px-4 font-mono text-[11px] font-medium text-text2">{formatDate(o.date)}</td>
                     <td className="py-3 px-4">
                       <button onClick={() => setSelectedOrder(o)}
-                        className="w-7 h-7 flex items-center justify-center border border-border text-text2 hover:border-pink hover:text-pink transition-all">
+                        className="w-7 h-7 flex items-center justify-center border border-border text-text2 hover:border-pink hover:text-pink transition-colors">
                         <Eye size={11} />
                       </button>
                     </td>
@@ -162,7 +162,7 @@ export default function AdminOrdersPage() {
             <div className="p-5 space-y-5">
               {/* Customer */}
               <div>
-                <p className="font-mono text-[10px] font-medium text-pink mb-2">{t('admin.customerInfo')}</p>
+                <p className="font-mono text-[11px] font-medium text-pink mb-2">{t('admin.customerInfo')}</p>
                 <div className="border border-border p-3 space-y-1">
                   {[
                     [t('admin.name'), `${selectedOrder.customer?.firstName} ${selectedOrder.customer?.lastName}`],
@@ -172,7 +172,7 @@ export default function AdminOrdersPage() {
                     [t('admin.city'), `${selectedOrder.customer?.city}, ${selectedOrder.customer?.postalCode}`],
                   ].map(([k,v]) => v && (
                     <div key={k} className="flex gap-3 text-[12px]">
-                      <span className="font-mono text-[10px] font-medium text-text2 w-16 shrink-0 mt-0.5">{k}</span>
+                      <span className="font-mono text-[11px] font-medium text-text2 w-16 shrink-0 mt-0.5">{k}</span>
                       <span className="font-body text-text1">{v}</span>
                     </div>
                   ))}
@@ -180,15 +180,15 @@ export default function AdminOrdersPage() {
               </div>
               {/* Items */}
               <div>
-                <p className="font-mono text-[10px] font-medium text-pink mb-2">{t('admin.items')}</p>
+                <p className="font-mono text-[11px] font-medium text-pink mb-2">{t('admin.items')}</p>
                 <div className="border border-border divide-y divide-border">
                   {(selectedOrder.items || []).map((item) => (
                     <div key={item.key} className="flex items-center justify-between px-3 py-2">
                       <div>
                         <p className="font-body text-[12px] text-text1">{productName(item.product)}</p>
-                        <p className="font-mono text-[10px] font-medium text-text2">{t('admin.size', { size: item.size, qty: item.qty })}</p>
+                        <p className="font-mono text-[11px] font-medium text-text2">{t('admin.size', { size: item.size, qty: item.qty })}</p>
                       </div>
-                      <span className="font-mono text-[10px] font-medium text-pink">{formatPrice(item.product?.price * item.qty)}</span>
+                      <span className="font-mono text-[11px] font-medium text-pink">{formatPrice(item.product?.price * item.qty)}</span>
                     </div>
                   ))}
                 </div>
@@ -200,11 +200,11 @@ export default function AdminOrdersPage() {
               </div>
               {/* Status update */}
               <div>
-                <p className="font-mono text-[10px] font-medium text-text2 mb-2">{t('admin.updateStatus')}</p>
+                <p className="font-mono text-[11px] font-medium text-text2 mb-2">{t('admin.updateStatus')}</p>
                 <div className="flex flex-wrap gap-2">
                   {STATUS_OPTIONS.map(s => (
                     <button key={s} onClick={() => { updateStatus(selectedOrder.id, s); setSelectedOrder(null) }}
-                      className={`font-mono text-[10px] font-medium px-3 py-1.5 border transition-all ${(selectedOrder.status)===s ? 'bg-text1 text-bg border-text1' : 'border-border text-text2 hover:border-text1 hover:text-text1'}`}>
+                      className={`font-mono text-[11px] font-medium px-3 py-1.5 border transition-colors ${(selectedOrder.status)===s ? 'bg-text1 text-bg border-text1' : 'border-border text-text2 hover:border-text1 hover:text-text1'}`}>
                       {t(`status.${s}`).toUpperCase()}
                     </button>
                   ))}

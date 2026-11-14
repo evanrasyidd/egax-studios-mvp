@@ -77,7 +77,7 @@ export default function EwalletPayment({ wallet, amount, orderId, onSuccess }) {
       {status === 'redirect' && (
         <button
           onClick={handleOpenApp}
-          className="flex items-center gap-2 text-white text-[11px] font-semibold uppercase tracking-widest px-8 py-3 transition-all hover:brightness-110 active:translate-y-px"
+          className="flex items-center gap-2 text-white text-[11px] font-semibold uppercase tracking-widest px-8 py-3 transition-colors hover:brightness-110 active:translate-y-px"
           style={{ background: meta.color }}
         >
           <ExternalLink size={13} /> {t('pay.openApp', { wallet: walletLabel })}

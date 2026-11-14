@@ -62,7 +62,7 @@ export default function VirtualAccount({ bank, vaNumber, amount, orderId, onSucc
           <p className="text-[11px] text-text2 mb-1">{t('pay.vaNumber')}</p>
           <p className="text-[18px] font-bold font-mono text-text1 tracking-widest">{vaNumber}</p>
         </div>
-        <button onClick={copy} className="flex items-center gap-1.5 font-mono text-[10px] font-medium uppercase tracking-[0.16em] text-text2 border border-border px-3 py-2 hover:border-text1 hover:text-text1 transition-colors">
+        <button onClick={copy} className="flex items-center gap-1.5 font-mono text-[11px] font-medium uppercase tracking-[0.16em] text-text2 border border-border px-3 py-2 hover:border-text1 hover:text-text1 transition-colors">
           {copied ? <Check size={12} className="text-green-700" /> : <Copy size={12} />} {copied ? t('pay.copied') : t('pay.copy')}
         </button>
       </div>

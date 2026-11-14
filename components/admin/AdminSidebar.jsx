@@ -63,7 +63,7 @@ export default function AdminSidebar() {
         <nav className="flex flex-col gap-0.5 p-3 flex-1">
           {LINKS.map(({ href, key, icon: Icon }) => (
             <Link key={href} href={href} onClick={() => setMobileOpen(false)} className={cn(
-              'flex items-center gap-3 px-3 py-2.5 text-[12px] font-semibold uppercase tracking-widest transition-all',
+              'flex items-center gap-3 px-3 py-2.5 text-[12px] font-semibold uppercase tracking-widest transition-colors',
               pathname===href ? 'bg-pink text-white' : 'text-text2 hover:text-text1 hover:bg-surface'
             )}>
               <Icon size={14}/>{t(`admin.${key}`)}
@@ -73,13 +73,13 @@ export default function AdminSidebar() {
         </nav>
         <div className="p-3 border-t border-border">
           <Link href="/pos" target="_blank" rel="noopener noreferrer"
-            className="group flex items-center gap-3 px-3 py-3 border border-pink/40 hover:border-pink bg-pink/5 hover:bg-pink/10 transition-all">
+            className="group flex items-center gap-3 px-3 py-3 border border-pink/40 hover:border-pink bg-pink/5 hover:bg-pink/10 transition-colors">
             <div className="w-9 h-9 shrink-0 flex items-center justify-center bg-pink text-white group-hover:rotate-3 transition-transform">
               <Store size={16}/>
             </div>
             <div className="flex-1">
               <p className="text-[11px] font-bold uppercase tracking-widest text-pink leading-none">{t('admin.posKasir')}</p>
-              <p className="text-[9px] text-text2 mt-0.5">{t('admin.posDesc')}</p>
+              <p className="text-[11px] text-text2 mt-0.5">{t('admin.posDesc')}</p>
             </div>
             <ChevronRight size={13} className="text-pink shrink-0 group-hover:translate-x-0.5 transition-transform"/>
           </Link>
@@ -94,7 +94,7 @@ export default function AdminSidebar() {
 
       {/* Logout confirm */}
       {showLogout && (
-        <div className="fixed inset-0 z-[95] bg-text1/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[95] bg-text1/60 flex items-center justify-center p-4">
           <div className="anim-rise bg-surface border border-text1 w-full max-w-sm">
             <div className="flex items-center justify-between px-5 py-2.5 bg-text1">
               <span className="arch-label text-bg">{t('admin.logoutTitle')}</span>

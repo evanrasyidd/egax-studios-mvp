@@ -1,76 +1,110 @@
 ﻿'use client'
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { X, Search } from 'lucide-react'
+import { gsap } from 'gsap'
+import { useGSAP } from '@gsap/react'
 import { useUIStore } from '@/store/uiStore'
 import { useAdminStore } from '@/store/adminStore'
 import { useI18n } from '@/store/i18nStore'
-import { useHydrated } from '@/hooks/useHydrated'
+import { useFocusTrap } from '@/hooks/useFocusTrap'
 import { formatPrice } from '@/lib/utils'
+import { CATEGORIES } from '@/constants/categories'
+import GarmentPlate from '@/components/product/GarmentPlate'
+
+gsap.registerPlugin(useGSAP)
 
 export default function SearchModal() {
   const { t, productName } = useI18n()
   const { isSearchOpen, closeSearch } = useUIStore()
-  const hydrated = useHydrated()
   const { products } = useAdminStore()
   const [query, setQuery] = useState('')
   const inputRef = useRef(null)
-  const list = hydrated ? products : []
-  const results = query.length > 1
-    ? list.filter(p => {
-        const q = query.toLowerCase()
-        return p.name.toLowerCase().includes(q) || (p.nameId || '').toLowerCase().includes(q) || p.category.toLowerCase().includes(q)
-      }).slice(0,6)
-    : []
+  const panelRef = useRef(null)
+
+  useFocusTrap(isSearchOpen, panelRef, closeSearch)
 
   useEffect(() => {
-    if (isSearchOpen) { setTimeout(() => inputRef.current?.focus(), 100); document.body.style.overflow = 'hidden' }
-    else { setQuery(''); document.body.style.overflow = '' }
-    return () => { document.body.style.overflow = '' }
+    if (isSearchOpen) inputRef.current?.focus()
+    else setQuery('')
   }, [isSearchOpen])
 
-  useEffect(() => {
-    const fn = e => { if (e.key === 'Escape') closeSearch() }
-    window.addEventListener('keydown', fn)
-    return () => window.removeEventListener('keydown', fn)
-  }, [closeSearch])
+  useGSAP(() => {
+    if (!isSearchOpen) return
+    const mm = gsap.matchMedia()
+    mm.add('(prefers-reduced-motion: no-preference)', () => {
+      gsap.fromTo(panelRef.current, { y: -14, opacity: 0 }, { y: 0, opacity: 1, duration: 0.35, ease: 'power3.out' })
+      const results = gsap.utils.toArray('.search-result')
+      if (results.length) {
+        gsap.fromTo(results, { y: 10, opacity: 0 }, { y: 0, opacity: 1, duration: 0.3, stagger: 0.04, delay: 0.08, ease: 'power3.out' })
+      }
+    })
+    return () => mm.revert()
+  }, { scope: panelRef, dependencies: [isSearchOpen, query] })
+
+  const results = query.length > 1
+    ? products.filter((p) => {
+        const q = query.toLowerCase()
+        return p.name.toLowerCase().includes(q) || (p.nameId || '').toLowerCase().includes(q) || p.category.toLowerCase().includes(q)
+      }).slice(0, 6)
+    : []
 
   if (!isSearchOpen) return null
+
   return (
-    <div className="fixed inset-0 z-[80] bg-bg/95 backdrop-blur-md flex flex-col">
-      <div className="flex items-center gap-4 px-6 py-5 border-b border-border">
-        <Search size={16} className="text-pink shrink-0"/>
-        <input ref={inputRef} value={query} onChange={e => setQuery(e.target.value)} placeholder={t('search.placeholder')}
-          className="flex-1 bg-transparent font-display text-[18px] md:text-[24px] font-medium text-text1 placeholder:text-text2/40 outline-none"/>
-        <button onClick={closeSearch} className="text-text2 hover:text-text1 border border-border hover:border-text2 p-1.5 transition-colors"><X size={14}/></button>
+    <div ref={panelRef} role="dialog" aria-modal="true" aria-labelledby="search-title" className="fixed inset-0 z-[80] flex flex-col bg-bg">
+      <h2 id="search-title" className="sr-only">{t('search.title')}</h2>
+      <div className="flex items-center gap-4 border-b border-border px-4 py-3 md:px-6">
+        <Search size={18} aria-hidden="true" className="shrink-0 text-text2" />
+        <label htmlFor="site-search" className="sr-only">{t('search.placeholder')}</label>
+        <input
+          ref={inputRef}
+          id="site-search"
+          type="search"
+          autoComplete="off"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder={t('search.placeholder')}
+          className="flex-1 bg-transparent font-display text-[18px] font-medium text-text1 placeholder:text-text2 md:text-[24px]"
+        />
+        <button type="button" onClick={closeSearch} aria-label={t('nav.close')} className="flex h-11 w-11 items-center justify-center border border-border text-text2 transition-colors hover:border-text1 hover:text-text1">
+          <X size={17} aria-hidden="true" />
+        </button>
       </div>
-      <div className="flex-1 overflow-y-auto px-6 py-6">
-        {query.length > 1 && results.length === 0 && <p className="text-text2 text-sm">{t('search.noResults', { q: query })}</p>}
+
+      <div className="flex-1 overflow-y-auto px-4 py-6 md:px-6">
+        <div aria-live="polite" className="sr-only">
+          {query.length > 1 ? t('search.resultCount', { n: results.length }) : ''}
+        </div>
+
+        {query.length > 1 && results.length === 0 && (
+          <p className="text-[13px] text-text2">{t('search.noResults', { q: query })}</p>
+        )}
+
         {results.length > 0 && (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-px bg-border max-w-3xl">
-            {results.map(p => (
+          <div className="grid max-w-3xl grid-cols-1 gap-px bg-border md:grid-cols-2">
+            {results.map((p) => (
               <Link key={p.id} href={`/product/${p.slug}`} onClick={closeSearch}
-                className="flex gap-4 p-4 bg-surface hover:bg-card transition-colors group">
-                <div className="w-14 h-20 shrink-0 border border-border flex items-center justify-center bg-card overflow-hidden">
-                  <span className="font-display text-[20px] font-bold text-text2">{productName(p)[0]}</span>
-                </div>
-                <div>
-                  <p className="arch-label text-text2 mb-1">{p.category}</p>
-                  <p className="text-[14px] font-medium text-text1 mb-1 group-hover:text-pink transition-colors">{productName(p)}</p>
-                  <p className="font-mono text-[12px] font-medium text-pink">{formatPrice(p.price)}</p>
+                className="search-result group flex gap-4 bg-surface p-4 transition-colors hover:bg-bg">
+                <GarmentPlate product={p} showMeta={false} compact className="aspect-[3/4] w-14 shrink-0 border border-border" />
+                <div className="min-w-0">
+                  <p className="font-mono text-[11px] uppercase tracking-[0.1em] text-text2">{t(`cat.${p.category.toLowerCase()}`)}</p>
+                  <p className="mb-1 truncate text-[14px] font-medium text-text1">{productName(p)}</p>
+                  <p className="tnum font-mono text-[12px] font-medium text-text1">{formatPrice(p.price)}</p>
                 </div>
               </Link>
             ))}
           </div>
         )}
+
         {query.length === 0 && (
           <div>
-            <p className="arch-label text-text2 mb-4">{t('search.popular')}</p>
+            <p className="arch-label mb-4 text-text2">{t('search.popular')}</p>
             <div className="flex flex-wrap gap-2">
-              {['Jacket','Tops','Shirt','Pants','Essentials','Accessories'].map(cat => (
-                <Link key={cat} href={`/catalog?category=${cat.toLowerCase()}`} onClick={closeSearch}
-                  className="font-mono text-[9px] font-medium uppercase tracking-[0.18em] text-text2 border border-border px-4 py-2 hover:border-text2 hover:text-text1 transition-all">
-                  {t(`cat.${cat.toLowerCase()}`)}
+              {CATEGORIES.filter((c) => c.slug !== 'all').map((cat) => (
+                <Link key={cat.slug} href={`/catalog?category=${cat.slug}`} onClick={closeSearch}
+                  className="border border-border px-4 py-3 font-mono text-[11px] font-medium uppercase tracking-[0.08em] text-text2 transition-colors hover:border-text1 hover:text-text1">
+                  {t(`cat.${cat.slug}`)}
                 </Link>
               ))}
             </div>

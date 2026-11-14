@@ -1,5 +1,5 @@
 ﻿'use client'
-import { useState, useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { Search, User, Menu, X, ChevronDown, ShoppingCart, GitCompareArrows } from 'lucide-react'
@@ -9,38 +9,51 @@ import { useGSAP } from '@gsap/react'
 import { useUIStore } from '@/store/uiStore'
 import { useCartStore } from '@/store/cartStore'
 import { useCompareStore } from '@/store/compareStore'
+import { useAdminStore } from '@/store/adminStore'
 import { useI18n } from '@/store/i18nStore'
 import { useHydrated } from '@/hooks/useHydrated'
+import { useFocusTrap } from '@/hooks/useFocusTrap'
 import { cn } from '@/lib/utils'
 import { CATEGORIES } from '@/constants/categories'
 
 gsap.registerPlugin(ScrollTrigger, useGSAP)
 
 export default function Navbar() {
-  const [scrolled, setScrolled] = useState(false)
   const [megaOpen, setMegaOpen] = useState(false)
   const pathname = usePathname()
   const hydrated = useHydrated()
   const { t, locale, setLocale } = useI18n()
   const { openCart, openSearch, isMenuOpen, closeMenu, toggleMenu } = useUIStore()
-  const getTotalItems = useCartStore(s => s.getTotalItems)
-  const compareCount = useCompareStore(s => s.ids.length)
+  const getTotalItems = useCartStore((s) => s.getTotalItems)
+  const compareCount = useCompareStore((s) => s.ids.length)
+  const { products } = useAdminStore()
   const totalItems = hydrated ? getTotalItems() : 0
 
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 50)
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [])
-
-  useEffect(() => { closeMenu() }, [pathname, closeMenu])
-
   const progressRef = useRef(null)
+  const megaRef = useRef(null)
+  const mobileRef = useRef(null)
 
-  // Scroll progress — strip hitam tipis di bawah navbar, kayak indeks dokumen
+  useFocusTrap(isMenuOpen, mobileRef, closeMenu)
+
+  useEffect(() => {
+    closeMenu()
+    setMegaOpen(false)
+  }, [pathname, closeMenu])
+
+  useEffect(() => {
+    if (!megaOpen) return
+    const onKey = (e) => { if (e.key === 'Escape') setMegaOpen(false) }
+    const onClick = (e) => { if (megaRef.current && !megaRef.current.contains(e.target)) setMegaOpen(false) }
+    document.addEventListener('keydown', onKey)
+    document.addEventListener('pointerdown', onClick)
+    return () => {
+      document.removeEventListener('keydown', onKey)
+      document.removeEventListener('pointerdown', onClick)
+    }
+  }, [megaOpen])
+
   useGSAP(() => {
     const mm = gsap.matchMedia()
-
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       gsap.fromTo(progressRef.current, { scaleX: 0 }, {
         scaleX: 1,
@@ -52,7 +65,6 @@ export default function Navbar() {
         },
       })
     })
-
     return () => mm.revert()
   }, { scope: progressRef })
 
@@ -65,52 +77,87 @@ export default function Navbar() {
     { label: t('nav.contact'), href: '/contact' },
   ]
 
+  const categories = CATEGORIES
+    .filter((c) => c.slug !== 'all')
+    .map((c) => ({ ...c, count: products.filter((p) => p.category.toLowerCase() === c.slug).length }))
+
   return (
     <>
-      <nav className={cn(
-        'relative sticky top-8 z-[65] flex items-center justify-between px-6 md:px-10 h-[64px] transition-all duration-300 border-b',
-        scrolled ? 'bg-bg/95 backdrop-blur-md border-border' : 'bg-bg border-border'
-      )}>
-        <div ref={progressRef} aria-hidden="true" className="absolute bottom-0 left-0 h-[2px] w-full bg-text1 origin-left scale-x-0" />
-        <Link href="/" className="flex items-baseline gap-2.5 shrink-0">
-          <span className="font-display text-[19px] font-bold tracking-[0.04em] text-text1 hover:text-pink transition-colors">EGAX STUDIOS</span>
+      <nav className="sticky top-8 z-[65] flex h-16 items-center justify-between border-b border-border bg-bg px-4 md:px-10">
+        <div ref={progressRef} aria-hidden="true" className="absolute bottom-0 left-0 h-[2px] w-full origin-left scale-x-0 bg-text1" />
+
+        <Link href="/" className="shrink-0">
+          <span className="font-display text-[17px] font-bold tracking-[0.02em] text-text1 transition-colors hover:text-text2 md:text-[19px]">
+            EGAX STUDIOS
+          </span>
         </Link>
 
-        <div className="hidden lg:flex items-center">
-          {navLinks.map(link =>
+        <div className="hidden items-center lg:flex">
+          {navLinks.map((link) =>
             link.hasMega ? (
-              <div key={link.href} className="relative"
+              <div
+                key={link.href}
+                ref={megaRef}
+                className="relative"
                 onMouseEnter={() => setMegaOpen(true)}
-                onMouseLeave={() => setMegaOpen(false)}>
-                <button className={cn(
-                  'nav-underline flex items-center gap-1 px-4 py-2 font-mono text-[10px] font-medium uppercase tracking-[0.2em] transition-colors',
-                  pathname.startsWith('/catalog') ? 'text-pink active' : 'text-text2 hover:text-text1'
-                )}>
-                  {link.label}
-                  <ChevronDown size={10} className={cn('transition-transform', megaOpen && 'rotate-180')} />
-                </button>
+                onMouseLeave={() => setMegaOpen(false)}
+              >
+                <div className="flex items-center">
+                  <Link
+                    href={link.href}
+                    className={cn(
+                      'nav-underline py-2 pl-3 pr-1 font-mono text-[11px] font-medium uppercase tracking-[0.1em] transition-colors',
+                      pathname.startsWith('/catalog') ? 'text-text1 active' : 'text-text2 hover:text-text1'
+                    )}
+                  >
+                    {link.label}
+                  </Link>
+                  <button
+                    type="button"
+                    onClick={() => setMegaOpen((v) => !v)}
+                    aria-expanded={megaOpen}
+                    aria-controls="catalog-menu"
+                    aria-label={t('nav.categories')}
+                    className="flex h-11 w-8 items-center justify-center text-text2 transition-colors hover:text-text1"
+                  >
+                    <ChevronDown size={13} aria-hidden="true" className={cn('transition-transform duration-200', megaOpen && 'rotate-180')} />
+                  </button>
+                </div>
+
                 {megaOpen && (
-                  <div className="anim-mega absolute top-full left-0 bg-surface border border-text1 shadow-ink-lg min-w-[200px] z-50">
-                    <div className="flex items-center justify-between px-5 py-2 border-b border-border">
-                      <span className="arch-label text-text2">Categories</span>
-                      <span className="font-mono text-[8px] uppercase tracking-widest text-text2/60">06</span>
+                  <div id="catalog-menu" className="anim-mega absolute left-0 top-full z-50 min-w-[250px] border border-text1 bg-surface">
+                    <div className="flex items-center justify-between border-b border-border px-5 py-2.5">
+                      <span className="arch-label text-text2">{t('nav.categories')}</span>
+                      <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-text2">{String(categories.length).padStart(2, '0')}</span>
                     </div>
-                    {CATEGORIES.map(cat => (
-                      <Link key={cat.slug}
-                        href={cat.slug === 'all' ? '/catalog' : `/catalog?category=${cat.slug}`}
-                        className="block px-5 py-2.5 font-mono text-[10px] font-medium uppercase tracking-[0.18em] text-text2 hover:text-bg hover:bg-text1 border-b border-border last:border-0 transition-colors">
-                        {t(`cat.${cat.slug}`)}
+                    <Link
+                      href="/catalog"
+                      className="block border-b border-text1 bg-bg px-5 py-3 font-mono text-[11px] font-semibold uppercase tracking-[0.1em] text-text1 hover:bg-text1 hover:text-bg"
+                    >
+                      {t('nav.allProducts')}
+                    </Link>
+                    {categories.map((cat) => (
+                      <Link
+                        key={cat.slug}
+                        href={`/catalog?category=${cat.slug}`}
+                        className="flex items-center justify-between border-b border-border px-5 py-2.5 font-mono text-[11px] uppercase tracking-[0.08em] text-text2 transition-colors last:border-0 hover:bg-text1 hover:text-bg"
+                      >
+                        <span>{t(`cat.${cat.slug}`)}</span>
+                        <span className="tnum text-[11px] opacity-70">{String(cat.count).padStart(2, '0')}</span>
                       </Link>
                     ))}
                   </div>
                 )}
               </div>
             ) : (
-              <Link key={link.href} href={link.href}
+              <Link
+                key={link.href}
+                href={link.href}
                 className={cn(
-                  'nav-underline px-4 py-2 font-mono text-[10px] font-medium uppercase tracking-[0.2em] transition-colors',
-                  pathname === link.href ? 'text-pink active' : 'text-text2 hover:text-text1'
-                )}>
+                  'nav-underline px-3 py-2 font-mono text-[11px] font-medium uppercase tracking-[0.1em] transition-colors',
+                  pathname === link.href ? 'text-text1 active' : 'text-text2 hover:text-text1'
+                )}
+              >
                 {link.label}
               </Link>
             )
@@ -118,65 +165,116 @@ export default function Navbar() {
         </div>
 
         <div className="flex items-center gap-0.5">
-          {/* Language toggle EN/ID */}
-          <div className="flex items-center border border-border mr-1.5" role="group" aria-label={t('nav.language')}>
-            {['en', 'id'].map(l => (
-              <button key={l} onClick={() => setLocale(l)}
-                className={cn('px-2.5 py-1.5 font-mono text-[9px] font-semibold uppercase tracking-[0.18em] transition-colors',
-                  locale === l ? 'bg-text1 text-bg' : 'text-text2 hover:text-text1')}>
+          <div className="mr-1 hidden items-center border border-border lg:flex" role="group" aria-label={t('nav.language')}>
+            {['en', 'id'].map((l) => (
+              <button
+                key={l}
+                type="button"
+                onClick={() => setLocale(l)}
+                aria-pressed={locale === l}
+                className={cn(
+                  'h-11 px-3 font-mono text-[11px] font-semibold uppercase tracking-[0.1em] transition-colors',
+                  locale === l ? 'bg-text1 text-bg' : 'text-text2 hover:text-text1'
+                )}
+              >
                 {l}
               </button>
             ))}
           </div>
-          <button onClick={openSearch} className="w-9 h-9 flex items-center justify-center text-text2 hover:text-pink transition-all" aria-label={t('nav.search')}>
-            <Search size={16} />
+
+          <button type="button" onClick={openSearch} className="flex h-11 w-11 items-center justify-center text-text2 transition-colors hover:text-text1" aria-label={t('nav.search')}>
+            <Search size={17} aria-hidden="true" />
           </button>
-          <Link href="/account" className="w-9 h-9 flex items-center justify-center text-text2 hover:text-pink transition-all" aria-label={t('nav.account')}>
-            <User size={16} />
+          <Link href="/account" className="hidden h-11 w-11 items-center justify-center text-text2 transition-colors hover:text-text1 lg:flex" aria-label={t('nav.account')}>
+            <User size={17} aria-hidden="true" />
           </Link>
-          <Link href="/compare" className="relative w-9 h-9 flex items-center justify-center text-text2 hover:text-pink transition-all" aria-label={t('nav.compare')}>
-            <GitCompareArrows size={16} />
+          <Link href="/compare" className="relative hidden h-11 w-11 items-center justify-center text-text2 transition-colors hover:text-text1 lg:flex" aria-label={t('nav.compare')}>
+            <GitCompareArrows size={17} aria-hidden="true" />
             {hydrated && compareCount > 0 && (
-              <span className="absolute top-0.5 right-0.5 bg-text1 text-bg text-[8px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+              <span className="absolute right-1 top-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-text1 px-1 text-[11px] font-bold text-bg tnum">
                 {compareCount}
               </span>
             )}
           </Link>
-          <button onClick={openCart} className="relative w-9 h-9 flex items-center justify-center text-text2 hover:text-pink transition-all" aria-label={t('nav.cart')}>
-            <ShoppingCart size={16} />
+          <button type="button" onClick={openCart} className="relative flex h-11 w-11 items-center justify-center text-text2 transition-colors hover:text-text1" aria-label={t('nav.cart')}>
+            <ShoppingCart size={17} aria-hidden="true" />
             {totalItems > 0 && (
-              <span className="absolute top-0.5 right-0.5 bg-pink text-bg text-[8px] font-bold w-4 h-4 rounded-full flex items-center justify-center">
+              <span className="absolute right-1 top-1 flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-text1 px-1 text-[11px] font-bold text-bg tnum">
                 {totalItems > 9 ? '9+' : totalItems}
               </span>
             )}
           </button>
-          <button onClick={toggleMenu} className="lg:hidden w-9 h-9 flex items-center justify-center text-text2 hover:text-pink" aria-label="Menu">
-            {isMenuOpen ? <X size={18}/> : <Menu size={18}/>}
+          <button type="button" onClick={toggleMenu} className="flex h-11 w-11 items-center justify-center text-text2 transition-colors hover:text-text1 lg:hidden" aria-label={t('nav.menu')}>
+            {isMenuOpen ? <X size={20} aria-hidden="true" /> : <Menu size={20} aria-hidden="true" />}
           </button>
         </div>
       </nav>
 
       {isMenuOpen && (
-        <div className="fixed inset-0 z-[55] bg-bg flex flex-col pt-28 px-8">
-          <div className="flex flex-col gap-1">
-            {navLinks.map(link => (
-              <Link key={link.href} href={link.href}
-                className="font-display text-[40px] font-bold tracking-tight text-text1 hover:text-pink transition-colors border-b border-border pb-2"
-                onClick={closeMenu}>
-                {link.label}
-              </Link>
-            ))}
+        <div ref={mobileRef} role="dialog" aria-modal="true" aria-labelledby="mobile-menu-title" className="fixed inset-0 z-[90] flex flex-col bg-bg">
+          <div className="flex h-16 items-center justify-between border-b border-border px-4">
+            <span id="mobile-menu-title" className="font-display text-[17px] font-bold tracking-[0.02em] text-text1">EGAX STUDIOS</span>
+            <button type="button" onClick={closeMenu} aria-label={t('nav.close')} className="flex h-11 w-11 items-center justify-center text-text2 hover:text-text1">
+              <X size={20} aria-hidden="true" />
+            </button>
           </div>
-          <div className="mt-auto pb-10 border-t border-border pt-5 flex items-center justify-between">
-            <p className="arch-label text-text2">{t('nav.tagline')}</p>
-            <div className="flex items-center border border-border" role="group" aria-label={t('nav.language')}>
-              {['en', 'id'].map(l => (
-                <button key={l} onClick={() => setLocale(l)}
-                  className={cn('px-2.5 py-1.5 font-mono text-[9px] font-semibold uppercase tracking-[0.18em] transition-colors',
-                    locale === l ? 'bg-text1 text-bg' : 'text-text2 hover:text-text1')}>
-                  {l}
-                </button>
+
+          <div className="flex-1 overflow-y-auto px-6 py-6">
+            <div className="flex flex-col">
+              {navLinks.map((link, i) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  onClick={closeMenu}
+                  className="flex items-baseline justify-between border-b border-border py-3.5"
+                >
+                  <span className="font-display text-[32px] font-bold leading-none tracking-[-0.02em] text-text1">{link.label}</span>
+                  <span className="font-mono text-[11px] text-text2 tnum">{String(i + 1).padStart(2, '0')}</span>
+                </Link>
               ))}
+            </div>
+
+            <div className="mt-8 grid grid-cols-2 gap-2">
+              <Link href="/account" onClick={closeMenu} className="border border-border px-4 py-3 font-mono text-[11px] uppercase tracking-[0.1em] text-text1">
+                {t('nav.account')}
+              </Link>
+              <Link href="/compare" onClick={closeMenu} className="border border-border px-4 py-3 font-mono text-[11px] uppercase tracking-[0.1em] text-text1">
+                {t('nav.compare')}
+              </Link>
+              <button
+                type="button"
+                onClick={() => { closeMenu(); openSearch() }}
+                className="border border-border px-4 py-3 text-left font-mono text-[11px] uppercase tracking-[0.1em] text-text1"
+              >
+                {t('nav.search')}
+              </button>
+              <button
+                type="button"
+                onClick={() => { closeMenu(); openCart() }}
+                className="border border-border px-4 py-3 text-left font-mono text-[11px] uppercase tracking-[0.1em] text-text1"
+              >
+                {t('nav.cart')}
+              </button>
+            </div>
+
+            <div className="mt-8 flex items-center justify-between border-t border-border pt-5">
+              <p className="max-w-[200px] text-[12px] leading-relaxed text-text2">{t('nav.tagline')}</p>
+              <div className="flex items-center border border-border" role="group" aria-label={t('nav.language')}>
+                {['en', 'id'].map((l) => (
+                  <button
+                    key={l}
+                    type="button"
+                    onClick={() => setLocale(l)}
+                    aria-pressed={locale === l}
+                    className={cn(
+                      'h-11 min-w-[44px] px-3 font-mono text-[11px] font-semibold uppercase tracking-[0.1em] transition-colors',
+                      locale === l ? 'bg-text1 text-bg' : 'text-text2'
+                    )}
+                  >
+                    {l}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </div>

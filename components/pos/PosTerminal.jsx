@@ -4,7 +4,7 @@ import { Search, Plus, Minus, Trash2, LogOut, ShoppingCart, X, Check, Printer } 
 import { useAdminStore } from '@/store/adminStore'
 import { useOrderStore } from '@/store/orderStore'
 import { usePosStore } from '@/store/posStore'
-import GarmentIcon from '@/components/product/GarmentIcon'
+import GarmentPlate from '@/components/product/GarmentPlate'
 import { formatPrice, generateOrderId } from '@/lib/utils'
 import { toast } from '@/components/ui/Toast'
 import Button from '@/components/ui/Button'
@@ -96,14 +96,14 @@ export default function PosTerminal() {
       {/* ── Top bar ── */}
       <div className="flex items-center justify-between px-5 py-3 border-b border-border bg-surface shrink-0">
         <div>
-          <p className="font-mono text-[10px] font-medium text-pink">{t('pos.badge')}</p>
-          <h1 className="font-display text-[12px] text-text1">{t('pos.title')}</h1>
+          <p className="font-mono text-[11px] font-medium text-pink">{t('pos.badge')}</p>
+          <h1 className="font-display text-[20px] font-bold tracking-[-0.01em] text-text1">{t('pos.title')}</h1>
         </div>
         <div className="flex items-center gap-3">
-          <p className="font-mono text-[10px] font-medium text-text2">{t('pos.cashier')}<span className="text-text1">{cashierName}</span></p>
+          <p className="font-mono text-[11px] font-medium text-text2">{t('pos.cashier')}<span className="text-text1">{cashierName}</span></p>
           <button
             onClick={handleLock}
-            className="flex items-center gap-1.5 font-mono text-[10px] font-medium text-text2 border border-border px-3 py-2 hover:border-red-400 hover:text-red-600 transition-colors"
+            className="flex items-center gap-1.5 font-mono text-[11px] font-medium text-text2 border border-border px-3 py-2 hover:border-red-400 hover:text-red-600 transition-colors"
           >
             <LogOut size={11} /> {t('pos.logout')}
           </button>
@@ -120,7 +120,7 @@ export default function PosTerminal() {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder={t('pos.search')}
-                className="w-full bg-bg border border-border text-text1 font-mono text-[10px] font-medium pl-9 pr-3 py-2.5 outline-none focus:border-text1"
+                className="w-full bg-bg border border-border text-text1 font-mono text-[11px] font-medium pl-9 pr-3 py-2.5 focus:border-text1"
               />
             </div>
             <div className="flex gap-2 overflow-x-auto pb-1">
@@ -128,7 +128,7 @@ export default function PosTerminal() {
                 <button
                   key={c}
                   onClick={() => setCategory(c)}
-                  className={`shrink-0 font-mono text-[10px] font-medium px-3 py-2 border transition-colors whitespace-nowrap ${
+                  className={`shrink-0 font-mono text-[11px] font-medium px-3 py-2 border transition-colors whitespace-nowrap ${
                     category === c ? 'border-text1 text-text1 bg-bg' : 'border-border text-text2 hover:border-text1'
                   }`}
                 >
@@ -140,24 +140,20 @@ export default function PosTerminal() {
 
           <div className="flex-1 overflow-y-auto p-4">
             {filtered.length === 0 ? (
-              <p className="font-mono text-[10px] font-medium text-text2 text-center py-12">{t('pos.notFound')}</p>
+              <p className="font-mono text-[11px] font-medium text-text2 text-center py-12">{t('pos.notFound')}</p>
             ) : (
               <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-                {filtered.map((p, i) => {
-                  const bgColors = ['#A6A29A','#77736C','#5A5751','#3A3936','#222220','#8F8B84','#6E6A63','#4A4844']
-                  const bg = bgColors[(parseInt(p.id.replace('p','')) || i) % bgColors.length]
+                {filtered.map((p) => {
                   return (
                     <button
                       key={p.id}
                       onClick={() => { addToCart(p, p.sizes?.[0]); toast(t('pos.added', { name: productName(p) })) }}
-                      className="border border-border hover:border-text1 transition-colors text-left group"
+                      className="group border border-border text-left transition-colors hover:border-text1"
                     >
-                      <div className="aspect-square flex items-center justify-center" style={{ background: bg }}>
-                        <GarmentIcon category={p.category} fill="rgba(255,255,255,0.92)" shade="rgba(0,0,0,0.22)" detail="#111111" scale={5} />
-                      </div>
+                      <GarmentPlate product={p} showMeta={false} compact className="aspect-[3/4] w-full" />
                       <div className="p-2.5 bg-surface">
                         <p className="font-body text-[11px] text-text1 leading-snug mb-1 line-clamp-2">{productName(p)}</p>
-                        <p className="font-mono text-[10px] font-medium text-pink">{formatPrice(p.price)}</p>
+                        <p className="font-mono text-[11px] font-medium text-pink">{formatPrice(p.price)}</p>
                       </div>
                     </button>
                   )
@@ -178,29 +174,29 @@ export default function PosTerminal() {
             {cart.length === 0 ? (
               <div className="flex flex-col items-center justify-center h-full gap-3 text-center px-6">
                 <ShoppingCart size={28} className="text-border" />
-                <p className="font-mono text-[10px] font-medium text-text2">{t('pos.cartEmpty')}</p>
+                <p className="font-mono text-[11px] font-medium text-text2">{t('pos.cartEmpty')}</p>
               </div>
             ) : (
               <div className="divide-y divide-border">
                 {cart.map((item) => (
                   <div key={item.key} className="flex gap-3 p-3">
                     <div className="flex-1 min-w-0">
-                      <p className="font-body text-[12px] text-text1 leading-snug mb-1">{productName(item.product)}</p>
-                      <p className="font-mono text-[10px] font-medium text-text2 mb-2">{t('pos.size', { size: item.size })}</p>
+                      <p className="mb-1 font-body text-[13px] leading-snug text-text1">{productName(item.product)}</p>
+                      <p className="mb-2 font-mono text-[11px] font-medium text-text2">{t('pos.size', { size: item.size })}</p>
                       <div className="flex items-center justify-between">
                         <div className="flex items-center border border-border">
-                          <button onClick={() => updateQty(item.key, item.qty - 1)} className="w-6 h-6 flex items-center justify-center text-text2 hover:text-pink">
-                            <Minus size={9} />
+                          <button type="button" onClick={() => updateQty(item.key, item.qty - 1)} aria-label={t('cart.decrease')} className="flex h-11 w-11 items-center justify-center text-text2 hover:text-text1">
+                            <Minus size={14} aria-hidden="true" />
                           </button>
-                          <span className="w-7 text-center font-mono text-[10px] font-medium text-text1">{item.qty}</span>
-                          <button onClick={() => updateQty(item.key, item.qty + 1)} className="w-6 h-6 flex items-center justify-center text-text2 hover:text-pink">
-                            <Plus size={9} />
+                          <span className="w-9 text-center font-mono text-[12px] font-medium text-text1 tnum">{item.qty}</span>
+                          <button type="button" onClick={() => updateQty(item.key, item.qty + 1)} aria-label={t('cart.increase')} className="flex h-11 w-11 items-center justify-center text-text2 hover:text-text1">
+                            <Plus size={14} aria-hidden="true" />
                           </button>
                         </div>
                         <div className="flex items-center gap-2">
-                          <span className="font-mono text-[10px] font-medium text-text1">{formatPrice(item.product.price * item.qty)}</span>
-                          <button onClick={() => removeFromCart(item.key)} className="text-text2 hover:text-red-600">
-                            <Trash2 size={11} />
+                          <span className="tnum font-mono text-[12px] font-medium text-text1">{formatPrice(item.product.price * item.qty)}</span>
+                          <button type="button" onClick={() => removeFromCart(item.key)} aria-label={t('cart.remove')} className="flex h-11 w-11 items-center justify-center text-text2 hover:text-red-700">
+                            <Trash2 size={15} aria-hidden="true" />
                           </button>
                         </div>
                       </div>
@@ -212,7 +208,7 @@ export default function PosTerminal() {
           </div>
 
           <div className="border-t-4 border-border p-4 space-y-3">
-            <div className="flex justify-between font-body font-bold text-[10px]">
+            <div className="flex justify-between font-body text-[13px] font-bold">
               <span className="text-text2">{t('pos.total')}</span>
               <span className="text-pink">{formatPrice(total)}</span>
             </div>
@@ -229,7 +225,7 @@ export default function PosTerminal() {
 
       {/* ── Lock confirm ── */}
       {showLockConfirm && (
-        <div className="fixed inset-0 z-[90] bg-text1/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[90] bg-text1/60 flex items-center justify-center p-4">
           <div className="anim-rise bg-surface border border-text1 w-full max-w-sm">
             <div className="flex items-center justify-between px-5 py-2.5 bg-text1">
               <span className="arch-label text-bg">{t('pos.lockTitle')}</span>
@@ -248,7 +244,7 @@ export default function PosTerminal() {
 
       {/* ── Payment modal ── */}
       {showPayment && (
-        <div className="fixed inset-0 z-[90] bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[90] bg-text1/70 flex items-center justify-center p-4">
           <div className="anim-rise bg-surface border border-text1 w-full max-w-sm">
             <div className="flex items-center justify-between px-5 py-2.5 bg-text1">
               <span className="arch-label text-bg">{t('pos.payment')}</span>
@@ -265,7 +261,7 @@ export default function PosTerminal() {
                   <button
                     key={m.id}
                     onClick={() => setPayMethod(m.id)}
-                    className={`font-mono text-[10px] font-medium py-3 border transition-colors ${
+                    className={`font-mono text-[11px] font-medium py-3 border transition-colors ${
                       payMethod === m.id ? 'border-text1 text-text1 bg-bg' : 'border-border text-text2 hover:border-text1'
                     }`}
                   >
@@ -276,13 +272,13 @@ export default function PosTerminal() {
 
               {payMethod === 'cash' && (
                 <div className="space-y-2">
-                  <label className="font-mono text-[10px] font-medium text-text2">{t('pos.cashReceived')}</label>
+                  <label className="font-mono text-[11px] font-medium text-text2">{t('pos.cashReceived')}</label>
                   <input
                     type="number"
                     value={cashGiven}
                     onChange={(e) => setCashGiven(e.target.value)}
                     placeholder="0"
-                    className="w-full bg-bg border border-border text-text1 font-display text-[12px] px-4 py-2.5 outline-none focus:border-text1"
+                    className="w-full bg-bg border border-border text-text1 font-display text-[12px] px-4 py-2.5 focus:border-text1"
                   />
                   {cashGiven && (
                     <div className="flex justify-between font-mono text-[11px] font-medium pt-1">
@@ -296,7 +292,7 @@ export default function PosTerminal() {
               )}
 
               {payMethod !== 'cash' && (
-                <p className="font-mono text-[10px] font-medium text-text2 leading-relaxed border border-border p-3">
+                <p className="font-mono text-[11px] font-medium text-text2 leading-relaxed border border-border p-3">
                   {t('pos.simulate', { method: payMethod === 'qris' ? t('pos.simulateQris') : t('pos.simulateDebit') })}
                 </p>
               )}
@@ -315,35 +311,35 @@ export default function PosTerminal() {
 
       {/* ── Success modal ── */}
       {showSuccess && (
-        <div className="fixed inset-0 z-[90] bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[90] bg-text1/70 flex items-center justify-center p-4">
           <div className="bg-surface border border-text1 w-full max-w-sm text-center" style={{ boxShadow: '0 6px 24px rgba(35,33,27,0.16)' }}>
             {/* Area struk yang di-print */}
             <div className="receipt-print p-6 text-left border-b border-border">
               <div className="text-center mb-4">
                 <p className="font-display font-bold text-[16px] text-text1 tracking-[0.08em]">EGAX STUDIOS</p>
-                <p className="font-mono text-[8px] uppercase tracking-[0.18em] text-text2 mt-1">Jakarta · {t('pos.receipt')}</p>
-                <p className="font-mono text-[8px] text-text2 mt-1">{showSuccess.orderId}</p>
-                <p className="font-mono text-[8px] text-text2">{new Date(showSuccess.date || Date.now()).toLocaleString('id-ID')}</p>
+                <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-text2 mt-1">Jakarta · {t('pos.receipt')}</p>
+                <p className="font-mono text-[11px] text-text2 mt-1">{showSuccess.orderId}</p>
+                <p className="font-mono text-[11px] text-text2">{new Date(showSuccess.date || Date.now()).toLocaleString('id-ID')}</p>
               </div>
               <div className="border-t border-dashed border-text1 pt-3 mb-2">
                 {(showSuccess.items || []).map((item) => (
-                  <div key={item.key} className="flex justify-between gap-3 font-mono text-[9px] text-text1 py-0.5">
+                  <div key={item.key} className="flex justify-between gap-3 font-mono text-[11px] text-text1 py-0.5">
                     <span className="truncate">{productName(item.product)} · {item.size} ×{item.qty}</span>
                     <span className="shrink-0">{formatPrice(item.product.price * item.qty)}</span>
                   </div>
                 ))}
               </div>
-              <div className="flex justify-between font-mono text-[10px] font-semibold text-text1 pt-2 border-t border-text1">
+              <div className="flex justify-between font-mono text-[11px] font-semibold text-text1 pt-2 border-t border-text1">
                 <span>{t('pos.total')}</span>
                 <span>{formatPrice(showSuccess.total)}</span>
               </div>
               {showSuccess.change > 0 && (
-                <div className="flex justify-between font-mono text-[9px] text-text2 pt-1">
+                <div className="flex justify-between font-mono text-[11px] text-text2 pt-1">
                   <span>{t('pos.change')}</span>
                   <span>{formatPrice(showSuccess.change)}</span>
                 </div>
               )}
-              <p className="text-center font-mono text-[9px] uppercase tracking-[0.2em] text-text2 mt-4">— {t('pos.thanksNote')} —</p>
+              <p className="mt-4 text-center font-mono text-[11px] uppercase tracking-[0.14em] text-text2">( {t('pos.thanksNote')} )</p>
             </div>
             {/* Aksi */}
             <div className="p-5 grid grid-cols-2 gap-3">

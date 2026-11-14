@@ -59,7 +59,7 @@ function StaffFormModal({ onClose, editTarget }) {
             <div className="grid grid-cols-2 gap-2">
               {['kasir', 'admin'].map((r) => (
                 <button key={r} type="button" onClick={() => setRole(r)}
-                  className={`font-mono text-[10px] font-medium py-3 border transition-colors ${role === r ? 'border-pink text-pink bg-pink/10' : 'border-border text-text2'}`}>
+                  className={`font-mono text-[11px] font-medium py-3 border transition-colors ${role === r ? 'border-pink text-pink bg-pink/10' : 'border-border text-text2'}`}>
                   {r === 'admin' ? t('admin.roleAdmin') : t('admin.roleCashier')}
                 </button>
               ))}
@@ -84,13 +84,13 @@ function StaffFormModal({ onClose, editTarget }) {
             </>
           ) : (
             <div className="space-y-1.5">
-              <label className="font-mono text-[10px] font-medium text-text2">{isEdit ? t('admin.fieldNewPin') : t('admin.fieldPin')}</label>
+              <label className="font-mono text-[11px] font-medium text-text2">{isEdit ? t('admin.fieldNewPin') : t('admin.fieldPin')}</label>
               <input value={pin} onChange={(e) => setPin(e.target.value.replace(/\D/g, ''))} maxLength={6} required={!isEdit}
-                className="w-full bg-bg border border-border text-text1 font-mono text-[11px] font-medium px-4 py-2.5 outline-none focus:border-text1" />
+                className="w-full bg-bg border border-border text-text1 font-mono text-[11px] font-medium px-4 py-2.5 focus:border-text1" />
             </div>
           )}
 
-          {error && <p className="font-mono text-[10px] font-medium text-red-700">{error}</p>}
+          {error && <p className="font-mono text-[11px] font-medium text-red-700">{error}</p>}
 
           <Button type="submit" disabled={loading} className="w-full">
             {loading ? t('admin.saving') : (isEdit ? t('admin.saveChanges') : t('admin.addStaff'))}
@@ -108,37 +108,37 @@ function StaffRow({ s, currentUserId, onEdit, onToggle, onDeleteRequest }) {
     <tr className="hover:bg-surface/50 transition-colors">
       <td className="py-3 px-4">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 flex items-center justify-center border border-border font-mono text-[10px] font-medium"
+          <div className="w-8 h-8 flex items-center justify-center border border-border font-mono text-[11px] font-medium"
             style={{ background: s.role === 'admin' ? '#111111' : '#FFFFFF', color: s.role === 'admin' ? '#FFFFFF' : '#111111' }}>
             {s.name[0]?.toUpperCase()}
           </div>
           <span className="font-body text-[13px] text-text1">{s.name}</span>
-          {isSelf && <span className="font-mono text-[9px] font-medium text-pink border border-pink px-1.5 py-0.5">{t('admin.you')}</span>}
+          {isSelf && <span className="font-mono text-[11px] font-medium text-pink border border-pink px-1.5 py-0.5">{t('admin.you')}</span>}
         </div>
       </td>
-      <td className="py-3 px-4 font-mono text-[10px] font-medium text-text2">
+      <td className="py-3 px-4 font-mono text-[11px] font-medium text-text2">
         {s.role === 'admin' ? `@${s.username}` : t('admin.pinMask')}
       </td>
-      <td className="py-3 px-4 font-mono text-[10px] font-medium text-text2">{formatDate(s.createdAt)}</td>
+      <td className="py-3 px-4 font-mono text-[11px] font-medium text-text2">{formatDate(s.createdAt)}</td>
       <td className="py-3 px-4">
-        <span className={`font-mono text-[9px] font-medium px-2 py-1 border ${s.active ? 'border-green-600 text-green-700' : 'border-red-500 text-red-700'}`}>
+        <span className={`font-mono text-[11px] font-medium px-2 py-1 border ${s.active ? 'border-green-600 text-green-700' : 'border-red-500 text-red-700'}`}>
           {s.active ? t('admin.active') : t('admin.inactive')}
         </span>
       </td>
       <td className="py-3 px-4">
         <div className="flex items-center gap-1.5">
           <button onClick={() => onEdit(s)}
-            className="w-8 h-8 flex items-center justify-center border border-border text-text2 hover:border-pink hover:text-pink transition-all">
+            className="w-8 h-8 flex items-center justify-center border border-border text-text2 hover:border-pink hover:text-pink transition-colors">
             <Edit2 size={11} />
           </button>
           {!isSelf && (
             <>
               <button onClick={() => onToggle(s)}
-                className={`w-8 h-8 flex items-center justify-center border transition-all ${s.active ? 'border-border text-text2 hover:border-red-400 hover:text-red-700' : 'border-green-600 text-green-700 hover:border-green-600'}`}>
+                className={`w-8 h-8 flex items-center justify-center border transition-colors ${s.active ? 'border-border text-text2 hover:border-red-400 hover:text-red-700' : 'border-green-600 text-green-700 hover:border-green-600'}`}>
                 {s.active ? <Ban size={11} /> : <Check size={11} />}
               </button>
               <button onClick={() => onDeleteRequest(s)}
-                className="w-8 h-8 flex items-center justify-center border border-border text-text2 hover:border-red-400 hover:text-red-700 transition-all">
+                className="w-8 h-8 flex items-center justify-center border border-border text-text2 hover:border-red-400 hover:text-red-700 transition-colors">
                 <Trash2 size={11} />
               </button>
             </>
@@ -183,7 +183,7 @@ export default function StaffPage() {
         <div>
           <p className="arch-label text-pink mb-1">{t('admin.panel')}</p>
           <h1 className="font-display text-[18px] font-bold tracking-[-0.01em] text-text1">{t('admin.staffTitle')}</h1>
-          <p className="font-mono text-[10px] font-medium text-text2 mt-1">{t('admin.staffCount', { admins: admins.length, kasirs: kasirs.length })}</p>
+          <p className="font-mono text-[11px] font-medium text-text2 mt-1">{t('admin.staffCount', { admins: admins.length, kasirs: kasirs.length })}</p>
         </div>
         <Button onClick={() => { setEditTarget(null); setShowModal(true) }}>
           <Plus size={13} /> {t('admin.addStaff')}
@@ -193,20 +193,20 @@ export default function StaffPage() {
       <div>
         <div className="flex items-center gap-2 mb-3">
           <ShieldCheck size={13} className="text-pink" />
-          <p className="font-mono text-[10px] font-medium text-pink">{t('admin.roleAdmin')} ({admins.length})</p>
+          <p className="font-mono text-[11px] font-medium text-pink">{t('admin.roleAdmin')} ({admins.length})</p>
         </div>
         <div className="border border-border overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b border-border bg-surface">
                 {[t('admin.colName'), t('admin.colUsername'), t('admin.colCreated'), t('admin.colStatus2'), t('admin.colActions')].map((h) => (
-                  <th key={h} className="text-left py-3 px-4 font-mono text-[10px] font-medium text-pink">{h}</th>
+                  <th key={h} className="text-left py-3 px-4 font-mono text-[11px] font-medium text-pink">{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
               {admins.length === 0 ? (
-                <tr><td colSpan={5} className="py-8 text-center font-mono text-[10px] font-medium text-text2">{t('admin.noAdmins')}</td></tr>
+                <tr><td colSpan={5} className="py-8 text-center font-mono text-[11px] font-medium text-text2">{t('admin.noAdmins')}</td></tr>
               ) : admins.map((s) => (
                 <StaffRow key={s.id} s={s} currentUserId={currentUserId} onEdit={handleEdit} onToggle={handleToggle} onDeleteRequest={setConfirmDelete} />
               ))}
@@ -218,20 +218,20 @@ export default function StaffPage() {
       <div>
         <div className="flex items-center gap-2 mb-3">
           <UserCheck size={13} className="text-pink" />
-          <p className="font-mono text-[10px] font-medium text-pink">{t('admin.roleCashier')} ({kasirs.length})</p>
+          <p className="font-mono text-[11px] font-medium text-pink">{t('admin.roleCashier')} ({kasirs.length})</p>
         </div>
         <div className="border border-border overflow-x-auto">
           <table className="w-full">
             <thead>
               <tr className="border-b border-border bg-surface">
                 {[t('admin.colName'), t('admin.colPin'), t('admin.colCreated'), t('admin.colStatus2'), t('admin.colActions')].map((h) => (
-                  <th key={h} className="text-left py-3 px-4 font-mono text-[10px] font-medium text-pink">{h}</th>
+                  <th key={h} className="text-left py-3 px-4 font-mono text-[11px] font-medium text-pink">{h}</th>
                 ))}
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
               {kasirs.length === 0 ? (
-                <tr><td colSpan={5} className="py-8 text-center font-mono text-[10px] font-medium text-text2">{t('admin.noCashiers')}</td></tr>
+                <tr><td colSpan={5} className="py-8 text-center font-mono text-[11px] font-medium text-text2">{t('admin.noCashiers')}</td></tr>
               ) : kasirs.map((s) => (
                 <StaffRow key={s.id} s={s} currentUserId={currentUserId} onEdit={handleEdit} onToggle={handleToggle} onDeleteRequest={setConfirmDelete} />
               ))}

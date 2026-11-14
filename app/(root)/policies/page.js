@@ -16,14 +16,14 @@ export default function PoliciesPage() {
     <div className="bg-bg min-h-screen">
       <div className="px-6 md:px-10 pt-16 pb-20 max-w-3xl mx-auto">
         <p className="arch-label text-pink mb-4">{t('policies.label')}</p>
-        <h1 data-skew className="font-display text-[44px] md:text-[56px] font-bold leading-[0.95] tracking-[-0.02em] text-text1 mb-12">{t('policies.title')}</h1>
+        <h1 className="mb-12 font-display text-[44px] font-bold leading-[0.95] tracking-[-0.02em] text-text1 md:text-[56px]">{t('policies.title')}</h1>
 
         <div data-reveal className="border border-border divide-y divide-border bg-surface mb-12">
           {SECTIONS.map((s) => (
             <details key={s.id} id={s.id} className="group">
               <summary className="flex items-center justify-between px-5 py-4 cursor-pointer list-none">
                 <span className="font-mono text-[12px] font-semibold uppercase tracking-[0.14em] text-text1">{t(s.titleKey)}</span>
-                <span className="font-mono text-[10px] text-text2 transition-transform duration-200 group-open:rotate-45">+</span>
+                <span className="font-mono text-[11px] text-text2 transition-transform duration-200 group-open:rotate-45">+</span>
               </summary>
               <div className="px-5 pb-5 text-[13px] text-text2 leading-relaxed space-y-3">
                 {[1, 2].map((n) => (

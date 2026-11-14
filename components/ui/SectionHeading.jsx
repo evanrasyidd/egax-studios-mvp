@@ -1,7 +1,6 @@
 ﻿'use client'
 import { useRef } from 'react'
 import Link from 'next/link'
-import { ArrowRight } from 'lucide-react'
 import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { SplitText } from 'gsap/SplitText'
@@ -19,7 +18,7 @@ export default function SectionHeading({ no, title, href, linkLabel }) {
 
     mm.add('(prefers-reduced-motion: no-preference)', () => {
       const q = gsap.utils.selector(root)
-      const split = SplitText.create(titleRef.current, { type: 'lines,words' })
+      const split = SplitText.create(titleRef.current, { type: 'lines,words', mask: 'lines' })
       const tl = gsap.timeline({
         scrollTrigger: { trigger: root.current, start: 'top 85%', once: true },
       })
@@ -49,9 +48,8 @@ export default function SectionHeading({ no, title, href, linkLabel }) {
           <h2 ref={titleRef} className="font-display text-[30px] md:text-[34px] font-bold tracking-[-0.01em] text-text1">{title}</h2>
         </div>
         {href && (
-          <Link href={href} className="sh-link hidden sm:inline-flex items-center gap-2 arch-label text-text2 hover:text-text1 group">
+          <Link href={href} className="sh-link hidden border-b border-text2/40 pb-0.5 font-mono text-[11px] uppercase tracking-[0.1em] text-text2 transition-colors hover:border-text1 hover:text-text1 sm:inline-flex">
             {linkLabel}
-            <ArrowRight size={11} className="group-hover:translate-x-0.5 transition-transform" />
           </Link>
         )}
       </div>

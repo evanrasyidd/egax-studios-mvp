@@ -39,7 +39,7 @@ export default function PosPinGate() {
         <div className="text-center mb-8">
           <p className="arch-label text-pink mb-2">{t('pos.badge')}</p>
           <h1 className="font-display text-[18px] text-text1">{t('pos.title')}</h1>
-          <p className="font-mono text-[10px] font-medium text-text2 mt-2">{t('pos.pinSub')}</p>
+          <p className="font-mono text-[11px] font-medium text-text2 mt-2">{t('pos.pinSub')}</p>
         </div>
 
         {/* PIN dots display */}
@@ -47,14 +47,13 @@ export default function PosPinGate() {
           {Array.from({ length: 6 }).map((_, i) => (
             <div
               key={i}
-              className="w-3 h-3 border border-border"
-              style={{ background: i < pin.length ? '#111111' : 'transparent' }}
+              className={`h-3 w-3 border border-border ${i < pin.length ? 'bg-text1' : 'bg-transparent'}`}
             />
           ))}
         </div>
 
         {error && (
-          <p className="text-center font-mono text-[10px] font-medium text-red-600 mb-4">{error}</p>
+          <p className="text-center font-mono text-[11px] font-medium text-red-600 mb-4">{error}</p>
         )}
 
         {/* Numpad */}
@@ -70,7 +69,7 @@ export default function PosPinGate() {
           ))}
           <button
             onClick={() => setPin('')}
-            className="aspect-square bg-surface border border-border text-text2 font-mono text-[10px] font-medium hover:border-red-400 hover:text-red-600 transition-colors"
+            className="aspect-square bg-surface border border-border text-text2 font-mono text-[11px] font-medium hover:border-red-400 hover:text-red-600 transition-colors"
           >
             {t('pos.clr')}
           </button>

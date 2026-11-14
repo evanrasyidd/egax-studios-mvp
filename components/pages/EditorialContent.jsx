@@ -1,37 +1,56 @@
-﻿'use client'
+'use client'
 import { EDITORIALS } from '@/constants/editorial'
+import GarmentPlate from '@/components/product/GarmentPlate'
+import { useAdminStore } from '@/store/adminStore'
 import { useI18n } from '@/store/i18nStore'
 
-const COLORS = ['#77736C','#4A4844','#222220','#5A5751','#3A3936','#2E2D2B']
 export default function EditorialContent() {
   const { t, locale } = useI18n()
+  const { products } = useAdminStore()
+
   return (
-    <div className="bg-bg min-h-screen px-6 md:px-10 py-12">
-      <div className="mb-10 pb-5 border-b border-border flex items-baseline justify-between">
+    <div className="min-h-screen bg-bg px-4 py-12 md:px-10">
+      <div className="mb-10 flex items-baseline justify-between border-b border-border pb-5">
         <div className="flex items-baseline gap-4">
-          <span className="arch-label text-pink">{t('editorial.label')}</span>
-          <h1 data-skew className="font-display text-[40px] font-bold tracking-[-0.01em] text-text1">{t('editorial.title')}</h1>
+          <span className="arch-label text-text2">{t('editorial.label')}</span>
+          <h1 className="font-display text-[36px] font-bold tracking-[-0.01em] text-text1 md:text-[40px]">{t('editorial.title')}</h1>
         </div>
-        <span className="hidden sm:block font-mono text-[8px] uppercase tracking-[0.24em] text-text2/70">SS26 · {EDITORIALS.length} Docs</span>
+        <span className="hidden font-mono text-[11px] uppercase tracking-[0.12em] text-text2 sm:block">
+          SS26 · {String(EDITORIALS.length).padStart(2, '0')} DOCS
+        </span>
       </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-px bg-border">
-        {EDITORIALS.map((item,i) => (
-          <div key={item.id} className="archive-tile group relative overflow-hidden" style={{aspectRatio:'3/4'}}>
-            <div data-zoom className="w-full h-full flex flex-col items-center justify-center gap-3" style={{background:COLORS[i%COLORS.length]}}>
-              <span className="font-display text-[44px] font-bold leading-none text-white/90">{(i+1).toString().padStart(2,'0')}</span>
-              <span aria-hidden="true" className="w-10 h-px bg-white/40" />
-              <span className="font-mono text-[8px] uppercase tracking-[0.22em] text-white/60">{`DOC ${(i+1).toString().padStart(2,'0')} · SS26`}</span>
-            </div>
-            <div className="absolute inset-x-0 bottom-0 h-1/2 bg-text1/75 group-hover:bg-text1/60 transition-all"/>
-            <div className="absolute bottom-0 left-0 p-5">
-              <div className="flex gap-1 mb-2 flex-wrap">
-                {(locale === 'id' && item.tagsId ? item.tagsId : item.tags).map(tag=><span key={tag} className="arch-label border border-pink/70 text-pink px-1.5 py-0.5">{tag}</span>)}
+
+      <div className="grid grid-cols-1 gap-px bg-border md:grid-cols-2 lg:grid-cols-3">
+        {EDITORIALS.map((item, i) => {
+          const product = products[i % products.length]
+          return (
+            <article key={item.id} className="archive-tile group overflow-hidden bg-surface">
+              <div className="relative">
+                {product ? (
+                  <GarmentPlate product={product} showMeta={false} marks={false} className="aspect-[3/4] w-full transition-transform duration-700 ease-out group-hover:scale-[1.015]" />
+                ) : (
+                  <div className="aspect-[3/4] w-full bg-bg" />
+                )}
+                <div className="absolute inset-x-0 top-0 flex items-center justify-between border-b border-text1 bg-bg px-3 py-2">
+                  <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-text1">DOC {String(i + 1).padStart(2, '0')}</span>
+                  <span className="font-mono text-[11px] uppercase tracking-[0.1em] text-text2">{item.date}</span>
+                </div>
               </div>
-              <p className="arch-label text-pink mb-1">{locale === 'id' && item.subtitleId ? item.subtitleId : item.subtitle}</p>
-              <p className="font-display text-[22px] font-bold tracking-[-0.01em] text-white">{locale === 'id' && item.titleId ? item.titleId : item.title}</p>
-            </div>
-          </div>
-        ))}
+
+              <div className="border-t border-border p-4">
+                <div className="mb-2 flex flex-wrap gap-1.5">
+                  {(locale === 'id' && item.tagsId ? item.tagsId : item.tags).map((tag) => (
+                    <span key={tag} className="border border-border px-1.5 py-0.5 font-mono text-[11px] uppercase tracking-[0.08em] text-text2">{tag}</span>
+                  ))}
+                </div>
+                <p className="arch-label mb-1 text-text2">{locale === 'id' && item.subtitleId ? item.subtitleId : item.subtitle}</p>
+                <h2 className="font-display text-[22px] font-bold leading-tight tracking-[-0.01em] text-text1">
+                  {locale === 'id' && item.titleId ? item.titleId : item.title}
+                </h2>
+              </div>
+            </article>
+          )
+        })}
       </div>
     </div>
   )

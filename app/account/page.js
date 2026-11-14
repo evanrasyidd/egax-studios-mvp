@@ -40,7 +40,7 @@ export default function AccountPage() {
       <div className="border border-text1 bg-bg max-w-sm">
         <div className="flex items-center justify-between px-5 py-2.5 bg-text1">
           <span className="arch-label text-bg">PROFILE</span>
-          <span className="font-mono text-[8px] uppercase tracking-[0.22em] text-bg/60">Nº 001</span>
+          <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-bg/60">Nº 001</span>
         </div>
         <div className="px-5 py-3">
           {[[t('account.name'),user.name],[t('account.email'),user.email],[t('account.roleLabel'),user.role?.toUpperCase()]].map(([k,v])=>(

@@ -7,10 +7,11 @@ export default function Badge({ children, variant = 'default', className }) {
     preorder: 'bg-text1 text-bg',
     soldout:  'bg-text2 text-bg',
     accent:   'bg-text1 text-bg',
+    outline:  'bg-bg text-text1',
   }
   return (
-    <span className={cn('inline-flex items-center gap-1.5 font-mono text-[8px] font-semibold uppercase tracking-[0.18em] px-2 py-1', variants[variant], className)}>
-      <span aria-hidden="true" className={cn('w-[5px] h-[5px] rounded-full border', variant === 'default' ? 'border-text1' : 'border-bg/70')} />
+    <span className={cn('inline-flex items-center gap-1.5 px-2 py-1 font-mono text-[11px] font-semibold uppercase tracking-[0.1em]', variants[variant], className)}>
+      <span aria-hidden="true" className={cn('h-1 w-1 border', variant === 'default' ? 'border-text1' : 'border-bg/70')} />
       {children}
     </span>
   )

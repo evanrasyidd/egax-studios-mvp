@@ -17,7 +17,7 @@ function VoucherModal({ initial, onSubmit, onClose }) {
   const [form, setForm] = useState(initial)
   const set = (k, v) => setForm((f) => ({ ...f, [k]: v }))
   return (
-    <div className="fixed inset-0 z-[90] bg-text1/60 backdrop-blur-sm flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[90] bg-text1/60 flex items-center justify-center p-4">
       <div className="anim-rise bg-surface border border-text1 w-full max-w-md">
         <div className="flex items-center justify-between px-5 py-2.5 bg-text1">
           <span className="arch-label text-bg">{initial?.id ? t('admin.editVoucher') : t('admin.addVoucher')}</span>
@@ -100,10 +100,10 @@ export default function AdminVouchersPage() {
             <span className="font-mono text-[11px] text-text2 w-28">
               {v.type === 'percent' ? `${v.value}% OFF` : formatPrice(v.value)}
             </span>
-            <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-text2/70 hidden md:block">
+            <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-text2 hidden md:block">
               {t('admin.voucherMinSpend')} {formatPrice(v.minSpend)}
             </span>
-            <span className={`font-mono text-[9px] uppercase tracking-widest px-2 py-0.5 border ${v.active ? 'border-green-700 text-green-800 bg-green-50' : 'border-border text-text2/60'}`}>
+            <span className={`font-mono text-[11px] uppercase tracking-widest px-2 py-0.5 border ${v.active ? 'border-green-700 text-green-800 bg-green-50' : 'border-border text-text2'}`}>
               {v.active ? t('admin.active') : t('admin.inactive')}
             </span>
             <div className="ml-auto flex items-center gap-3">
@@ -120,7 +120,7 @@ export default function AdminVouchersPage() {
       </div>
 
       {confirmDelete && (
-        <div className="fixed inset-0 z-[90] bg-text1/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[90] bg-text1/60 flex items-center justify-center p-4">
           <div className="anim-rise bg-surface border border-text1 w-full max-w-sm">
             <div className="flex items-center justify-between px-5 py-2.5 bg-text1">
               <span className="arch-label text-bg">{t('admin.deleteVoucher')}</span>

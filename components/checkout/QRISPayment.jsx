@@ -49,13 +49,13 @@ export default function QRISPayment({ orderId, amount, onSuccess }) {
         {status === 'checking' && (
           <div className="absolute inset-0 bg-white/90 flex flex-col items-center justify-center gap-2">
             <Loader2 size={28} className="text-text1 animate-spin" />
-            <p className="text-[10px] font-semibold uppercase tracking-widest text-text1">{t('pay.verifying')}</p>
+            <p className="text-[11px] font-semibold uppercase tracking-widest text-text1">{t('pay.verifying')}</p>
           </div>
         )}
         {status === 'success' && (
           <div className="absolute inset-0 bg-white flex flex-col items-center justify-center gap-2">
             <CheckCircle2 size={36} className="text-green-500" />
-            <p className="text-[10px] font-semibold uppercase tracking-widest text-green-600">{t('pay.verified')}</p>
+            <p className="text-[11px] font-semibold uppercase tracking-widest text-green-600">{t('pay.verified')}</p>
           </div>
         )}
       </div>

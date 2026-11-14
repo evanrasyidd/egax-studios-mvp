@@ -51,7 +51,7 @@ export default function AdminPage() {
             </div>
             <p className="font-display text-[32px] font-bold tracking-[-0.01em] text-text1 leading-none mb-3">{formatPrice(revenue)}</p>
             {orders.length > 0 && (
-              <div className={`inline-flex items-center gap-1 font-mono text-[8px] font-medium uppercase tracking-widest px-2 py-1 border ${trendPct >= 0 ? 'border-green-700 text-green-800' : 'border-red-700 text-red-800'}`}>
+              <div className={`inline-flex items-center gap-1 font-mono text-[11px] font-medium uppercase tracking-widest px-2 py-1 border ${trendPct >= 0 ? 'border-green-700 text-green-800' : 'border-red-700 text-red-800'}`}>
                 <ArrowUpRight size={10} className={trendPct < 0 ? 'rotate-90' : ''} />
                 {t('admin.vsLast7', { pct: `${trendPct >= 0 ? '+' : ''}${trendPct}` })}
               </div>
@@ -100,11 +100,11 @@ export default function AdminPage() {
               <div key={o.id} className="flex items-center justify-between px-4 py-3 hover:bg-surface transition-colors">
                 <div>
                   <span className="arch-label text-text2 block">{o.id}</span>
-                  <span className="arch-label text-text2/60">{formatDateTime(o.date)}</span>
+                  <span className="arch-label text-text2">{formatDateTime(o.date)}</span>
                 </div>
                 <span className="font-body text-[12px] text-text1">{o.customer?.firstName} {o.customer?.lastName}</span>
                 <span className="font-mono text-[11px] font-medium text-pink">{formatPrice(o.total)}</span>
-                <span className="font-mono text-[8px] font-medium uppercase tracking-widest text-green-800 border border-green-700 bg-green-50 px-2 py-0.5">{t(`status.${o.status}`)}</span>
+                <span className="font-mono text-[11px] font-medium uppercase tracking-widest text-green-800 border border-green-700 bg-green-50 px-2 py-0.5">{t(`status.${o.status}`)}</span>
               </div>
             ))}
           </div>

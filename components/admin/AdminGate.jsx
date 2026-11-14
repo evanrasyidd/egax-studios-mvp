@@ -39,12 +39,12 @@ function AdminLoginForm() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-bg grid-paper px-6">
+    <main id="main" className="flex min-h-screen items-center justify-center bg-bg px-6">
       <div className="w-full max-w-sm">
-        <div className="border border-text1 bg-surface mb-8">
-          <div className="flex items-center justify-between px-6 py-3 bg-text1">
+        <div className="mb-8 border border-text1 bg-surface">
+          <div className="flex items-center justify-between bg-text1 px-6 py-3">
             <span className="arch-label text-bg">EGAX STUDIOS</span>
-            <span className="font-mono text-[9px] uppercase tracking-[0.2em] text-bg/60">ADMIN</span>
+            <span className="font-mono text-[11px] uppercase tracking-[0.12em] text-bg/70">ADMIN</span>
           </div>
           <div className="p-6">
             <p className="arch-label text-pink mb-2">{t('admin.loginBadge')}</p>
@@ -53,15 +53,15 @@ function AdminLoginForm() {
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
-                <FieldLabel>{t('admin.username')}</FieldLabel>
-                <FieldInput value={username} onChange={(e) => setUsername(e.target.value)} autoComplete="username" placeholder="admin" />
+                <FieldLabel htmlFor="admin-username">{t('admin.username')}</FieldLabel>
+                <FieldInput id="admin-username" value={username} onChange={(e) => setUsername(e.target.value)} autoComplete="username" placeholder="admin" required />
               </div>
               <div>
-                <FieldLabel>{t('admin.password')}</FieldLabel>
-                <FieldInput type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" placeholder="••••••••" />
+                <FieldLabel htmlFor="admin-password">{t('admin.password')}</FieldLabel>
+                <FieldInput id="admin-password" type="password" value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" placeholder="••••••••" required />
               </div>
 
-              {error && <p className="font-mono text-[11px] text-red-600">{error}</p>}
+              {error && <p role="alert" className="font-mono text-[11px] text-red-700">{error}</p>}
 
               <Button type="submit" disabled={loading} className="w-full">
                 {loading ? t('admin.verifying') : t('admin.loginBtn')}
@@ -69,9 +69,9 @@ function AdminLoginForm() {
             </form>
           </div>
         </div>
-        <p className="text-center font-mono text-[9px] uppercase tracking-[0.2em] text-text2/60">{t('admin.loginHint')}</p>
+        <p className="text-center font-mono text-[11px] uppercase tracking-[0.12em] text-text2">{t('admin.loginHint')}</p>
       </div>
-    </div>
+    </main>
   )
 }
 
@@ -96,9 +96,9 @@ export default function AdminGate({ children }) {
   return (
     <div className="min-h-screen bg-bg lg:flex">
       <AdminSidebar />
-      <div className="flex-1 p-4 lg:p-8 overflow-auto">
+      <main id="main" className="flex-1 p-4 lg:p-8 overflow-auto">
         {children}
-      </div>
+      </main>
     </div>
   )
 }

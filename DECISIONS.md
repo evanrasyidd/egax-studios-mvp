@@ -1,5 +1,17 @@
 # DECISIONS — EGAX Studios
 
+## Specimen catalogue direction — technical flats + dua typeface
+
+**Keputusan:** visual produk bukan foto, tapi **technical flat SVG**. Alasannya: foto asli belum ada, dan ikon kecil di blok warna terbaca seperti placeholder demo. Flat 400x520 dengan grid, registration mark, jahitan, dan label kain membuat keterbatasan aset jadi bahasa visual yang disengaja.
+
+**Tipografi:** Archivo untuk display/body, **IBM Plex Mono** untuk label teknis, nomor, harga, dan tabel. Mono palsu (Archivo di-alias) sebelumnya membuat semua label kehilangan suara teknis dan angka tidak tabular.
+
+**Kontras:** `text2` #7A7A7A gagal AA (4.11:1). Diganti #5F5F5F. Semua teks sekunder alpha dihapus.
+
+**Motion:** tiga momen scrub saja: hero scroll-out, Drop Reel horizontal, Archive Stack sequential. Sisanya entrance sekali. Tidak ada parallax/skew/zoom yang menempel di semua elemen. Alasan: motion yang tersebar terasa seperti template, bukan sistem.
+
+**Sticky gotcha:** `overflow-hidden` di section mematikan `position: sticky` di dalamnya. Pakai `overflow-x-clip` kalau perlu clipping horizontal tanpa membunuh sticky. Ini akar reel/stack yang tidak pernah benar-benar nge-pin.
+
 ## Redesign style → Minimal archive / brutalist — Agu 2026
 **Masalah:** User gak suka style lama (cartoon comic: border ink tebal + offset shadow, Anton/Bangers, pop pink-kuning-biru di atas cream). Fitur & menu harus tetap sama, cuma style diganti.
 

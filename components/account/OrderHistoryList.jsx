@@ -1,16 +1,17 @@
 ﻿'use client'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Package, X, ChevronRight } from 'lucide-react'
 import { formatPrice, formatDate } from '@/lib/utils'
+import { useFocusTrap } from '@/hooks/useFocusTrap'
 import { useI18n } from '@/store/i18nStore'
 
 const STATUS_STYLE = {
-  Paid:       'bg-green-100 text-green-700',
-  Processing: 'bg-blue-100 text-blue-700',
-  Shipped:    'bg-purple-100 text-purple-700',
-  Delivered:  'bg-green-200 text-green-800',
-  Cancelled:  'bg-red-100 text-red-600',
-  Pending:    'bg-yellow-100 text-yellow-700',
+  Paid:       'bg-text1 text-bg',
+  Processing: 'border border-text1 text-text1',
+  Shipped:    'border border-text1 text-text1',
+  Delivered:  'bg-text1 text-bg',
+  Cancelled:  'border border-red-700 text-red-700',
+  Pending:    'border border-border text-text2',
 }
 
 // Urutan progress: Pending → Paid → Processing → Shipped → Delivered
@@ -43,8 +44,8 @@ function StatusTimeline({ status }) {
                 {isNow && <span className="absolute inset-[-4px] rounded-full border border-text1/40 animate-pulse" />}
               </span>
               <div className="-mt-0.5">
-                <p className={`font-mono text-[10px] font-semibold uppercase tracking-[0.16em] ${done ? 'text-text1' : 'text-text2/50'}`}>
-                  {t(`status.${s}`)}{isNow && <span className="text-pink ml-2">— {t('account.currentStatus')}</span>}
+                <p className={`font-mono text-[11px] font-semibold uppercase tracking-[0.16em] ${done ? 'text-text1' : 'text-text2'}`}>
+                  {t(`status.${s}`)}{isNow && <span className="ml-2 text-text2">({t('account.currentStatus')})</span>}
                 </p>
               </div>
             </li>
@@ -57,22 +58,24 @@ function StatusTimeline({ status }) {
 
 function OrderDetailModal({ order, onClose }) {
   const { t, productName } = useI18n()
+  const modalRef = useRef(null)
+  useFocusTrap(Boolean(order), modalRef, onClose)
   if (!order) return null
   return (
-    <div className="fixed inset-0 z-[90] bg-black/50 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="bg-surface border border-border shadow-2xl w-full max-w-lg max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between px-5 py-4 border-b border-border sticky top-0 bg-surface">
+    <div className="fixed inset-0 z-[90] flex items-center justify-center bg-text1/60 p-4">
+      <div ref={modalRef} role="dialog" aria-modal="true" aria-labelledby="order-detail-title" className="max-h-[90vh] w-full max-w-lg overflow-y-auto border border-border bg-surface">
+        <div className="sticky top-0 flex items-center justify-between border-b border-border bg-surface px-5 py-4">
           <div>
-            <p className="font-semibold text-text1 text-[14px]">{t('account.orderDetail')}</p>
-            <p className="font-mono text-[11px] text-text2 mt-0.5">{order.id}</p>
+            <p id="order-detail-title" className="text-[14px] font-semibold text-text1">{t('account.orderDetail')}</p>
+            <p className="mt-0.5 font-mono text-[11px] text-text2">{order.id}</p>
           </div>
-          <button onClick={onClose} className="text-text2 hover:text-text1 p-1"><X size={16}/></button>
+          <button type="button" onClick={onClose} aria-label={t('nav.close')} className="flex h-11 w-11 items-center justify-center text-text2 hover:text-text1"><X size={16} aria-hidden="true"/></button>
         </div>
         <div className="p-5 space-y-5">
           {/* Status */}
           <div className="flex items-center justify-between">
             <span className="arch-label text-text2">{t('account.status')}</span>
-            <span className={`text-[11px] font-bold uppercase tracking-widest px-3 py-1 rounded-full ${STATUS_STYLE[order.status] || 'bg-border text-text2'}`}>
+            <span className={`px-3 py-1 font-mono text-[11px] font-semibold uppercase tracking-[0.08em] ${STATUS_STYLE[order.status] || 'border border-border text-text2'}`}>
               {t(`status.${order.status}`)}
             </span>
           </div>
@@ -99,7 +102,7 @@ function OrderDetailModal({ order, onClose }) {
                 <div key={i} className="flex items-center justify-between py-2 border-b border-border last:border-0">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-14 bg-border border border-border flex items-center justify-center shrink-0">
-                      <span className="text-[10px] text-text2 font-bold">{productName(item.product)[0] || ''}</span>
+                      <span className="text-[11px] text-text2 font-bold">{productName(item.product)[0] || ''}</span>
                     </div>
                     <div>
                       <p className="text-[13px] font-medium text-text1">{productName(item.product)}</p>
@@ -162,17 +165,17 @@ export default function OrderHistoryList({ orders }) {
       <div className="space-y-2">
         {orders.map(order => (
           <button key={order.id} onClick={() => setSelected(order)}
-            className="w-full text-left border border-border p-4 hover:border-pink hover:shadow-sm transition-all group">
+            className="w-full text-left border border-border p-4 hover:border-pink transition-colors group">
             <div className="flex items-start justify-between mb-2">
               <div>
                 <p className="font-mono text-[12px] font-bold text-text1">{order.id}</p>
                 <p className="text-[11px] text-text2 mt-0.5">{formatDate(order.date)}</p>
               </div>
               <div className="flex items-center gap-2">
-                <span className={`text-[10px] font-bold uppercase tracking-widest px-2 py-0.5 rounded-full ${STATUS_STYLE[order.status] || 'bg-border text-text2'}`}>
+                <span className={`px-2 py-0.5 font-mono text-[11px] font-semibold uppercase tracking-[0.08em] ${STATUS_STYLE[order.status] || 'border border-border text-text2'}`}>
                   {t(`status.${order.status}`)}
                 </span>
-                <ChevronRight size={14} className="text-text2/70 group-hover:text-pink transition-colors"/>
+                <ChevronRight size={14} className="text-text2 group-hover:text-pink transition-colors"/>
               </div>
             </div>
             <div className="flex justify-between text-[13px]">

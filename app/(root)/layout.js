@@ -13,7 +13,7 @@ export default function RootGroupLayout({ children }) {
       <SearchModal />
       <CartDrawer />
       <ToastContainer />
-      <main>{children}</main>
+      <main id="main">{children}</main>
       <Footer />
     </>
   )

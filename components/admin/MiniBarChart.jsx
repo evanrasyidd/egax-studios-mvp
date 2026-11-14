@@ -35,7 +35,7 @@ export default function MiniBarChart({ orders }) {
 
   return (
     <div className="relative">
-      <svg width="100%" viewBox={`0 0 ${W} ${H + 20}`} preserveAspectRatio="xMidYMax meet">
+      <svg width="100%" viewBox={`0 0 ${W} ${H + 20}`} preserveAspectRatio="xMidYMax meet" aria-hidden="true">
         {days.map((d, i) => {
           const h = (d.total / max) * H
           const x = i * (W / days.length) + 4
@@ -58,7 +58,7 @@ export default function MiniBarChart({ orders }) {
         })}
       </svg>
       {hoverIdx !== null && (
-        <div className="absolute top-0 left-0 font-mono text-[10px] font-medium text-pink bg-bg border border-pink px-2 py-1">
+        <div className="absolute top-0 left-0 font-mono text-[11px] font-medium text-pink bg-bg border border-pink px-2 py-1">
           {days[hoverIdx].total > 0
             ? new Intl.NumberFormat('id-ID', { style: 'currency', currency: 'IDR', maximumFractionDigits: 0 }).format(days[hoverIdx].total)
             : 'NO SALES'}

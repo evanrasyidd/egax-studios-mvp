@@ -6,6 +6,12 @@ import SearchModal from '@/components/search/SearchModal'
 import ToastContainer from '@/components/ui/Toast'
 import AccountSidebar from '@/components/account/AccountSidebar'
 
+export const metadata = {
+  title: 'Account',
+  description: 'Your EGAX Studios account, orders, wishlist, and addresses.',
+  robots: { index: false, follow: false },
+}
+
 export default function AccountLayout({ children }) {
   return (
     <>
@@ -14,14 +20,14 @@ export default function AccountLayout({ children }) {
       <SearchModal />
       <CartDrawer />
       <ToastContainer />
-      <div className="min-h-screen bg-surface px-6 md:px-10 py-10">
-        <div className="max-w-5xl mx-auto">
-          <div className="flex flex-col md:flex-row gap-10">
+      <main id="main" className="min-h-screen bg-surface px-6 py-10 md:px-10">
+        <div className="mx-auto max-w-5xl">
+          <div className="flex flex-col gap-10 md:flex-row">
             <AccountSidebar />
             <div className="flex-1">{children}</div>
           </div>
         </div>
-      </div>
+      </main>
       <Footer />
     </>
   )

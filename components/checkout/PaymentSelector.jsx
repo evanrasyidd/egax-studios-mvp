@@ -35,17 +35,17 @@ export default function PaymentSelector({ selected, onChange }) {
         <h2 className="font-display text-[22px] font-bold tracking-[-0.01em] text-text1">{t('checkout.payMethod')}</h2>
         <span className="arch-label text-text2">02</span>
       </div>
-      <div className="space-y-5">
+      <div className="space-y-5" role="radiogroup" aria-label={t('checkout.payMethod')}>
         {GROUPS.map((group) => (
           <div key={group.label}>
             <p className="arch-label text-text2 mb-2">{group.label}</p>
             <div className="space-y-2">
               {group.methods.map((m) => (
-                <button key={m.id} type="button" onClick={() => onChange(m.id)}
-                  className={cn('w-full flex items-center gap-4 p-4 border text-left transition-all duration-150 active:translate-y-px',
+                <button key={m.id} type="button" role="radio" aria-checked={selected === m.id} onClick={() => onChange(m.id)}
+                  className={cn('flex w-full items-center gap-4 border p-4 text-left transition-colors active:translate-y-px',
                     selected === m.id ? 'border-text1 bg-bg' : 'border-border bg-surface hover:border-text1')}>
-                  <div className="w-9 h-9 shrink-0 border border-border bg-bg flex items-center justify-center">
-                    <m.icon size={16} className={selected === m.id ? 'text-text1' : 'text-text2'} />
+                  <div className="flex h-10 w-10 shrink-0 items-center justify-center border border-border bg-bg">
+                    <m.icon size={16} aria-hidden="true" className={selected === m.id ? 'text-text1' : 'text-text2'} />
                   </div>
                   <div className="flex-1">
                     <p className="text-[13px] font-medium text-text1">{m.label}</p>

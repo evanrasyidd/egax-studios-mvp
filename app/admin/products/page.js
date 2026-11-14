@@ -13,7 +13,7 @@ const EMPTY = { name:'', nameId:'', category:'Tops', price:'', originalPrice:'',
 
 function Modal({ title, onClose, children }) {
   return (
-    <div className="fixed inset-0 z-[90] bg-text1/50 backdrop-blur-sm flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[90] bg-text1/50 flex items-center justify-center p-4">
       <div className="bg-surface border border-text1 w-full max-w-lg max-h-[90vh] overflow-y-auto" style={{ boxShadow:'0 8px 24px rgba(35,33,27,0.16)' }}>
         <div className="flex items-center justify-between px-5 py-2.5 bg-text1 sticky top-0">
           <span className="arch-label text-bg">{title}</span>
@@ -84,7 +84,7 @@ function ProductForm({ initial, onSubmit, onClose }) {
         <div className="flex flex-wrap gap-1">
           {allSizes.map(s => (
             <button key={s} type="button" onClick={() => toggleSize(s)}
-              className={`font-mono text-[10px] font-medium px-2.5 py-1.5 border transition-all ${form.sizes.includes(s) ? 'bg-text1 text-bg border-text1' : 'bg-bg text-text2 border-border hover:border-text1'}`}>
+              className={`font-mono text-[11px] font-medium px-2.5 py-1.5 border transition-colors ${form.sizes.includes(s) ? 'bg-text1 text-bg border-text1' : 'bg-bg text-text2 border-border hover:border-text1'}`}>
               {s}
             </button>
           ))}
@@ -93,13 +93,13 @@ function ProductForm({ initial, onSubmit, onClose }) {
       <div>
         <FieldLabel className="mb-2">{t('admin.stockLabel')}</FieldLabel>
         <div className="flex flex-wrap gap-1.5">
-          {form.sizes.length === 0 && <p className="font-mono text-[10px] text-text2/60">{t('admin.stockHint')}</p>}
+          {form.sizes.length === 0 && <p className="font-mono text-[11px] text-text2">{t('admin.stockHint')}</p>}
           {form.sizes.map(s => (
             <label key={s} className="flex items-center gap-1.5 border border-border bg-bg px-2 py-1">
-              <span className="font-mono text-[10px] font-medium text-text2">{s}</span>
+              <span className="font-mono text-[11px] font-medium text-text2">{s}</span>
               <input type="number" min={0} value={form.stock?.[s] ?? ''} placeholder="0"
                 onChange={e => setStock(s, Math.max(0, Number(e.target.value)))}
-                className="w-11 bg-transparent text-text1 font-mono text-[11px] py-0.5 outline-none text-center placeholder:text-text2/40" />
+                className="w-11 bg-transparent text-text1 font-mono text-[11px] py-0.5 text-center placeholder:text-text2" />
             </label>
           ))}
         </div>
@@ -109,7 +109,7 @@ function ProductForm({ initial, onSubmit, onClose }) {
         <div className="grid grid-cols-2 gap-2">
           {bools.map(({ k, label }) => (
             <button key={k} type="button" onClick={() => set(k, !form[k])}
-              className={`flex items-center gap-2 font-mono text-[10px] font-medium px-3 py-2 border transition-all ${form[k] ? 'bg-text1 text-bg border-text1' : 'bg-bg text-text2 border-border hover:border-text1'}`}>
+              className={`flex items-center gap-2 font-mono text-[11px] font-medium px-3 py-2 border transition-colors ${form[k] ? 'bg-text1 text-bg border-text1' : 'bg-bg text-text2 border-border hover:border-text1'}`}>
               {form[k] ? <Check size={10}/> : <X size={10}/>} {label}
             </button>
           ))}
@@ -169,7 +169,7 @@ export default function AdminProductsPage() {
         <div>
           <p className="arch-label text-pink mb-1">{t('admin.panel')}</p>
           <h1 className="font-display text-[18px] font-bold tracking-[-0.01em] text-text1">{t('admin.productsTitle')}</h1>
-          <p className="font-mono text-[10px] text-text2 mt-1">{t('admin.productsTotal', { n: products.length })}</p>
+          <p className="font-mono text-[11px] text-text2 mt-1">{t('admin.productsTotal', { n: products.length })}</p>
         </div>
         <Button onClick={() => setShowAdd(true)}>
           <Plus size={13} /> {t('admin.addProduct')}
@@ -179,11 +179,11 @@ export default function AdminProductsPage() {
       {/* Filters */}
       <div className="flex flex-col md:flex-row gap-3">
         <input value={search} onChange={e=>setSearch(e.target.value)} placeholder={t('admin.searchProducts')}
-          className="flex-1 bg-bg border border-border text-text1 font-mono text-[11px] px-3.5 py-2.5 outline-none focus:border-text1 placeholder:text-text2/50" />
+          className="flex-1 bg-bg border border-border text-text1 font-mono text-[11px] px-3.5 py-2.5 focus:border-text1 placeholder:text-text2" />
         <div className="flex gap-1 flex-wrap">
           {cats.map(c => (
             <button key={c} onClick={() => setCatFilter(c)}
-              className={`font-mono text-[10px] font-medium px-3 py-2 border transition-all ${catFilter===c ? 'bg-text1 text-bg border-text1' : 'bg-surface text-text2 border-border hover:border-text1'}`}>
+              className={`font-mono text-[11px] font-medium px-3 py-2 border transition-colors ${catFilter===c ? 'bg-text1 text-bg border-text1' : 'bg-surface text-text2 border-border hover:border-text1'}`}>
               {c === 'all' ? t('cat.all').toUpperCase() : t(`cat.${c.toLowerCase()}`).toUpperCase()}
             </button>
           ))}
@@ -196,7 +196,7 @@ export default function AdminProductsPage() {
           <thead>
             <tr className="border-b border-border bg-surface">
               {[t('admin.colProduct'),t('admin.colCategory'),t('admin.colPrice'),t('admin.colStatus'),t('admin.colFlags'),t('admin.colActions')].map(h => (
-                <th key={h} className="text-left py-3 px-4 font-mono text-[10px] font-medium text-pink">{h}</th>
+                <th key={h} className="text-left py-3 px-4 font-mono text-[11px] font-medium text-pink">{h}</th>
               ))}
             </tr>
           </thead>
@@ -206,44 +206,44 @@ export default function AdminProductsPage() {
                 <td className="py-3 px-4">
                   <div className="flex items-center gap-3">
                     <div className="w-8 h-10 shrink-0 flex items-center justify-center border border-border bg-card">
-                      <span className="font-mono text-[10px] font-medium text-pink">{productName(p)[0]}</span>
+                      <span className="font-mono text-[11px] font-medium text-pink">{productName(p)[0]}</span>
                     </div>
                     <div>
                       <p className="font-body text-[13px] font-medium text-text1">{productName(p)}</p>
-                      <p className="font-body font-bold text-[7px] text-text2">{p.id}</p>
+                      <p className="font-body font-bold text-[11px] text-text2">{p.id}</p>
                     </div>
                   </div>
                 </td>
-                <td className="py-3 px-4 font-mono text-[10px] text-text2">{p.category.toUpperCase()}</td>
+                <td className="py-3 px-4 font-mono text-[11px] text-text2">{p.category.toUpperCase()}</td>
                 <td className="py-3 px-4">
                   <span className="font-mono text-[11px] font-medium text-pink">{formatPrice(p.price)}</span>
-                  {p.originalPrice && <p className="font-body font-bold text-[7px] text-text2 line-through">{formatPrice(p.originalPrice)}</p>}
+                  {p.originalPrice && <p className="font-body font-bold text-[11px] text-text2 line-through">{formatPrice(p.originalPrice)}</p>}
                 </td>
                 <td className="py-3 px-4">
-                  <span className={`font-mono text-[10px] font-medium px-2 py-1 border ${p.soldOut ? 'border-red-500 text-red-700 bg-red-100' : 'border-green-600 text-green-700 bg-green-100'}`}>
+                  <span className={`font-mono text-[11px] font-medium px-2 py-1 border ${p.soldOut ? 'border-red-500 text-red-700 bg-red-100' : 'border-green-600 text-green-700 bg-green-100'}`}>
                     {p.soldOut ? t('admin.statusSoldOut') : t('admin.statusActive')}
                   </span>
                 </td>
                 <td className="py-3 px-4">
                   <div className="flex flex-wrap gap-1">
-                    {p.preOrder && <span className="font-mono text-[9px] font-medium border border-text1 px-1 text-text1">PO</span>}
-                    {p.featured && <span className="font-mono text-[9px] font-medium border border-pink px-1 text-pink">FT</span>}
-                    {p.bestSeller && <span className="font-mono text-[9px] font-medium border border-border px-1 text-text2">BS</span>}
-                    {p.newCollection && <span className="font-mono text-[9px] font-medium border border-green-600 px-1 text-green-700">NC</span>}
+                    {p.preOrder && <span className="font-mono text-[11px] font-medium border border-text1 px-1 text-text1">PO</span>}
+                    {p.featured && <span className="font-mono text-[11px] font-medium border border-pink px-1 text-pink">FT</span>}
+                    {p.bestSeller && <span className="font-mono text-[11px] font-medium border border-border px-1 text-text2">BS</span>}
+                    {p.newCollection && <span className="font-mono text-[11px] font-medium border border-green-600 px-1 text-green-700">NC</span>}
                   </div>
                 </td>
                 <td className="py-3 px-4">
                   <div className="flex items-center gap-1">
                     <button onClick={() => setEditId(p.id)} title={t('admin.edit')}
-                      className="w-7 h-7 flex items-center justify-center border border-border text-text2 hover:border-pink hover:text-pink transition-all">
+                      className="w-7 h-7 flex items-center justify-center border border-border text-text2 hover:border-pink hover:text-pink transition-colors">
                       <Pencil size={11} />
                     </button>
                     <button onClick={() => toggleSoldOut(p.id)} title={t('admin.toggleSoldOut')}
-                      className="w-7 h-7 flex items-center justify-center border border-border text-text2 hover:border-yellow-400 hover:text-yellow-400 transition-all">
+                      className="w-7 h-7 flex items-center justify-center border border-border text-text2 hover:border-yellow-400 hover:text-yellow-400 transition-colors">
                       {p.soldOut ? <ToggleLeft size={11}/> : <ToggleRight size={11}/>}
                     </button>
                     <button onClick={() => setConfirmDelete(p.id)} title={t('admin.deleteBtn')}
-                      className="w-7 h-7 flex items-center justify-center border border-border text-text2 hover:border-red-400 hover:text-red-700 transition-all">
+                      className="w-7 h-7 flex items-center justify-center border border-border text-text2 hover:border-red-400 hover:text-red-700 transition-colors">
                       <Trash2 size={11} />
                     </button>
                   </div>

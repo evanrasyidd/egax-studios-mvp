@@ -21,10 +21,10 @@ export default function AboutContent() {
     <div className="bg-bg min-h-screen">
       <div className="px-6 md:px-10 pt-16 pb-20 max-w-6xl mx-auto">
         <p className="arch-label text-pink mb-4">{t('about.label')}</p>
-        <h1 data-skew className="font-display text-[52px] md:text-[72px] font-bold leading-[0.95] tracking-[-0.02em] text-text1 mb-8">MADE FOR<br/>EVERYDAY.</h1>
+        <h1 className="mb-8 font-display text-[44px] font-bold leading-[0.95] tracking-[-0.02em] text-text1 md:text-[72px]">MADE FOR<br/>EVERYDAY.</h1>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
-          <div className="space-y-5 text-[15px] text-text2 leading-relaxed border-l border-pink pl-6">
+          <div className="space-y-5 border-t border-text1 pt-6 text-[15px] leading-relaxed text-text2">
             <p>{t('about.p1')}</p>
             <p>{t('about.p2')}</p>
             <p>{t('about.p3')}</p>
@@ -33,7 +33,7 @@ export default function AboutContent() {
           <div data-reveal className="border border-text1 bg-surface h-fit">
             <div className="flex items-center justify-between px-5 py-2.5 bg-text1">
               <span className="arch-label text-bg">{t('about.sheet')}</span>
-              <span className="font-mono text-[8px] uppercase tracking-[0.22em] text-bg/60">SS 2026</span>
+              <span className="font-mono text-[11px] uppercase tracking-[0.22em] text-bg/60">SS 2026</span>
             </div>
             <div className="divide-y divide-border">
               {points.map((p) => (
@@ -65,7 +65,7 @@ export default function AboutContent() {
             <div key={s.k} className="px-5 py-6">
               <p className="arch-label text-text2 mb-2">{s.k}</p>
               <p className="font-display text-[16px] md:text-[20px] font-bold text-text1 tracking-[-0.01em]">{s.v}</p>
-              <p className="font-mono text-[9px] uppercase tracking-[0.18em] text-text2 mt-1">{s.l}</p>
+              <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-text2 mt-1">{s.l}</p>
             </div>
           ))}
         </div>

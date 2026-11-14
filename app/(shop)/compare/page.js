@@ -6,10 +6,8 @@ import { useCompareStore } from '@/store/compareStore'
 import { useHydrated } from '@/hooks/useHydrated'
 import { useI18n } from '@/store/i18nStore'
 import { formatPrice } from '@/lib/utils'
-import GarmentIcon from '@/components/product/GarmentIcon'
+import GarmentPlate from '@/components/product/GarmentPlate'
 import Button from '@/components/ui/Button'
-
-const GARMENT_TONES = ['#F0EFEA', '#E4E2DC', '#D8D6CF', '#C6C3BB', '#A6A29A', '#77736C', '#4A4844', '#222220']
 
 export default function ComparePage() {
   const { t, locale, productName } = useI18n()
@@ -37,7 +35,7 @@ export default function ComparePage() {
 
   const rows = [
     { k: t('compare.price'), render: (p) => <span className="font-mono text-[12px] font-semibold">{formatPrice(p.price)}</span> },
-    { k: t('compare.category'), render: (p) => <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-text2">{t(`cat.${p.category.toLowerCase()}`)}</span> },
+    { k: t('compare.category'), render: (p) => <span className="font-mono text-[11px] uppercase tracking-[0.14em] text-text2">{t(`cat.${p.category.toLowerCase()}`)}</span> },
     { k: t('product.fabric'), render: (p) => <span className="text-[12px] text-text1 leading-relaxed">{lang(p.fabricId, p.fabric)}</span> },
     { k: t('product.fit'), render: (p) => <span className="text-[12px] text-text1 leading-relaxed">{lang(p.fitId, p.fit)}</span> },
     { k: t('product.care'), render: (p) => <span className="text-[12px] text-text1 leading-relaxed">{lang(p.careId, p.care)}</span> },
@@ -62,12 +60,12 @@ export default function ComparePage() {
         <div className="flex items-baseline justify-between mb-8 pb-4 border-b border-border">
           <div className="flex items-baseline gap-4">
             <span className="arch-label text-pink">{t('compare.label')}</span>
-            <h1 data-skew className="font-display text-[34px] font-bold tracking-[-0.01em] text-text1">{t('compare.title')}</h1>
+            <h1 className="font-display text-[34px] font-bold tracking-[-0.01em] text-text1">{t('compare.title')}</h1>
           </div>
           <button onClick={clear} className="arch-label text-text2 hover:text-red-600 transition-colors">{t('compare.clear')}</button>
         </div>
 
-        <div className="overflow-x-auto border border-text1 bg-surface">
+        <div tabIndex={0} role="region" aria-label={t('compare.title')} className="overflow-x-auto border border-text1 bg-surface">
           <table className="w-full min-w-[720px]">
             <thead>
               <tr className="border-b border-border">
@@ -75,13 +73,11 @@ export default function ComparePage() {
                 {items.map((p, i) => (
                   <th key={p.id} className="px-4 py-3 text-left align-top min-w-[200px]">
                     <div className="relative">
-                      <button onClick={() => remove(p.id)} className="absolute -top-1 -right-1 w-7 h-7 flex items-center justify-center border border-border bg-surface text-text2 hover:text-red-600 hover:border-red-600 transition-colors" aria-label={t('compare.remove')}>
-                        <X size={13} />
+                      <button type="button" onClick={() => remove(p.id)} className="absolute right-1 top-1 z-10 flex h-11 w-11 items-center justify-center border border-border bg-surface text-text2 transition-colors hover:border-red-600 hover:text-red-700" aria-label={t('compare.remove')}>
+                        <X size={15} aria-hidden="true" />
                       </button>
-                      <Link href={`/product/${p.slug}`} className="block border border-border overflow-hidden">
-                        <div className="flex items-center justify-center border-b border-border" style={{ height: '9rem', background: GARMENT_TONES[i % GARMENT_TONES.length] }}>
-                          <GarmentIcon category={p.category} fill="rgba(255,255,255,0.92)" shade="rgba(0,0,0,0.16)" detail="#111111" scale={3.5} />
-                        </div>
+                      <Link href={`/product/${p.slug}`} className="block overflow-hidden border border-border">
+                        <GarmentPlate product={p} showMeta={false} compact marks={false} className="aspect-[3/4] w-full" />
                         <div className="px-3 py-2">
                           <p className="text-[12px] font-medium text-text1 leading-snug">{productName(p)}</p>
                         </div>

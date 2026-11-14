@@ -206,7 +206,7 @@ export default function CheckoutPage() {
                 <div className="flex items-center justify-between gap-3">
                   <div>
                     <p className="font-mono text-[11px] font-semibold text-text1">{voucher.voucher.code}</p>
-                    <p className="font-mono text-[9px] uppercase tracking-[0.14em] text-green-700">
+                    <p className="font-mono text-[11px] uppercase tracking-[0.14em] text-green-700">
                       {t('checkout.voucherApplied', { amount: formatPrice(discount) })}
                     </p>
                   </div>
@@ -216,16 +216,26 @@ export default function CheckoutPage() {
                   </button>
                 </div>
               ) : (
-                <div className="flex gap-2">
-                  <input value={voucherCode} onChange={(e) => setVoucherCode(e.target.value)}
-                    placeholder={t('checkout.voucherPlaceholder')}
-                    className="flex-1 bg-surface border border-border px-3 py-2 font-mono text-[11px] uppercase tracking-[0.12em] text-text1 placeholder:text-text2/50 outline-none focus:border-text1 min-w-0" />
-                  <Button size="sm" variant="outline" onClick={handleApplyVoucher} className="shrink-0">
-                    {t('checkout.apply')}
-                  </Button>
+                <div>
+                  <label htmlFor="voucher-code" className="sr-only">{t('checkout.voucherPlaceholder')}</label>
+                  <div className="flex gap-2">
+                    <input
+                      id="voucher-code"
+                      value={voucherCode}
+                      onChange={(e) => setVoucherCode(e.target.value)}
+                      placeholder={t('checkout.voucherPlaceholder')}
+                      autoComplete="off"
+                      aria-invalid={voucherError ? true : undefined}
+                      aria-describedby={voucherError ? 'voucher-error' : undefined}
+                      className="min-w-0 flex-1 border border-text2 bg-surface px-3 py-2 font-mono text-[11px] uppercase tracking-[0.12em] text-text1 placeholder:text-text2 focus:border-text1"
+                    />
+                    <Button size="sm" variant="outline" onClick={handleApplyVoucher} className="shrink-0">
+                      {t('checkout.apply')}
+                    </Button>
+                  </div>
                 </div>
               )}
-              {voucherError && <p className="font-mono text-[10px] text-red-600 mt-2">{voucherError}</p>}
+              {voucherError && <p id="voucher-error" role="alert" className="mt-2 font-mono text-[11px] text-red-700">{voucherError}</p>}
             </div>
             <OrderSummary items={items} total={total} discount={discount} />
           </div>

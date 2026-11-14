@@ -1,9 +1,10 @@
 ﻿'use client'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Plus, MapPin, Trash2, X, Check } from 'lucide-react'
 import Button from '@/components/ui/Button'
 import { FieldInput, FieldLabel } from '@/components/ui/Field'
 import { toast } from '@/components/ui/Toast'
+import { useFocusTrap } from '@/hooks/useFocusTrap'
 import { useI18n } from '@/store/i18nStore'
 
 const EMPTY_ADDR = { label:'', firstName:'', lastName:'', phone:'', address:'', city:'', postalCode:'', province:'', isDefault:false }
@@ -11,12 +12,15 @@ const EMPTY_ADDR = { label:'', firstName:'', lastName:'', phone:'', address:'', 
 function AddressModal({ initial, onSave, onClose }) {
   const { t } = useI18n()
   const [form, setForm] = useState(initial || EMPTY_ADDR)
+  const modalRef = useRef(null)
   const set = (k, v) => setForm(f => ({...f, [k]: v}))
+
+  useFocusTrap(true, modalRef, onClose)
 
   const fields = [
     { k:'label', label:t('account.labelField'), placeholder:'Home', full:true },
-    { k:'firstName', label:t('checkout.firstName'), placeholder:'John' },
-    { k:'lastName', label:t('checkout.lastName'), placeholder:'Doe' },
+    { k:'firstName', label:t('checkout.firstName'), placeholder:'Nadia' },
+    { k:'lastName', label:t('checkout.lastName'), placeholder:'Pratama' },
     { k:'phone', label:t('checkout.phone'), placeholder:'08xxxxxxxxxx', full:true },
     { k:'address', label:t('checkout.address'), placeholder:'Jl. Sudirman No. 1', full:true },
     { k:'city', label:t('checkout.city'), placeholder:'Jakarta' },
@@ -25,18 +29,18 @@ function AddressModal({ initial, onSave, onClose }) {
   ]
 
   return (
-    <div className="fixed inset-0 z-[90] bg-text1/60 backdrop-blur-sm flex items-center justify-center p-4">
-      <div className="anim-rise bg-surface border border-text1 w-full max-w-lg max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between px-5 py-2.5 bg-text1 sticky top-0">
-          <span className="arch-label text-bg">{initial?.id ? t('account.editAddr') : t('account.addNew')}</span>
-          <button onClick={onClose} className="text-bg/70 hover:text-bg p-1"><X size={15}/></button>
+    <div className="fixed inset-0 z-[90] flex items-center justify-center bg-text1/60 p-4">
+      <div ref={modalRef} role="dialog" aria-modal="true" aria-labelledby="address-title" className="anim-rise max-h-[90vh] w-full max-w-lg overflow-y-auto border border-text1 bg-surface">
+        <div className="sticky top-0 flex items-center justify-between bg-text1 px-5 py-2.5">
+          <span id="address-title" className="arch-label text-bg">{initial?.id ? t('account.editAddr') : t('account.addNew')}</span>
+          <button type="button" onClick={onClose} aria-label={t('nav.close')} className="flex h-11 w-11 items-center justify-center text-bg/70 hover:text-bg"><X size={16} aria-hidden="true"/></button>
         </div>
         <form onSubmit={e => { e.preventDefault(); onSave(form) }} className="p-5">
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
             {fields.map(({ k, label, placeholder, full }) => (
-              <div key={k} className={full ? 'col-span-2' : ''}>
-                <FieldLabel>{label}</FieldLabel>
-                <FieldInput value={form[k]} onChange={e => set(k, e.target.value)} placeholder={placeholder}
+              <div key={k} className={full ? 'sm:col-span-2' : ''}>
+                <FieldLabel htmlFor={`addr-${k}`}>{label}</FieldLabel>
+                <FieldInput id={`addr-${k}`} value={form[k]} onChange={e => set(k, e.target.value)} placeholder={placeholder}
                   required={['label','firstName','lastName','address','city','postalCode'].includes(k)}/>
               </div>
             ))}
@@ -110,7 +114,7 @@ export default function AddressesPage() {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
             {addresses.map(addr => (
-              <div key={addr.id} className={`border p-4 relative transition-all ${addr.isDefault ? 'border-text1 bg-bg' : 'border-border bg-surface hover:border-text1'}`}>
+              <div key={addr.id} className={`border p-4 relative transition-colors ${addr.isDefault ? 'border-text1 bg-bg' : 'border-border bg-surface hover:border-text1'}`}>
                 {addr.isDefault && (
                   <span className="absolute top-3 right-3 arch-label bg-text1 text-bg px-2 py-0.5">{t('account.default')}</span>
                 )}
@@ -125,7 +129,7 @@ export default function AddressesPage() {
                   {!addr.isDefault && (
                     <Button variant="outline" size="sm" className="border-text1" onClick={() => handleSetDefault(addr.id)}>{t('account.setDefault')}</Button>
                   )}
-                  <button onClick={() => setDeleteId(addr.id)} className="ml-auto text-text2/70 hover:text-red-600 transition-colors" aria-label={t('account.delete')}>
+                  <button onClick={() => setDeleteId(addr.id)} className="ml-auto text-text2 hover:text-red-600 transition-colors" aria-label={t('account.delete')}>
                     <Trash2 size={14}/>
                   </button>
                 </div>
@@ -144,7 +148,7 @@ export default function AddressesPage() {
       )}
 
       {deleteId && (
-        <div className="fixed inset-0 z-[90] bg-text1/60 backdrop-blur-sm flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[90] bg-text1/60 flex items-center justify-center p-4">
           <div className="anim-rise bg-surface border border-text1 w-full max-w-sm">
             <div className="flex items-center justify-between px-5 py-2.5 bg-text1">
               <span className="arch-label text-bg">{t('account.deleteAddress')}</span>

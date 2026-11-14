@@ -1,8 +1,8 @@
 # EGAX Studios
 
-Fashion e-commerce built with Next.js 15, Tailwind CSS, Framer Motion, Zustand.
+Fashion e-commerce built with Next.js 15, Tailwind CSS, GSAP/ScrollTrigger, Zustand.
 
-**Design language:** minimal archive / brutalist — putih-hitam monochrome (paper #FAFAF8, ink #111111), satu typeface Archivo untuk semua peran, tanpa shadow/dekorasi, hairline rules tipis, archive numbering (Nº serial produk, section 01–05). Signaturnya: hero archive catalog card (Nº + visual garmen + harga di atas putih).
+**Design language:** minimal archive / specimen catalogue. Monochrome paper #FAFAF8, ink #111111, hairline rules, no decorative shadows. Archivo untuk display/body, IBM Plex Mono untuk label teknis, angka, dan spesifikasi. Signature: technical flat garmen (SVG) di plate bernomor, bukan foto stock. Semua produk punya flat sendiri per kategori (chore, trucker, flannel, chino, jeans, beanie, cap, tote, socks).
 
 ## Requirements
 - Node.js v18+
@@ -52,9 +52,10 @@ Soal keamanan credential: password admin dan PIN kasir sekarang disimpan sebagai
 - `/checkout` — Checkout simulation (QRIS, E-Wallet, Virtual Account, voucher code)
 - `/pos` — POS kasir (PIN-gated, terpisah dari admin, print struk)
 - `/editorial` — Editorial lookbook
-- `/gallery` — Photo gallery
+- `/gallery` — Archive / contact sheet
 - `/about` — Brand story
 - `/contact` — Contact form
+- `/policies` — Refund, shipping, privacy, terms, legal, cookies
 - `/account` — Login / Register
 - `/account/orders` — Order history + tracking timeline
 - `/account/wishlist` — Wishlist
@@ -62,34 +63,38 @@ Soal keamanan credential: password admin dan PIN kasir sekarang disimpan sebagai
 - `/admin/vouchers` — Kelola promo code (admin)
 
 ## Features
-- Hero archive catalog: headline grotesk hitam besar (WEAR / THE NOISE.) + kartu katalog bernomor (Nº serial, visual garmen di tone abu garment, nama & harga) sebagai signature element — semuanya tipografi/SVG, tanpa foto stock
-- Sticky navbar with underline animation
-- Mega menu dropdown (Catalog)
-- Mobile fullscreen menu
-- Cart drawer (Zustand + localStorage) dengan slide-in animation
-- Wishlist (Zustand + localStorage)
-- Search modal
-- Checkout simulation ala payment gateway: QRIS (dengan pseudo-QR visual), E-Wallet (GoPay/OVO/Dana), Virtual Account (BCA/BNI/Mandiri) — masing-masing punya state machine waiting → checking → success/failed dengan kemungkinan gagal acak (realistis, bukan instant-success)
+- Hero archive catalogue: headline Archivo besar (WEAR / EVERYDAY.) + kartu spesimen bernomor (Nº serial, technical flat, nama, harga)
+- Technical flat SVG per produk: front view, detail crop, dan woven label view di halaman produk
+- GSAP motion: hanging tag preloader, hero entrance/scroll-out, section heading mask reveal, scroll-reactive index strip, horizontal scrub reel, sequential archive stack, footer wordmark cascade, product gallery view transition, cart line stagger, search/mega menu entrance
+- Reduced-motion fallback untuk semua momen besar: reel jadi native horizontal scroll, stack jadi tumpukan statis, semua pin/scrub mati
+- Sticky navbar dengan mega menu Catalog yang bisa hover, klik, dan keyboard
+- Mobile menu fullscreen dengan focus trap, Escape, dan close button
+- Cart drawer dan search modal dengan role dialog, focus trap, Escape, dan focus restore
+- Wishlist dan compare tersedia di product card (bukan hover-only)
+- Checkout simulation ala payment gateway: QRIS (pseudo-QR visual), E-Wallet (GoPay/OVO/Dana), Virtual Account (BCA/BNI/Mandiri), state machine waiting → checking → success/failed
 - 15-minute payment countdown
-- Order history dengan tanggal ISO timestamp (akurat untuk sorting/analitik)
-- Admin panel (products, orders, users) dengan dashboard revenue chart (mini bar chart 7 hari, dari data order asli)
-- POS kasir standalone dengan PIN auth sendiri, cart kasir terpisah dari cart customer, dan transaksi otomatis tercatat ke order store yang sama dengan shop online (dibedakan lewat field `channel`)
-- 25 mock products across 6 categories, masing-masing dengan representasi visual `GarmentIcon` per kategori (bukan foto asli — ganti ke foto produk real kapan saja sudah tersedia)
-- Pre Order, New Collection, Featured, Best Seller sections
-- Paper-white sections dengan hairline rules & archive numbering (01/02/03)
-- Responsive: mobile, tablet, desktop
+- Order history dengan tanggal ISO timestamp, timeline status, dan modal detail
+- Admin panel (products, orders, staff, users, vouchers) dengan revenue chart dari data order asli
+- POS kasir standalone dengan PIN auth, cart terpisah, dan print struk
+- 24 produk di 6 kategori, semua memakai technical flat yang konsisten
+- Halaman produk SSG (24 slug), metadata per produk, canonical, dan JSON-LD `Product`
+- Open Graph image dinamis di `/opengraph-image`
+- Storefront responsive di 320, 375, 390, 768, 1024, 1440
+- Fokus keyboard, skip link, kontras AA, label form, dan touch target 44px
 
 ## Known limitations / next steps
-- `CompleteTheFit` (related products di halaman produk) baca dari `constants/products.js` langsung, bukan `useAdminStore` — jadi tidak ikut update kalau admin edit/hapus produk dari dashboard
-- Foto produk masih representasi `GarmentIcon`, bukan foto asli — ganti `product.images` dan render `<img>` begitu foto tersedia
-- Belum ada store customer terpusat — daftar di `/admin/users` diturunkan dari `order.customer`, bukan tabel user sungguhan
+- Visual produk saat ini technical flat, bukan foto. Kalau foto asli tersedia, ganti `GarmentPlate` di gallery/card dengan `next/image` dan simpan foto di `product.images`. Plate tetap bisa dipakai sebagai fallback.
+- Semua data (cart, order, staff, produk) hidup di localStorage. Ini demo/portfolio, bukan backend commerce.
+- Produk yang ditambahkan lewat admin dashboard tidak masuk `generateStaticParams` dan sitemap. Mereka tetap bisa dibuka lewat dynamic params, tapi metadata/SEO-nya memakai fallback.
+- Belum ada payment gateway asli; semua status pembayaran disimulasikan.
+- Belum ada automated browser test untuk checkout dan auth. Kalau project naik ke produksi, tambahkan smoke test (Playwright) untuk alur cart → checkout → order dan login admin/POS.
 
 ## Security Notes
 Audit yang sudah dilakukan terhadap project ini:
 - **`.gitignore`** sudah ada (sebelumnya tidak ada sama sekali) — `node_modules`, `.next`, dan file `.env*` tidak akan ke-commit
 - **Tidak ada API key/secret pihak ketiga** yang ke-hardcode di kode manapun (sudah di-scan pattern Stripe/Google/AWS/GitHub/Supabase)
 - **Tidak ada endpoint API publik** — sebelumnya ada `/api/mock-payment` yang dead code (tidak dipanggil dari manapun) dan publicly exposed tanpa rate-limit, sudah dihapus. Semua fitur (checkout, POS, auth) berjalan client-side, tidak ada permukaan API untuk di-spam/DDoS
-- **Tidak ada `dangerouslySetInnerHTML`/`eval`** di kode manapun
+- **`dangerouslySetInnerHTML` hanya dipakai untuk JSON-LD produk** di server component (`app/(shop)/product/[slug]/page.js`), isinya `JSON.stringify` dari data statis `constants/products.js`, bukan input user. Tidak ada `eval`.
 - **Password admin & PIN kasir disimpan sebagai hash SHA-256 + salt** (`lib/staffCrypto.js`), bukan plaintext — localStorage tidak lagi membocorkan credential asli kalau dibuka lewat DevTools
 - **Session token** untuk login admin/kasir di-derive dari hash credential staff, bukan boolean polos — mencegah bypass login dengan mengetik `isLoggedIn: true` langsung di console
 

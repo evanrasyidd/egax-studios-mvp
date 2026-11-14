@@ -2,6 +2,7 @@
 import { useEffect, useState } from 'react'
 import { X, Check, AlertCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
+import { useI18n } from '@/store/i18nStore'
 
 let toastListeners = []
 let toastId = 0
@@ -12,23 +13,41 @@ export function toast(message, type = 'success') {
 }
 
 export default function ToastContainer() {
+  const { t } = useI18n()
   const [toasts, setToasts] = useState([])
+
   useEffect(() => {
-    const fn = (t) => {
-      setToasts(p => [...p, t])
-      setTimeout(() => setToasts(p => p.filter(x => x.id !== t.id)), 3000)
+    const fn = (item) => {
+      setToasts(p => [...p, item])
+      setTimeout(() => setToasts(p => p.filter(x => x.id !== item.id)), 3000)
     }
     toastListeners.push(fn)
     return () => { toastListeners = toastListeners.filter(l => l !== fn) }
   }, [])
+
   return (
-    <div className="fixed bottom-6 right-6 z-[200] flex flex-col gap-2">
-      {toasts.map(t => (
-        <div key={t.id} className={cn('anim-toast corner-brackets flex items-center gap-3 px-4 py-3 text-sm min-w-[260px] shadow-xl border',
-          t.type === 'success' ? 'bg-surface border-text1 text-text1' : 'bg-surface border-red-600 text-text1')}>
-          {t.type === 'success' ? <Check size={13} className="text-text1 shrink-0"/> : <AlertCircle size={13} className="text-red-600 shrink-0"/>}
-          <span className="flex-1 font-mono text-[11px] uppercase tracking-[0.08em]">{t.message}</span>
-          <button onClick={() => setToasts(p => p.filter(x => x.id !== t.id))} className="text-text2 hover:text-text1"><X size={12}/></button>
+    <div aria-live="polite" aria-atomic="false" className="fixed bottom-24 right-4 z-[200] flex max-w-[calc(100vw-2rem)] flex-col gap-2 sm:bottom-6 sm:right-6">
+      {toasts.map(item => (
+        <div
+          key={item.id}
+          role={item.type === 'success' ? 'status' : 'alert'}
+          className={cn(
+            'anim-toast corner-brackets flex min-w-[260px] max-w-[380px] items-center gap-3 border px-4 py-3 text-[12px]',
+            item.type === 'success' ? 'border-text1 bg-surface text-text1' : 'border-red-700 bg-surface text-text1'
+          )}
+        >
+          {item.type === 'success'
+            ? <Check size={15} aria-hidden="true" className="shrink-0 text-text1" />
+            : <AlertCircle size={15} aria-hidden="true" className="shrink-0 text-red-700" />}
+          <span className="flex-1 leading-snug">{item.message}</span>
+          <button
+            type="button"
+            onClick={() => setToasts(p => p.filter(x => x.id !== item.id))}
+            aria-label={t('common.dismiss')}
+            className="flex h-8 w-8 shrink-0 items-center justify-center text-text2 transition-colors hover:text-text1"
+          >
+            <X size={14} aria-hidden="true" />
+          </button>
         </div>
       ))}
     </div>
